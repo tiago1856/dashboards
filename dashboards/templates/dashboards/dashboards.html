@@ -1,0 +1,32 @@
+{% load i18n %}
+
+<html lang="en">
+<head>
+ 	{% load static %}
+	<meta charset="utf-8">
+	<meta name="viewport" content="width = device-width, initial-scale = 1, shrink-to-fit = no">
+
+	<title>{% trans 'Dashboards' %}</title>
+
+	{% include 'dashboards/_styles.html' %}
+</head>
+
+<body>	
+
+	<div class="container-fluid">
+		{% include 'dashboards/_top_row.html' %}
+		{% include 'dashboards/_dashboard_title.html' %}
+
+		<div id="components-container"></div>
+	</div>
+
+
+	<!-- MODALS -->
+	<div id="modals-container"></div>
+
+	{% include 'dashboards/_layout_selection_modal.html' %}
+
+	{% include 'dashboards/_scripts.html' %}
+  
+   </body>
+</html>

@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Home" %}{% endblock %}
+
+{% block extra_extra_head %}
+
+  <style>
+  </style>
+
+{% endblock %}
+
+{% block no_heading %}
+<div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1>Projeto: FEUP/INSA/2021-77453</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{% url 'home' %}">{% trans "Home" %}</a></li>
+            </ol>
+          </div>
+        </div>
+      </div><!-- /.container-fluid -->
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid">
+
+  <div class="row">
+    <dt class="col-sm-3">Designação do projeto:</dt>
+    <dd class="col-sm-9">FEUP/INSA/2021-77453 - Desenvolvimento de um software para uma App para recolha de amostras e o desenvolvimento de um software de classificação de alimentos de acordo com o FoodEx2</dd>
+
+    <dt class="col-sm-3">Código do projeto:</dt>
+    <dd class="col-sm-9">FEUP/INSA/2021-77453</dd>
+
+    <dt class="col-sm-3">Parceiro(s) / Co-promotor(es) / Instituição(ões) participante(s):</dt>
+    <dd class="col-sm-9">Instituto Nacional de Saúde Dr. Ricardo Jorge; Faculdade de Engenharia da Universidade do Porto; </dd>
+
+    <dt class="col-sm-3">Data de início:</dt>
+    <dd class="col-sm-9">2021-02-11</dd>
+
+    <dt class="col-sm-3">Data de conclusão:</dt>
+    <dd class="col-sm-9">2022-01-10</dd>
+    
+
+  </div>
+
+
+</div> <!-- /.container-fluid -->
+
+
+{% endblock %}
+
+{% block extra_js %}
+
+{% endblock %}
+

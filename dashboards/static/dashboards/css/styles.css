@@ -1,0 +1,64 @@
+
+.full-height {
+    height: 100%;
+}
+
+/* ********************** */
+/*  ADMINLTE OVERRIDES    */
+/* ********************** */
+
+.sub-menu-right.dropdown-submenu > .dropdown-menu {
+    left: -100% !important;
+    right: 100% !important;
+}
+
+/**
+    adding a color to card other than light => dropdown items text color = light
+*/
+.dropdown-item {
+    color: #343a40 !important;
+    padding-bottom: 0 !important;
+}
+
+.dropdown-item > a {
+    color: #343a40 !important;
+    padding-bottom: 0 !important;
+}
+
+
+
+
+/* *********************** */
+/*  EDITABLE COMPONENTS    */
+/* *********************** */
+
+.editable-component {
+    display: none;
+}
+
+/* *********************** */
+/*  LAYOUT CHOICE MODAL    */
+/* *********************** */
+
+.layout-choice{
+    max-width: 48px;
+}
+
+.layout-choice:hover {
+    border-style: dashed;
+    border-width: thin;
+    background-color: #ffe3e3;
+    border-color: red;
+    transform: scale(1.1);
+    transition: 500ms linear;
+}
+
+.layout-choice:active {
+    border-style: dashed;
+    border-width: thin;
+    background-color: #CCFF66;
+    border-color: green;
+    transform: scale(1.2);
+    transition: 200ms linear; 
+}
+
