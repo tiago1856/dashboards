@@ -18,11 +18,13 @@
 .dropdown-item {
     color: #343a40 !important;
     padding-bottom: 0 !important;
+    padding-top: 0 !important;
 }
 
 .dropdown-item > a {
     color: #343a40 !important;
     padding-bottom: 0 !important;
+    padding-top: 0 !important;
 }
 
 

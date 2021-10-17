@@ -1,0 +1,95 @@
+{% load static %}
+
+<!-- DATA SOURCE MODAL -->
+<div class="modal" id="data-source-modal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Fonte de Dados</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div><!-- /modal-header -->
+
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <select class="form-control form-control" id="query-selection" name="query-selection">
+                                <option value="" style="display:none" selected>Selecione uma Query</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="btn-group float-right mt-1">
+                            <button id="data-source-save-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Guardar query">
+                                <i class="fa fa-save"></i> 
+                            </button>
+                            <button id="data-source-new-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Nova query">
+                                <i class="fa fa-plus"></i> 
+                            </button>
+                            <button id="data-source-edit-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Editar query">
+                                <i class="fa fa-pencil-alt"></i> 
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <label for="comment">Query:</label>
+                            <textarea class="form-control" disabled id="data-source-query"></textarea>
+                        </div> 
+                    </div> 
+                </div>
+
+                <div class="row">
+                    <div class="col">
+                        <div class="form-check-inline">
+                            <label class="form-check-label">
+                                <input type="checkbox" class="form-check-input" checked>Mostrar resultado
+                            </label>
+                        </div>
+                    </div>   
+                </div>
+
+                
+
+                <div id="data-source-table">
+<table class="table table-sm">
+    <thead>
+      <tr>
+        <th>Firstname</th>
+        <th>Lastname</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>John</td>
+        <td>Doe</td>
+        <td>john@example.com</td>
+      </tr>
+      <tr>
+        <td>Mary</td>
+        <td>Moe</td>
+        <td>mary@example.com</td>
+      </tr>  
+    </tbody>
+  </table>
+                </div>
+
+
+            </div><!-- /modal-body -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                <button type="button" id="data-source-selection-ok-btn" class="btn btn-primary">
+                <i class="fas fa-tv"></i>
+                  Visualização</button>
+            </div> <!-- /modal-footer -->
+
+        </div> <!-- /modal-content -->
+    </div><!-- /modal-dialog -->
+</div>

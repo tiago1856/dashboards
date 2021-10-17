@@ -15,6 +15,7 @@ export function Context() {
         onChanged: new Signal(),                // somethig changed => save button on
 
         onGlobalData: new Signal(),             // new temporal interval
+        onEditComponent: new Signal(),          // edit a specific component
 
     }
 

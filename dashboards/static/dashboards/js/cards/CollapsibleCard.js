@@ -26,7 +26,7 @@ export class CollapsibleCard extends Div {
 
 
         const edit_btn = new AwesomeIconAndButton('','fas fa-edit').attachTo(card_tools);
-        edit_btn.addClass('btn btn-sm btn-danger editable-component');
+        edit_btn.addClass('btn btn-sm text-danger editable-component');
         edit_btn.setAttribute('type','button');
 
         this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
@@ -67,6 +67,10 @@ export class CollapsibleCard extends Div {
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
 
+
+        $(edit_btn.dom).on('click',function() {
+          context.signals.onEditComponent.dispatch();
+        });
         
         $(this.options_btn.dom).on('click',function() {
             console.log("1111111111");

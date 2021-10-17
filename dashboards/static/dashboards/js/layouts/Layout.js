@@ -50,7 +50,7 @@ export class Layout extends Div {
                     spot++;
                 } else {
                     for (let i=0; i < col[1]; i++) {
-                        new CollapsibleCard(this.context, 'XXX', false, 'success').attachTo(_col);
+                        new CollapsibleCard(this.context, 'XXX', false, 'light').attachTo(_col);
                         spot++;
                     }
                 }

@@ -1,7 +1,4 @@
 
-export const MSG_OVERRIDE_LAYOUT = "Mudar de layout irá descartar tudo menos o nome. Deseja continuar?";
-
-
 export const NO_TITLE_DEFINED = '<span style="color: red;">Titulo do Dashboard não Definido!</span>';
 
 export const LAYOUTS = {
