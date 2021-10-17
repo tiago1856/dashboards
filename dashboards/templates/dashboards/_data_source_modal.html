@@ -13,14 +13,14 @@
             <div class="modal-body">
 
                 <div class="row">
-                    <div class="col-3">
+                    <div class="col-4">
                         <div class="form-group">
                             <select class="form-control form-control" id="query-selection" name="query-selection">
                                 <option value="" style="display:none" selected>Selecione uma Query</option>
                             </select>
                         </div>
                     </div>
-                    <div class="col-9">
+                    <div class="col-8">
                         <div class="btn-group float-right mt-1">
                             <button id="data-source-save-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Guardar query">
                                 <i class="fa fa-save"></i> 
@@ -37,31 +37,51 @@
 
                 <div class="row">
                     <div class="col">
+                        <label for="comment">Query:</label>
+                    </div>                    
+                    <div class="col"> 
+                        <div class="float-right">
+                            <button id="data-source-execute-btn" class="btn btn-outline-success btn-sm mr-1" type="button" data-toggle="tooltip" title="Execute query">
+                                <i class="fa fa-play"></i> 
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
                         <div class="form-group">
-                            <label for="comment">Query:</label>
                             <textarea class="form-control" disabled id="data-source-query"></textarea>
                         </div> 
-                    </div> 
+                    </div>
                 </div>
 
                 <div class="row">
-                    <div class="col">
-                        <div class="form-check-inline">
-                            <label class="form-check-label">
-                                <input type="checkbox" class="form-check-input" checked>Mostrar resultado
-                            </label>
-                        </div>
+                    <div class="col-3 ml-2">
+                        <div class="form-group row">
+                            <label for="data-source-lines" class="col-form-label">Numero de linhas: </label>
+                            <div class="col">
+                                <input type="number" value="10" class="form-control" id="data-source-lines" aria-describedby="emailHelp">
+                            </div>
+                        </div>                        
                     </div>   
                 </div>
 
                 
 
-                <div id="data-source-table">
-<table class="table table-sm">
+                    <div id="data-source-table">
+<table class="table-responsive table-sm">
     <thead>
       <tr>
         <th>Firstname</th>
         <th>Lastname</th>
+        <th>Email</th>
+        <th>Email</th>
+        <th>Email</th>
+        <th>Email</th>
+        <th>Email</th>
+        <th>Email</th>
+        <th>Email</th>
+        <th>Email</th>
         <th>Email</th>
       </tr>
     </thead>
@@ -70,15 +90,32 @@
         <td>John</td>
         <td>Doe</td>
         <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
       </tr>
       <tr>
         <td>Mary</td>
         <td>Moe</td>
-        <td>mary@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
+        <td>john@example.com</td>
       </tr>  
     </tbody>
   </table>
                 </div>
+
 
 
             </div><!-- /modal-body -->
