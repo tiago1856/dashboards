@@ -1,9 +1,9 @@
 {% load static %}
 
-<div class="row">
+    <div class="row">
 
         <div class="col-3">
-            <div class="form-group">
+            <div class="form-group non-editable-component">
                 <select class="form-control" id="dashboard-selection" name="dashboard-selection">
                     <option value="" style="display:none" selected>Selecione um Dashboard</option>
                 </select>
@@ -20,25 +20,25 @@
                 <button id="location-btn" class="btn btn-outline-secondary mr-4" type="button" data-toggle="tooltip" title="Selecionar localização">
                     <i class="fa fa-map-marked-alt"></i> 
                 </button>                
-                <button id="save-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Guardar">
+                <button id="save-btn" class="btn btn-outline-secondary mr-1 editable-component" type="button" data-toggle="tooltip" title="Guardar">
                     <i class="fa fa-save"></i> 
                 </button>
-                <button id="print-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Imprimir">
+                <button id="print-btn" class="btn btn-outline-secondary mr-1 non-editable-component" type="button" data-toggle="tooltip" title="Imprimir">
                     <i class="fa fa-print"></i> 
                 </button>
-                <button id="edit-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Editar dashboard">
+                <button id="edit-btn" class="btn btn-outline-secondary mr-1 non-editable-component" type="button" data-toggle="tooltip" title="Editar dashboard">
                     <i class="fa fa-pencil-alt"></i> 
                 </button>
-                <button id="edit-apply-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Aplicar alterações">
+                <button id="edit-apply-btn" class="btn btn-outline-secondary mr-1 editable-component" type="button" data-toggle="tooltip" title="Aplicar alterações">
                     <i class="fa fa-check"></i> 
                 </button>                
-                <button id="network-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Comunicação">
+                <button id="network-btn" class="btn btn-outline-secondary mr-1 editable-component" type="button" data-toggle="tooltip" title="Comunicação">
                     <i class="fa fa-project-diagram"></i> 
                 </button>
-                <button id="grid-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Escolher novo layout">
+                <button id="layout-choice-btn" class="btn btn-outline-secondary mr-1 editable-component" type="button" data-toggle="tooltip" title="Escolher novo layout">
                     <i class="fa fa-th"></i> 
                 </button>
-                <button id="delete-btn" class="btn btn-outline-danger mr-1" type="button" data-toggle="tooltip" title="Apagar">
+                <button id="delete-btn" class="btn btn-outline-danger mr-1 editable-component" type="button" data-toggle="tooltip" title="Apagar">
                     <i class="fa fa-trash"></i> 
                 </button>                
             </div><!-- /btn-group -->
@@ -46,4 +46,3 @@
         </div><!-- /col -->
     </div><!-- /row -->
 
-</div>

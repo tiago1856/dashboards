@@ -25,9 +25,9 @@ export class CollapsibleCard extends Div {
         card_tools.addClass('card-tools');
 
 
-        this.options_btn = new AwesomeIconAndButton('','fas fa-edit').attachTo(card_tools);
-        this.options_btn.addClass('btn btn-sm btn-danger editable-component');
-        this.options_btn.setAttribute('type','button');
+        const edit_btn = new AwesomeIconAndButton('','fas fa-edit').attachTo(card_tools);
+        edit_btn.addClass('btn btn-sm btn-danger editable-component');
+        edit_btn.setAttribute('type','button');
 
         this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
         this.options_btn.addClass('btn btn-sm');    // dropdown-toggle --- no caret

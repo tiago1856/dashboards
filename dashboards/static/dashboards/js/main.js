@@ -10,19 +10,22 @@ import { DataRangePicker } from './temporal/DataRangePicker.js';
 
 import { Layout } from './layouts/Layout.js';
 
+import { MSG_OVERRIDE_LAYOUT } from './constants.js';
 
 
 // -----------------
 // --- CONSTANTS ---
 // -----------------
 
-const MODALS_CONTAINER = document.getElementById('modals-container');
+const MODALS_CONTAINER = $('#modals-container');
+const SAVE_BTN = $('#save-btn');
 
+// ---------------------------
+// --- CONTEXT AND GLOBALS ---
+// ---------------------------
 
-// ---------------
-// --- CONTEXT ---
-// ---------------
 let context = new Context();
+let layout = null;
 
 
 // ------------------------------
@@ -33,20 +36,20 @@ let context = new Context();
 * Error modal.
 * Triggered by onError signal.
 */
-const error_modal = new ErrorModal().attachTo(MODALS_CONTAINER);
+const error_modal = new ErrorModal().attachTo(MODALS_CONTAINER[0]);
 
 /**
  * Are you sure modal.
  * Triggered by onAYS signal.
  */
-const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER);
+const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
 
 
 /**
  * Global warning modal.
  * Triggered by onWarning signal.
  */
- const warning_modal = new WarningModal().attachTo(MODALS_CONTAINER);
+ const warning_modal = new WarningModal().attachTo(MODALS_CONTAINER[0]);
 
 
 
@@ -67,22 +70,62 @@ context.signals.onWarning.add((text) => {
     warning_modal.show(text);
 });
 
+context.signals.onChanged.add(() => {
+    changeSaveStatus(true);
+});
+
+
+
+
+// ----------------
+// TOP ROW ACTIONS
+// ----------------
+
+// ENTER EDIT MODE
+$('#edit-btn').on('click',function() {
+    $('.editable-component').show();
+    $('.non-editable-component').hide();
+    context.edit_mode = true;
+})
+
+// EXIT EDIT MODE
+$('#edit-apply-btn').on('click',function() {
+    $('.editable-component').hide();
+    $('.non-editable-component').show();    
+    context.edit_mode = false;
+})
+
+$('#layout-choice-btn').on('click',function() {
+    $('#layout-selection-modal').show();   
+})
+
+// -------------
+// ACTIONS
+// -------------
+
+// NEW LAYOUT CHOICE
+$('.layout-choice').on('click', function(e) {
+    if (context.changed) {
+        context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
+            newLayout($(this).attr('data-id'));
+        });
+    } else {
+        newLayout($(this).attr('data-id'));
+    }
+});
 
 
 // -------------
-// SETUP
+// INIT
 // -------------
+
 
 const date_interval = new DataRangePicker('#daterange-btn', (start, end) => {
     $('#date-interval').html(start + ' - ' + end);
     context.date_start = start;
     context.date_end = end;  
     context.signals.onGlobalData.dispatch(start, end);
-  })
-
-// -------------
-// INIT
-// -------------
+})
 
 $(function(){
     // default date: last month
@@ -93,12 +136,28 @@ $(function(){
 });
 
 
-$('#edit-btn').on('click',function() {
+
+
+layout = new Layout(context, 'LA2');
+
+
+
+// -------------
+// SAVE BUTTON
+// -------------
+
+function changeSaveStatus(new_status) {
+    context.changed = new_status;
+    if (new_status) {
+        SAVE_BTN.removeClass('btn-outline-secondary').addClass('btn-danger');
+    } else {
+        SAVE_BTN.removeClass('btn-danger').addClass('btn-outline-secondary');
+    }
+}
+
+function newLayout(layout_id) {
+    $('#layout-selection-modal').hide();
+    $(layout.dom).remove();
+    layout = new Layout(context, layout_id, null);
     $('.editable-component').show();
-})
-$('#edit-apply-btn').on('click',function() {
-    $('.editable-component').hide();
-})
-
-
-const layout = new Layout(context, 'LE2');
+}

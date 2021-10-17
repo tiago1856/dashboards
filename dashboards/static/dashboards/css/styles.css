@@ -36,6 +36,10 @@
     display: none;
 }
 
+.non-editable-component {
+    display: inline;
+}
+
 /* *********************** */
 /*  LAYOUT CHOICE MODAL    */
 /* *********************** */

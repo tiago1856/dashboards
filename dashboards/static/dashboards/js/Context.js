@@ -12,11 +12,13 @@ export function Context() {
         onAYS: new Signal(),                    // are you sure
         onWarning: new Signal(),
 
+        onChanged: new Signal(),                // somethig changed => save button on
+
         onGlobalData: new Signal(),             // new temporal interval
 
     }
 
-    this.editing_mode = false;  // editor or presentation
+    this.edit_mode = false;  // editor or presentation
     this.dash_id = null;        // dashboard id
     this.name = null;           // dashboard name
     this.changed = false;       // indicates if there was any change (save system)

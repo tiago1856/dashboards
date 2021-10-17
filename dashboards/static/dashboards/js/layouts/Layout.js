@@ -1,22 +1,31 @@
 
 import { Div } from '../builders/BuildingBlocks.js';
 import { CollapsibleCard } from '../cards/CollapsibleCard.js';
-import { LAYOUTS } from './constants.js';
+import { LAYOUTS } from '../constants.js';
+import { LayoutTitle } from './LayoutTitle.js';
 
 
-const COMPONENTS_CONTAINER = document.getElementById('components-container');
-/*
-LE2: [
-    [[4,1],[4,1],[4,1]],
-    [[8,1],[4,2]],
-],
-*/
+
+const LAYOUT_CONTAINER = $('#layout-container');
+
+
+
 export class Layout extends Div {
-    constructor (context, layout_id) {
+    /**
+     * 
+     * @param {Context} context Context.
+     * @param {string} layout_id Layout ID (check constants.js).
+     * @param {object} data Data to restore the layout and all its components.
+     */
+    constructor (context, layout_id, data=null) {
         super();
         this.context = context;
+        this.attachTo(LAYOUT_CONTAINER[0]);
 
         const rows = LAYOUTS[layout_id];
+
+        const title = new LayoutTitle(context, data?data.title:null).attachTo(this);
+        
 
         let spot = 0
 
@@ -31,7 +40,7 @@ export class Layout extends Div {
                 }
             };
                         
-            const new_row = new Div({classes:['row']}).attachTo(COMPONENTS_CONTAINER);
+            const new_row = new Div({classes:['row']}).attachTo(this);
             row.forEach(col => {
 
                 const _col = new Div({classes:['col-md-' + col[0], 'mb-2']});
@@ -50,20 +59,7 @@ export class Layout extends Div {
 
         });
     }
-    /*
-    parse(_row, parent) {
-            const row = new Div({classes:['row mb-2']}).attachTo(parent);
-            _row.forEach(_size => {
-                if (typeof(_size) === 'number') {
-                    const place = new Div({classes:['col-' + _size]}).attachTo(row);
-                    new CollapsibleCard(this.context, 'XXX').attachTo(place);
-                } else {
-                    const place = new Div({classes:['col']}).attachTo(row)
-                    this.parse(_size, place);
-                }
-            });
-    }
-    */
+
 }
 
 
