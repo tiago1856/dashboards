@@ -44,7 +44,7 @@
                     </div>                    
                     <div class="col"> 
                         <div class="float-right">
-                            <button id="data-source-execute-btn" class="btn btn-outline-success btn-sm mr-1" type="button" data-toggle="tooltip" title="Execute query">
+                            <button id="data-source-execute-btn" disabled class="btn btn-outline-primary mr-1" type="button" data-toggle="tooltip" title="Execute query">
                                 <i class="fa fa-play"></i> 
                             </button>
                         </div>
@@ -59,14 +59,32 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-3 ml-2">
+                    <div class="col-4 ml-2">
                         <div class="form-group row">
                             <label for="data-source-lines" class="col-form-label">Numero de linhas: </label>
                             <div class="col">
                                 <input type="number" value="10" class="form-control" id="data-source-lines" aria-describedby="emailHelp">
                             </div>
                         </div>                        
-                    </div>   
+                    </div>
+
+                    <div class="col-4 ml-2">
+                        <div class="form-group row">
+                            <label for="data-source-lines" class="col-form-label">Campos a usar: </label>
+                            <div class="col">
+                                <select id="data-source-selected-fields" multiple="multiple">
+                                </select>
+                            </div>
+                        </div> 
+                    </div>
+
+                    <div class="col">
+                        <div class="btn-group float-right mt-1">
+                            <button id="data-source-excel-btn" disabled class="btn btn-outline-success mr-1" type="button" data-toggle="tooltip" title="Exportar tabela visivel para excel">
+                                <i class="fa fa-file-excel"></i> 
+                            </button>                         
+                        </div>
+                    </div>
                 </div>
 
                 

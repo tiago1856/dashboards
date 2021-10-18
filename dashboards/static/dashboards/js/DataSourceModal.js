@@ -7,6 +7,8 @@
 import { fetchGET, fetchPOST } from "./Fetch.js";
 import { URL_LIST_QUERIES, URL_EXEC_QUERY } from "./urls.js";
 import { BasicTable } from './builders/BasicTable.js';
+import { ExportTable2Excel } from './export/ExportTable2Excel.js';
+
 
 const QUERY_AREA = $('#data-source-query');
 const TABLE_AREA = $('#data-source-table');
@@ -17,7 +19,10 @@ const QUERY_SELECTION = $('#query-selection');
 const SAVE_BTN = $('#data-source-save-query-btn');
 const EDIT_BTN = $('#data-source-edit-query_btn');
 const DELETE_BTN = $('#data-source-delete-query_btn');
-
+const EXCEL_BTN = $('#data-source-excel-btn');
+const EXEC_QUERY = $('#data-source-execute-btn');
+const SELECTED_FIELDS = $('#data-source-selected-fields');
+const DEFAULT_MAX_LINE = 10;
 
 export function DataSourceModal(context) {
 
@@ -26,6 +31,13 @@ export function DataSourceModal(context) {
     let query_id = null;
     let original_query = null;
     this.new_query = false;
+    let table_id = null;
+
+    SELECTED_FIELDS.multiselect({enableFiltering: true,
+        includeSelectAllOption: true,
+        maxHeight: 200,
+        dropUp: true
+    });
 
     // ----------------
     // BUTTONS
@@ -39,6 +51,11 @@ export function DataSourceModal(context) {
     DELETE_BTN.on('click',function() {
     })
     
+    // EXPORT TABLE TO EXCEL
+    EXCEL_BTN.on('click',function() {
+        ExportTable2Excel(table_id,'xxx')
+    })
+
 
     // NEW QUERY
     $('#data-source-new-query-btn').on('click',function() {
@@ -51,7 +68,7 @@ export function DataSourceModal(context) {
     })
 
     // EXEC QUERY
-    $('#data-source-execute-btn').on('click',function() {
+    EXEC_QUERY.on('click',function() {
         $("body").css("cursor","progress");
         fetchPOST(URL_EXEC_QUERY,
             {
@@ -61,7 +78,18 @@ export function DataSourceModal(context) {
                 $("body").css("cursor","auto");
                 DATA_SOURCE_TABLE_ALERT.hide();
                 TABLE_AREA.empty();
-                new BasicTable(result, parseInt(NUMBER_LINES.val())).attachTo(TABLE_AREA.get(0));
+                SELECTED_FIELDS.empty();                
+
+                if (result.length == 0) return;                
+
+                Object.keys(result[0]).forEach(column => {
+                    SELECTED_FIELDS.append(self.createFieldItem(column, true));
+                });
+                SELECTED_FIELDS.multiselect('rebuild');
+
+                const table = new BasicTable(result, parseInt(NUMBER_LINES.val())).attachTo(TABLE_AREA.get(0));
+                table_id = table.getId();
+                EXCEL_BTN.removeAttr('disabled');
             },
             (error) => {
 				$("body").css("cursor","auto");
@@ -77,7 +105,16 @@ export function DataSourceModal(context) {
 
     // on modal show, fetch all available queries
     DATA_SOURCE_MODAL.on('show.bs.modal', function (e) {
+        DATA_SOURCE_TABLE_ALERT.show();
+        TABLE_AREA.empty();
+        SELECTED_FIELDS.empty();
+        SELECTED_FIELDS.multiselect('rebuild');
+        NUMBER_LINES.val(DEFAULT_MAX_LINE);
+
         self.fetchQueries();
+
+        QUERY_SELECTION.val('');
+        QUERY_SELECTION.trigger('change');
     })
 
     // on query selection
@@ -90,9 +127,12 @@ export function DataSourceModal(context) {
         if (query_id !== query_id) {
             EDIT_BTN.attr('disabled', true);
             DELETE_BTN.attr('disabled', true);
+            EXCEL_BTN.attr('disabled', true);
+            EXEC_QUERY.attr('disabled', true);
         } else {
             EDIT_BTN.removeAttr('disabled');
             DELETE_BTN.removeAttr('disabled');
+            EXEC_QUERY.removeAttr('disabled'); 
         }
     })
 
@@ -136,6 +176,14 @@ DataSourceModal.prototype = {
        if (selected) option.attr('selected', true);
        return option;
     },
+
+    createFieldItem : function(value, selected=false) {
+        const option = $('<option/>')
+        option.text(value);
+        option.attr('value', value);
+        if (selected) option.attr('selected', true);
+        return option;
+     },
 
     changeSaveStatus: function(new_status) {
         //context.changed = new_status;

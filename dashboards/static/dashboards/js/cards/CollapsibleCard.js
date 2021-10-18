@@ -25,6 +25,14 @@ export class CollapsibleCard extends Div {
         card_tools.addClass('card-tools');
 
 
+        const open_btn = new AwesomeIconAndButton('','fas fa-folder-open').attachTo(card_tools);
+        open_btn.addClass('btn btn-sm text-danger editable-component');
+        open_btn.setAttribute('type','button');
+
+        const save_btn = new AwesomeIconAndButton('','fas fa-save').attachTo(card_tools);
+        save_btn.addClass('btn btn-sm text-danger editable-component');
+        save_btn.setAttribute('type','button');
+
         const edit_btn = new AwesomeIconAndButton('','fas fa-edit').attachTo(card_tools);
         edit_btn.addClass('btn btn-sm text-danger editable-component');
         edit_btn.setAttribute('type','button');

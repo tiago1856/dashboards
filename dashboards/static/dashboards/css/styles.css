@@ -72,3 +72,13 @@
     transition: 200ms linear; 
 }
 
+/* *********************** */
+/*  TABLES    */
+/* *********************** */
+
+/* selected cell */
+.selected-cell {
+    background-color: blue;
+    color: white;
+}
+
