@@ -20,14 +20,16 @@
 
 <script src="{% static 'dashboards/plugins/adminlte/adminlte.min.js' %}"></script>
 <script type="module" src="{% static 'dashboards/js/main.js' %}"></script>
-<script type="module" src="{% static 'dashboards/js/datasource.js' %}"></script>
 
 <script>
-
-  $(document).ready(function(){
+/*
+  $(document).ready(function(){    
     $('[data-toggle="tooltip"]').tooltip({
       trigger : 'hover',
     });
+    $('[rel="tooltip"]').on('click', function () {
+        $(this).tooltip('hide')
+    })    
   });
-
+*/
 </script>

@@ -14,23 +14,26 @@
 
                 <div class="row">
                     <div class="col-4">
-                        <div class="form-group">
-                            <select class="form-control form-control" id="query-selection" name="query-selection">
-                                <option value="" style="display:none" selected>Selecione uma Query</option>
-                            </select>
+                        <div class="form-group">                        
+                            <select class="form-control" id="query-selection" name="query-selection">
+                                <option value="" name="default" selected>Selecione ou escreva uma Query</option>
+                            </select>                    
                         </div>
                     </div>
                     <div class="col-8">
                         <div class="btn-group float-right mt-1">
-                            <button id="data-source-save-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Guardar query">
+                            <button id="data-source-save-query-btn" disabled class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Guardar query">
                                 <i class="fa fa-save"></i> 
                             </button>
-                            <button id="data-source-new-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Nova query">
+                            <button id="data-source-new-query_btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Nova query">
                                 <i class="fa fa-plus"></i> 
                             </button>
-                            <button id="data-source-edit-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Editar query">
+                            <button id="data-source-edit-query_btn" disabled class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Editar query">
                                 <i class="fa fa-pencil-alt"></i> 
                             </button>
+                            <button id="data-source-delete-query_btn" disabled class="btn btn-outline-danger mr-1" type="button" data-toggle="tooltip" title="Apagar query">
+                                <i class="fa fa-trash"></i> 
+                            </button>                            
                         </div>
                     </div>
                 </div>
@@ -50,7 +53,7 @@
                 <div class="row">
                     <div class="col">
                         <div class="form-group">
-                            <textarea class="form-control" disabled id="data-source-query"></textarea>
+                            <textarea class="form-control" disabled id="data-source-query" name="data-source-query"></textarea>
                         </div> 
                     </div>
                 </div>
@@ -68,52 +71,12 @@
 
                 
 
-                    <div id="data-source-table">
-<table class="table-responsive table-sm">
-    <thead>
-      <tr>
-        <th>Firstname</th>
-        <th>Lastname</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-        <th>Email</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>John</td>
-        <td>Doe</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-      </tr>
-      <tr>
-        <td>Mary</td>
-        <td>Moe</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-        <td>john@example.com</td>
-      </tr>  
-    </tbody>
-  </table>
+                <div style="max-width : 100%; overflow-x: auto;">
+                    <div id="data-source-table-alert" class="alert alert-info text-center" role="alert">
+                        Execute uma query!
+                    </div>
+                    <div id="data-source-table" style="max-height : 50vh; overflow-y: auto;">
+                    </div>                    
                 </div>
 
 

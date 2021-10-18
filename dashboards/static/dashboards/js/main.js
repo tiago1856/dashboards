@@ -10,7 +10,7 @@ import {
     MSG_OVERRIDE_LAYOUT, 
     MSG_NO_SAVE 
 } from './messages.js';
-
+import { DataSourceModal } from './DataSourceModal.js';
 
 // -----------------
 // --- CONSTANTS ---
@@ -32,9 +32,10 @@ const PAGE_URL = '/dashboards';
 // --- CONTEXT AND GLOBALS ---
 // ---------------------------
 
-let context = new Context();
+const context = new Context();
 let layout = null;
 
+const datasourcemodal = new DataSourceModal(context);
 
 // ------------------------------
 // --- MAIN AND GLOBAL MODALS ---
@@ -177,7 +178,7 @@ $('.layout-choice').on('click', function(e) {
 DATA_SOURCE_SELECTION.on('click', function(e) {
     DATA_SOURCE_MODAL.modal('hide');
 });
-DATA_SOURCE_MODAL.modal('show');
+
 
 // -------------
 // INIT
@@ -203,6 +204,7 @@ $(function(){
 
 
 layout = new Layout(context, 'LA2');
+setTimeout(function(){ DATA_SOURCE_MODAL.modal('show');; }, 500);
 
 
 
