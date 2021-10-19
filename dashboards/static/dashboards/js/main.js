@@ -23,8 +23,8 @@ const DATA_SOURCE_MODAL = $('#data-source-modal');
 const DATE_INTERVAL = $('#date-interval');
 const DATA_SOURCE_SELECTION = $('#data-source-selection-ok-btn');
 
-const SELECTABLE_COMPINENTS = '.editable-component';
-const NON_SELECTABLE_COMPINENTS = '.non-editable-component';
+const SELECTABLE_COMPONENTS = '.editable-component';
+const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
 
 const PAGE_URL = '/dashboards';
 
@@ -96,8 +96,8 @@ context.signals.onEditComponent.add(() => {
 
 // ENTER EDIT MODE
 $('#edit-btn').on('click',function() {
-    $(SELECTABLE_COMPINENTS).show();
-    $(NON_SELECTABLE_COMPINENTS).hide();
+    $(SELECTABLE_COMPONENTS).show();
+    $(NON_SELECTABLE_COMPONENTS).hide();
     context.edit_mode = true;
 })
 
@@ -204,7 +204,7 @@ $(function(){
 
 
 layout = new Layout(context, 'LA2');
-setTimeout(function(){ DATA_SOURCE_MODAL.modal('show');; }, 500);
+//setTimeout(function(){ DATA_SOURCE_MODAL.modal('show');; }, 500);
 
 
 
@@ -222,8 +222,8 @@ function changeSaveStatus(new_status) {
 }
 
 function exitEditMode() {
-    $(SELECTABLE_COMPINENTS).hide();
-    $(NON_SELECTABLE_COMPINENTS).show();
+    $(SELECTABLE_COMPONENTS).hide();
+    $(NON_SELECTABLE_COMPONENTS).show();
 
     context.edit_mode = false;
 }
@@ -235,5 +235,5 @@ function onEditComponent() {
 function newLayout(layout_id) {
     $(layout.dom).remove();
     layout = new Layout(context, layout_id, null);
-    $(SELECTABLE_COMPINENTS).show();
+    $(SELECTABLE_COMPONENTS).show();
 }

@@ -11,6 +11,9 @@ export const WARNING_IMAGE = URL_IMAGES + 'dialogs/warning.png'; // image in War
 
 
 // === APIS ===
-
 export const URL_LIST_QUERIES = "/dashboards/api/list_queries/";
 export const URL_EXEC_QUERY = "/dashboards/api/exec_query/";
+export const URL_SAVE_QUERY = "/dashboards/api/save_query/";
+export const URL_DELETE_QUERY = "/dashboards/api/delete_query/";
+
+

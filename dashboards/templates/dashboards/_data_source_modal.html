@@ -16,7 +16,7 @@
                     <div class="col-4">
                         <div class="form-group">                        
                             <select class="form-control" id="query-selection" name="query-selection">
-                                <option value="" name="default" selected>Selecione ou escreva uma Query</option>
+                                <option value="" name="default" selected>Selecione ou crie uma Query nova</option>
                             </select>                    
                         </div>
                     </div>
@@ -25,18 +25,36 @@
                             <button id="data-source-save-query-btn" disabled class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Guardar query">
                                 <i class="fa fa-save"></i> 
                             </button>
-                            <button id="data-source-new-query_btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Nova query">
+                            <button id="data-source-new-query-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Nova query">
                                 <i class="fa fa-plus"></i> 
                             </button>
-                            <button id="data-source-edit-query_btn" disabled class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Editar query">
+                            <button id="data-source-edit-query-btn" disabled class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Editar query">
                                 <i class="fa fa-pencil-alt"></i> 
                             </button>
-                            <button id="data-source-delete-query_btn" disabled class="btn btn-outline-danger mr-1" type="button" data-toggle="tooltip" title="Apagar query">
+                            <button id="data-source-delete-query-btn" disabled class="btn btn-outline-danger mr-1" type="button" data-toggle="tooltip" title="Apagar query">
                                 <i class="fa fa-trash"></i> 
                             </button>                            
                         </div>
                     </div>
                 </div>
+
+                <div id="data-source-new-query-dialog" class="row mb-2" style="display: none;">
+                    <div class="col-3">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="data-source-new-query-name" placeholder="Nome da Query">
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group">
+                            <input type="text" class="form-control" id="data-source-new-query-description" placeholder="Descrição da Query">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <button id="data-source-new-query-save" disabled type="submit" class="btn btn-success"><i class="fa fa-save"></i> Gravar</button>
+                        <button id="data-source-new-query-cancel" type="submit" class="btn btn-warning"><i class="fa fa-times"></i> Cancelar</button>
+                    </div>
+                </div>
+
 
                 <div class="row">
                     <div class="col">
@@ -102,10 +120,14 @@
             </div><!-- /modal-body -->
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                <button type="button" id="data-source-selection-ok-btn" class="btn btn-primary">
-                <i class="fas fa-tv"></i>
-                  Visualização</button>
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                     Cancelar
+                </button>
+                <button type="button" id="data-source-modal-ok-btn" class="btn btn-primary">
+                    <i class="fas fa-tv"></i>
+                  Visualização
+                </button>
             </div> <!-- /modal-footer -->
 
         </div> <!-- /modal-content -->

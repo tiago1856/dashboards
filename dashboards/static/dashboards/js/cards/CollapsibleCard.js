@@ -28,61 +28,89 @@ export class CollapsibleCard extends Div {
         const open_btn = new AwesomeIconAndButton('','fas fa-folder-open').attachTo(card_tools);
         open_btn.addClass('btn btn-sm text-danger editable-component');
         open_btn.setAttribute('type','button');
+        open_btn.setAttribute('data-toggle','tooltip');
+        open_btn.setAttribute('title','Abrir component');
 
         const save_btn = new AwesomeIconAndButton('','fas fa-save').attachTo(card_tools);
         save_btn.addClass('btn btn-sm text-danger editable-component');
         save_btn.setAttribute('type','button');
+        save_btn.setAttribute('data-toggle','tooltip');
+        save_btn.setAttribute('title','Guardar component');
 
         const edit_btn = new AwesomeIconAndButton('','fas fa-edit').attachTo(card_tools);
         edit_btn.addClass('btn btn-sm text-danger editable-component');
         edit_btn.setAttribute('type','button');
+        edit_btn.setAttribute('data-toggle','tooltip');
+        edit_btn.setAttribute('title','Editar component');
+
+        const add_query_btn = new AwesomeIconAndButton('','fas fa-plus').attachTo(card_tools);
+        add_query_btn.addClass('btn btn-sm text-danger editable-component');
+        add_query_btn.setAttribute('type','button');
+        add_query_btn.setAttribute('data-toggle','tooltip');
+        add_query_btn.setAttribute('title','Adicionar Query');        
+
+        const add_template_btn = new AwesomeIconAndButton('','fas fa-calendar-plus').attachTo(card_tools);
+        add_template_btn.addClass('btn btn-sm text-danger editable-component');
+        add_template_btn.setAttribute('type','button');
+        add_template_btn.setAttribute('data-toggle','tooltip');
+        add_template_btn.setAttribute('title','Adicionar Template');
+
 
         this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
-        this.options_btn.addClass('btn btn-sm');    // dropdown-toggle --- no caret
+        this.options_btn.addClass('btn btn-sm non-editable-component');    // no dropdown-toggle --- no caret
         this.options_btn.setAttribute('type','button');
         this.options_btn.setAttribute('data-toggle','dropdown');
-        const ul = new Ul().attachTo(this.options_btn);
-        this.options_btn.setAttribute('role','menu');
-        ul.addClass('dropdown-menu');
+        this.options_btn.setAttribute('role','menu');       
+        const ul_options = new Ul().attachTo(this.options_btn);  
+        ul_options.addClass('dropdown-menu');
         new Item("11111",() => {
             console.log("1111111111111");
-        }).attachTo(ul);        
+        }).attachTo(ul_options);        
         new Item("2222",() => {
             console.log("222222222222");
-        }).attachTo(ul);
-        new Item(null, null, true).attachTo(ul);
+        }).attachTo(ul_options);
+        new Item(null, null, true).attachTo(ul_options);
         new Item("333333",() => {
             console.log("33333333333");
-        }).attachTo(ul);
+        }).attachTo(ul_options);
         new SubMenu('title',[
             {title:'title 1', selection: () => {console.log("title 1");}},
             {title:'title 2', selection: () => {console.log("title 2");}},
             {title:'title 3', selection: () => {console.log("title 3");}},
-        ]).attachTo(ul);
+        ]).attachTo(ul_options);
 
 
         const collapse_btn = new AwesomeIconAndButton('','fas fa-minus').attachTo(card_tools);
-        collapse_btn.addClass('btn btn-sm');
+        collapse_btn.addClass('btn btn-sm non-editable-component');
         collapse_btn.setAttribute('type','button');
         collapse_btn.setAttribute('data-card-widget','collapse');
+        collapse_btn.setAttribute('data-toggle','tooltip');
+        collapse_btn.setAttribute('title','Collapsar componente');
 
         const close_btn = new AwesomeIconAndButton('','fas fa-times').attachTo(card_tools);
-        close_btn.addClass('btn btn-sm');
+        close_btn.addClass('btn btn-sm non-editable-component');
         close_btn.setAttribute('type','button');
         close_btn.setAttribute('data-card-widget','remove');
-        
+        close_btn.setAttribute('data-toggle','tooltip');
+        close_btn.setAttribute('title','Remover componente');
 
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
 
-
-        $(edit_btn.dom).on('click',function() {
+        
+        $(add_query_btn.dom).on('click',function() {
           context.signals.onEditComponent.dispatch();
         });
         
+
+        $(edit_btn.dom).on('click',function() {
+          //context.signals.onEditComponent.dispatch();
+        });
+        /*
         $(this.options_btn.dom).on('click',function() {
             console.log("1111111111");
         })
+        */
         
         // necessary, otherwise only the contents collapse/show and not the box itself.
         const self = this;
