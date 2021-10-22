@@ -88,9 +88,7 @@ context.signals.onChanged.add(() => {
     changeSaveStatus(true);
 });
 
-context.signals.onEditComponent.add(() => {
-    onEditComponent(true);
-});
+
 
 
 
@@ -233,9 +231,7 @@ function exitEditMode() {
     context.edit_mode = false;
 }
 
-function onEditComponent() {
-    DATA_SOURCE_MODAL.modal('show');
-}
+
 
 function newLayout(layout_id) {
     $(layout.dom).remove();

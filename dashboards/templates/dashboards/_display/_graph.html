@@ -1,3 +1,76 @@
+{% load static %}
+
+<div id="display-modal-graph-accordion">
+
+  <div class="card p-0 m-0">
+    <div class="card-header p-0" id="display-modal-graph-type">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#display-modal-graph-collapseOne" aria-expanded="true" aria-controls="collapseOne">
+            <i class="fa fa-plus"></i> Tipo de Gráfico
+        </button>
+      </h5>
+    </div>
+    <div id="display-modal-graph-collapseOne" class="collapse show" aria-labelledby="display-modal-graph-type" data-parent="#display-modal-graph-accordion">
+      <div class="card-body">
+        <div class="row text-center">
+            <div class="col-1">
+                <button data-id="column" class="btn btn-outline-success p-0 m-0 display-modal-graph-type-selection-btn active">
+                    <img class="img-fluid" src="{% static 'dashboards/images/graphtypes/column.png' %}">
+                </button>
+            </div>
+            <div class="col-1">
+                <button data-id="bar" class="btn btn-outline-success p-0 m-0 display-modal-graph-type-selection-btn not-active">
+                    <img class="img-fluid" src="{% static 'dashboards/images/graphtypes/bar.png' %}">
+                </button>
+            </div>
+            <div class="col-1">
+                <button data-id="area" class="btn btn-outline-success p-0 m-0 display-modal-graph-type-selection-btn not-active">
+                    <img class="img-fluid" src="{% static 'dashboards/images/graphtypes/area.png' %}">
+                </button>
+            </div>
+            <div class="col-1">
+                <button data-id="line" class="btn btn-outline-success p-0 m-0 display-modal-graph-type-selection-btn not-active">
+                    <img class="img-fluid" src="{% static 'dashboards/images/graphtypes/line.png' %}">
+                </button>
+            </div>
+            <div class="col-1">
+                <button data-id="pie" class="btn btn-outline-success p-0 m-0 display-modal-graph-type-selection-btn not-active">
+                    <img class="img-fluid" src="{% static 'dashboards/images/graphtypes/pie.png' %}">
+                </button>
+            </div>               
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card p-0 m-0">
+    <div class="card-header p-0" id="display-modal-graph-data">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#display-modal-graph-collapseThree" aria-expanded="false" aria-controls="collapseThree">
+         <i class="fa fa-plus"></i>  Selecção dos Dados
+        </button>
+      </h5>
+    </div>
+    <div id="display-modal-graph-collapseThree" class="collapse" aria-labelledby="display-modal-graph-data" data-parent="#display-modal-graph-accordion">
+      <div class="card-body">
+        DATA
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="card p-0 m-0">
+    <div class="card-header p-0" id="display-modal-graph-elements">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#display-modal-graph-collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+         <i class="fa fa-plus"></i> Elementos
+        </button>
+      </h5>
+    </div>
+    <div id="display-modal-graph-collapseTwo" class="collapse" aria-labelledby="display-modal-graph-display" data-parent="#display-modal-graph-accordion">
+      <div class="card-body">
+
 
         <div class="row">
             <div class="col-8">
@@ -67,7 +140,7 @@
                             </label>
                         </div>
                         <div class="form-check form-check-inline">
-                            <input class="form-check-input" type="radio" name="display-modal-graph-legend-position" id="display-modal-graph-legend-right" value="right">
+                            <input class="form-check-input" type="radio" name="display-modal-graph-legend-position" id="display-modal-graph-legend-right" value="right" checked>
                             <label class="form-check-label" for="display-modal-graph-legend-right">Direita
                             </label>
                         </div>
@@ -85,3 +158,11 @@
                 </div> <!-- /row -->
             </div> <!-- /col-4 -->
         </div> <!-- /row-->     
+
+
+      </div>
+    </div>
+  </div>
+
+
+</div>

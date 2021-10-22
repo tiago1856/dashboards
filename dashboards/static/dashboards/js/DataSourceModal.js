@@ -45,10 +45,18 @@ export function DataSourceModal(context) {
     this.new_query = false;
     this.table_id = null;
 
+    
     SELECTED_FIELDS.multiselect({enableFiltering: true,
         includeSelectAllOption: true,
         maxHeight: 200,
         dropUp: true
+    });
+
+
+
+    context.signals.onEditComponent.add((spot) => {
+        DATA_SOURCE_MODAL.modal('show');
+        console.log("data source > ", self.context.layout.components[spot]);
     });
 
     // ----------------
@@ -173,6 +181,7 @@ export function DataSourceModal(context) {
             NEW_QUERY_SAVE_BTN.attr('disabled', true);
         }
     });
+
 
 }
 

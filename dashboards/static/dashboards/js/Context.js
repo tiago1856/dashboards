@@ -19,13 +19,14 @@ export function Context() {
 
     }
 
-    this.edit_mode = false;  // editor or presentation
+    this.edit_mode = false;     // editor or presentation
     this.dash_id = null;        // dashboard id
     this.name = null;           // dashboard name
     this.changed = false;       // indicates if there was any change (save system)
     this.date_start = null;
     this.date_end = null;
 
+    this.layout = null;         // => layout and components accessible everywhere
 
     // ready
     this.signals.onStuffDone.add((msg) => console.log("Log message > ", msg));

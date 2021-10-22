@@ -14,7 +14,7 @@
 
                 <ul class="nav nav-tabs" id="display-modal-tab" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" id="display-modal-table-tab" data-toggle="tab" href="#display-modal-table" role="tab" aria-controls="display-modal-table"
+                        <a class="nav-link" id="display-modal-table-tab" data-toggle="tab" href="#display-modal-table" role="tab" aria-controls="display-modal-table"
                         aria-selected="true"> <i class="fa fa-table"></i> Tabela</a>
                     </li>
                     <li class="nav-item">
@@ -26,7 +26,7 @@
                         aria-selected="false"><i class="fa fa-border-alt"></i> Matrix</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="display-modal-graph-tab" data-toggle="tab" href="#display-modal-graph" role="tab" aria-controls="display-modal-graph"
+                        <a class="nav-link active" id="display-modal-graph-tab" data-toggle="tab" href="#display-modal-graph" role="tab" aria-controls="display-modal-graph"
                         aria-selected="true"><i class="fa fa-chart-bar"></i> Gráfico</a>
                     </li>
                     <li class="nav-item">
@@ -44,7 +44,7 @@
                 </ul>
 
 <div class="tab-content" id="display-modal-tabcontent">
-    <div class="tab-pane fade show active" id="display-modal-table" role="tabpanel" aria-labelledby="display-modal-table-tab">
+    <div class="tab-pane fade" id="display-modal-table" role="tabpanel" aria-labelledby="display-modal-table-tab">
         <h1>TABELA</h1>
     </div>
     <div class="tab-pane fade" id="display-modal-list" role="tabpanel" aria-labelledby="display-modal-list-tab">
@@ -55,7 +55,7 @@
     </div>
 
 
-    <div class="tab-pane fade" id="display-modal-graph" role="tabpanel" aria-labelledby="display-modal-graph-tab">
+    <div class="tab-pane fade show active" id="display-modal-graph" role="tabpanel" aria-labelledby="display-modal-graph-tab">
 
         <br>
         {% include 'dashboards/_display/_graph.html' %}            

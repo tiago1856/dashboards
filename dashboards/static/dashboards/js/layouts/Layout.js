@@ -1,6 +1,6 @@
 
 import { Div } from '../builders/BuildingBlocks.js';
-import { CollapsibleCard } from '../cards/CollapsibleCard.js';
+import { Component } from '../components/Component.js';
 import { LAYOUTS } from '../constants.js';
 import { LayoutTitle } from './LayoutTitle.js';
 
@@ -22,11 +22,11 @@ export class Layout extends Div {
         this.context = context;
         this.attachTo(LAYOUT_CONTAINER[0]);
 
-        const layout = {title: null, components: {}};
+        context.layout = {title: null, components: {}};
 
         const rows = LAYOUTS[layout_id];
 
-        layout.title = new LayoutTitle(context, data?data.title:null).attachTo(this);
+        context.layout.title = new LayoutTitle(context, data?data.title:null).attachTo(this);
         
 
         let spot = 0
@@ -48,11 +48,11 @@ export class Layout extends Div {
                 const _col = new Div({classes:['col-md-' + col[0], 'mb-2']});
                 _col.attachTo(new_row);
                 if (col[1] === 1 && h100) {
-                    layout.components[spot] = new CollapsibleCard(this.context, spot, 'XXX', true, 'primary').attachTo(_col);
+                    context.layout.components[spot] = new Component(this.context, spot, 'XXX', true, 'primary').attachTo(_col);
                     spot++;
                 } else {
                     for (let i=0; i < col[1]; i++) {                        
-                        layout.components[spot] = new CollapsibleCard(this.context, spot, 'XXX', false, 'light').attachTo(_col);
+                        context.layout.components[spot] = new Component(this.context, spot, 'XXX', false, 'light').attachTo(_col);
                         spot++;
                     }
                 }
@@ -61,7 +61,7 @@ export class Layout extends Div {
 
         });
 
-        console.log(layout);
+        console.log(context.layout);
     }
 
 }

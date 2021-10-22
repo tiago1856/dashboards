@@ -1,26 +1,31 @@
 
 import { Div, AwesomeIconAndButton, Text, Ul, Li, Link} from '../builders/BuildingBlocks.js';
-
+import { ComponentData } from './ComponentData.js';
 /**
  * 
  */
-export class CollapsibleCard extends Div {
+export class Component extends Div {
     constructor(context, spot, _title=null, h100 = false, color_scheme = 'light') {
         super(context);
-        this.addClass('CollapsibleCard card mb-1');
+        this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
+        
+        this.data = { ...ComponentData};
+
         this.spot = spot;
+        this.data.spot = this.spot;
+
         //if (vh100) this.setStyle('min-height','100%');
         if (h100) this.addClass('full-height');
 
-        this.context = context;
+        this.context = context;   
 
         const header = new Div().attachTo(this);
-        header.addClass('card-header py-1 px-2');
-       
+        header.addClass('card-header py-1 px-2');       
         
-        this.title = new Text(_title).attachTo(header);
+        this.title = new Text().attachTo(header);
         this.title.addClass('card-title');
+        this.setTitle(_title);
         
         const card_tools = new Div().attachTo(header);
         card_tools.addClass('card-tools');
@@ -80,6 +85,11 @@ export class CollapsibleCard extends Div {
         ]).attachTo(ul_options);
 
 
+        const print_btn = new AwesomeIconAndButton('','fas fa-print').attachTo(card_tools);
+        print_btn.addClass('btn btn-sm non-editable-component');
+        print_btn.setAttribute('type','button');
+        print_btn.setAttribute('data-toggle','tooltip');
+        print_btn.setAttribute('title','Ampliar componente');
 
         const zoom_btn = new AwesomeIconAndButton('','fas fa-search-plus').attachTo(card_tools);
         zoom_btn.addClass('btn btn-sm non-editable-component');
@@ -106,7 +116,7 @@ export class CollapsibleCard extends Div {
 
         
         $(add_query_btn.dom).on('click',function() {
-          context.signals.onEditComponent.dispatch();
+          context.signals.onEditComponent.dispatch(self.spot);
         });
         
 
@@ -153,10 +163,16 @@ export class CollapsibleCard extends Div {
     }
 
     setTitle(_title) {
-      if (_title)
+      if (_title) {
         this.title.setTextContent(_title);
-      else
+        this.data.title = _title;
+      } else {
         this.title.dom.innerHTML = '<span style="color: red;">Titulo não definido!</span>';
+      }
+    }
+
+    getComponentData() {
+      return this.data;
     }
 }
 
