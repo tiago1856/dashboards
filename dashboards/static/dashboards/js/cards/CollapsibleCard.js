@@ -5,10 +5,11 @@ import { Div, AwesomeIconAndButton, Text, Ul, Li, Link} from '../builders/Buildi
  * 
  */
 export class CollapsibleCard extends Div {
-    constructor(context, _title=null, h100 = false, color_scheme = 'light') {
+    constructor(context, spot, _title=null, h100 = false, color_scheme = 'light') {
         super(context);
         this.addClass('CollapsibleCard card mb-1');
         this.addClass('card-' + color_scheme);
+        this.spot = spot;
         //if (vh100) this.setStyle('min-height','100%');
         if (h100) this.addClass('full-height');
 
@@ -55,7 +56,6 @@ export class CollapsibleCard extends Div {
         add_template_btn.setAttribute('data-toggle','tooltip');
         add_template_btn.setAttribute('title','Adicionar Template');
 
-
         this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
         this.options_btn.addClass('btn btn-sm non-editable-component');    // no dropdown-toggle --- no caret
         this.options_btn.setAttribute('type','button');
@@ -79,6 +79,13 @@ export class CollapsibleCard extends Div {
             {title:'title 3', selection: () => {console.log("title 3");}},
         ]).attachTo(ul_options);
 
+
+
+        const zoom_btn = new AwesomeIconAndButton('','fas fa-search-plus').attachTo(card_tools);
+        zoom_btn.addClass('btn btn-sm non-editable-component');
+        zoom_btn.setAttribute('type','button');
+        zoom_btn.setAttribute('data-toggle','tooltip');
+        zoom_btn.setAttribute('title','Ampliar componente');
 
         const collapse_btn = new AwesomeIconAndButton('','fas fa-minus').attachTo(card_tools);
         collapse_btn.addClass('btn btn-sm non-editable-component');

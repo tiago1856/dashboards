@@ -1,0 +1,101 @@
+{% load static %}
+
+<!-- DATA SOURCE MODAL -->
+<div class="modal" id="display-modal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Visualização</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div><!-- /modal-header -->
+
+            <div class="modal-body" id="display-modal-accordion"> 
+
+                <ul class="nav nav-tabs" id="display-modal-tab" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link active" id="display-modal-table-tab" data-toggle="tab" href="#display-modal-table" role="tab" aria-controls="display-modal-table"
+                        aria-selected="true"> <i class="fa fa-table"></i> Tabela</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="display-modal-list-tab" data-toggle="tab" href="#display-modal-list" role="tab" aria-controls="display-modal-list"
+                        aria-selected="false"> <i class="fa fa-bars"></i> Lista</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="display-modal-matrix-tab" data-toggle="tab" href="#display-modal-matrix" role="tab" aria-controls="display-modal-matrix"
+                        aria-selected="false"><i class="fa fa-border-alt"></i> Matrix</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="display-modal-graph-tab" data-toggle="tab" href="#display-modal-graph" role="tab" aria-controls="display-modal-graph"
+                        aria-selected="true"><i class="fa fa-chart-bar"></i> Gráfico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="display-modal-graph3axis-tab" data-toggle="tab" href="#display-modal-graph3axis" role="tab" aria-controls="display-modal-graph3axis"
+                        aria-selected="false"><i class="fa fa-cube"></i> Gráfico 3 Eixos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="display-modal-geo-tab" data-toggle="tab" href="#display-modal-geo" role="tab" aria-controls="display-modal-geo"
+                        aria-selected="false"><i class="fa fa-map-marked"></i> Geográfico</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="display-modal-info-tab" data-toggle="tab" href="#display-modal-info" role="tab" aria-controls="display-modal-info"
+                        aria-selected="false"><i class="fa fa-info"></i> Informativo</a>
+                    </li>
+                </ul>
+
+<div class="tab-content" id="display-modal-tabcontent">
+    <div class="tab-pane fade show active" id="display-modal-table" role="tabpanel" aria-labelledby="display-modal-table-tab">
+        <h1>TABELA</h1>
+    </div>
+    <div class="tab-pane fade" id="display-modal-list" role="tabpanel" aria-labelledby="display-modal-list-tab">
+        <h1>list</h1>
+    </div>
+    <div class="tab-pane fade" id="display-modal-matrix" role="tabpanel" aria-labelledby="display-modal-matrix-tab">
+        <h1>matrix</h1>
+    </div>
+
+
+    <div class="tab-pane fade" id="display-modal-graph" role="tabpanel" aria-labelledby="display-modal-graph-tab">
+
+        <br>
+        {% include 'dashboards/_display/_graph.html' %}            
+
+    </div> <!-- tab-pane -->
+
+    <div class="tab-pane fade" id="display-modal-graph3axis" role="tabpanel" aria-labelledby="display-modal-graph3axis-tab">
+        
+        <br>
+        {% include 'dashboards/_display/_graph3axis.html' %}  
+
+    </div> <!-- /tab-pane -->
+
+
+    <div class="tab-pane fade" id="display-modal-geo" role="tabpanel" aria-labelledby="display-modal-geo-tab">
+        <h1>geo</h1>
+    </div>
+    <div class="tab-pane fade" id="display-modal-info" role="tabpanel" aria-labelledby="display-modal-info-tab">
+        <h1>info</h1>
+    </div>                    
+
+
+            </div><!-- /modal-body -->
+
+            <div class="modal-footer">
+                <button type="button" id="data-source-modal-ok-btn" class="btn btn-success mr-auto">
+                    <i class="fas fa-arrow-left"></i>
+                  Fonte de Dados
+                </button>
+
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                     Cancelar
+                </button>
+                <button type="button" id="data-source-modal-ok-btn" class="btn btn-primary">
+                    <i class="fas fa-check"></i>
+                  Ok
+                </button>                
+            </div> <!-- /modal-footer -->
+
+        </div> <!-- /modal-content -->
+    </div><!-- /modal-dialog -->
+</div>

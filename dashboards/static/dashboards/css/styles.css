@@ -82,3 +82,27 @@
     color: white;
 }
 
+
+/* *********************** */
+/*  DISPLAY MODAL    */
+/* *********************** */
+
+.display-modal-type-selection-btn { 
+   /* color: #333;
+    width: auto;
+    text-align: center;
+    padding: 0 10px;
+    background: #f0f0f0;
+    line-height: 1.5em;
+    height: auto;*/
+}
+
+.display-modal-type-selection-btn.active {
+    background: #ea0000 !important;
+    color: #fff !important;
+    opacity: 1.0;
+}
+
+.display-modal-type-selection-btn.not-active {
+    opacity: 0.5;
+}

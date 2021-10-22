@@ -22,9 +22,11 @@ export class Layout extends Div {
         this.context = context;
         this.attachTo(LAYOUT_CONTAINER[0]);
 
+        const layout = {title: null, components: {}};
+
         const rows = LAYOUTS[layout_id];
 
-        const title = new LayoutTitle(context, data?data.title:null).attachTo(this);
+        layout.title = new LayoutTitle(context, data?data.title:null).attachTo(this);
         
 
         let spot = 0
@@ -46,11 +48,11 @@ export class Layout extends Div {
                 const _col = new Div({classes:['col-md-' + col[0], 'mb-2']});
                 _col.attachTo(new_row);
                 if (col[1] === 1 && h100) {
-                    new CollapsibleCard(this.context, 'XXX', true, 'primary').attachTo(_col);
+                    layout.components[spot] = new CollapsibleCard(this.context, spot, 'XXX', true, 'primary').attachTo(_col);
                     spot++;
                 } else {
-                    for (let i=0; i < col[1]; i++) {
-                        new CollapsibleCard(this.context, 'XXX', false, 'light').attachTo(_col);
+                    for (let i=0; i < col[1]; i++) {                        
+                        layout.components[spot] = new CollapsibleCard(this.context, spot, 'XXX', false, 'light').attachTo(_col);
                         spot++;
                     }
                 }
@@ -58,6 +60,8 @@ export class Layout extends Div {
             });
 
         });
+
+        console.log(layout);
     }
 
 }

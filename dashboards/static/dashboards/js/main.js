@@ -11,6 +11,7 @@ import {
     MSG_NO_SAVE 
 } from './messages.js';
 import { DataSourceModal } from './DataSourceModal.js';
+import { DisplayModal } from './DisplayModal.js';
 
 // -----------------
 // --- CONSTANTS ---
@@ -20,6 +21,7 @@ const MODALS_CONTAINER = $('#modals-container');
 const SAVE_BTN = $('#save-btn');
 const LAYOUT_SELECTION_MODAL = $('#layout-selection-modal');
 const DATA_SOURCE_MODAL = $('#data-source-modal');
+const DISPLAY_MODAL = $('#display-modal');
 const DATE_INTERVAL = $('#date-interval');
 const DATA_SOURCE_SELECTION = $('#data-source-selection-ok-btn');
 
@@ -36,6 +38,9 @@ const context = new Context();
 let layout = null;
 
 const datasourcemodal = new DataSourceModal(context);
+const displaymodal = new DisplayModal(context);
+
+
 
 // ------------------------------
 // --- MAIN AND GLOBAL MODALS ---
@@ -205,7 +210,7 @@ $(function(){
 
 layout = new Layout(context, 'LA2');
 //setTimeout(function(){ DATA_SOURCE_MODAL.modal('show');; }, 500);
-
+DISPLAY_MODAL.modal('show');
 
 
 // -------------

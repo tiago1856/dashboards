@@ -43,7 +43,7 @@ export function DataSourceModal(context) {
     let query_id = null;
     let original_query = null;
     this.new_query = false;
-    let table_id = null;
+    this.table_id = null;
 
     SELECTED_FIELDS.multiselect({enableFiltering: true,
         includeSelectAllOption: true,
@@ -69,7 +69,7 @@ export function DataSourceModal(context) {
     
     // EXPORT TABLE TO EXCEL
     EXCEL_BTN.on('click',function() {
-        ExportTable2Excel(table_id,'xxx')
+        ExportTable2Excel(this.table_id,'xxx')
     })
 
 
@@ -81,6 +81,8 @@ export function DataSourceModal(context) {
         NEW_QUERY_NAME.val('');
         NEW_QUERY_DESCRIPTION.val('');
         NEW_QUERY_DIALOG.show();
+
+        self.changeSaveStatus(false);
     })
 
     // EDIT QUERY
@@ -91,7 +93,7 @@ export function DataSourceModal(context) {
 
     // EXEC QUERY
     EXEC_QUERY.on('click',function() {
-        this.execQuery();
+        self.execQuery();
     })
 
     // save new query name/descr
@@ -284,7 +286,7 @@ DataSourceModal.prototype = {
                 SELECTED_FIELDS.multiselect('rebuild');
 
                 const table = new BasicTable(result, parseInt(NUMBER_LINES.val())).attachTo(TABLE_AREA.get(0));
-                table_id = table.getId();
+                this.table_id = table.getId();
                 EXCEL_BTN.removeAttr('disabled');
             },
             (error) => {
