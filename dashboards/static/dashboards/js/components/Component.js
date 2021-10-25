@@ -43,23 +43,23 @@ export class Component extends Div {
         save_btn.setAttribute('data-toggle','tooltip');
         save_btn.setAttribute('title','Guardar component');
 
-        const edit_btn = new AwesomeIconAndButton('','fas fa-edit').attachTo(card_tools);
-        edit_btn.addClass('btn btn-sm text-danger editable-component');
-        edit_btn.setAttribute('type','button');
-        edit_btn.setAttribute('data-toggle','tooltip');
-        edit_btn.setAttribute('title','Editar component');
+        const display_btn = new AwesomeIconAndButton('','fas fa-tv').attachTo(card_tools);
+        display_btn.addClass('btn btn-sm text-danger editable-component');
+        display_btn.setAttribute('type','button');
+        display_btn.setAttribute('data-toggle','tooltip');
+        display_btn.setAttribute('title','Editar visualização');
 
         const add_query_btn = new AwesomeIconAndButton('','fas fa-plus').attachTo(card_tools);
         add_query_btn.addClass('btn btn-sm text-danger editable-component');
         add_query_btn.setAttribute('type','button');
         add_query_btn.setAttribute('data-toggle','tooltip');
-        add_query_btn.setAttribute('title','Adicionar Query');        
+        add_query_btn.setAttribute('title','Nova/Editar Query');        
 
         const add_template_btn = new AwesomeIconAndButton('','fas fa-calendar-plus').attachTo(card_tools);
         add_template_btn.addClass('btn btn-sm text-danger editable-component');
         add_template_btn.setAttribute('type','button');
         add_template_btn.setAttribute('data-toggle','tooltip');
-        add_template_btn.setAttribute('title','Adicionar Template');
+        add_template_btn.setAttribute('title','Novo/Editar Template');
 
         this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
         this.options_btn.addClass('btn btn-sm non-editable-component');    // no dropdown-toggle --- no caret
@@ -89,7 +89,7 @@ export class Component extends Div {
         print_btn.addClass('btn btn-sm non-editable-component');
         print_btn.setAttribute('type','button');
         print_btn.setAttribute('data-toggle','tooltip');
-        print_btn.setAttribute('title','Ampliar componente');
+        print_btn.setAttribute('title','Imprimir componente');
 
         const zoom_btn = new AwesomeIconAndButton('','fas fa-search-plus').attachTo(card_tools);
         zoom_btn.addClass('btn btn-sm non-editable-component');
@@ -120,14 +120,6 @@ export class Component extends Div {
         });
         
 
-        $(edit_btn.dom).on('click',function() {
-          //context.signals.onEditComponent.dispatch();
-        });
-        /*
-        $(this.options_btn.dom).on('click',function() {
-            console.log("1111111111");
-        })
-        */
         
         // necessary, otherwise only the contents collapse/show and not the box itself.
         const self = this;
