@@ -88,6 +88,9 @@ context.signals.onChanged.add(() => {
     changeSaveStatus(true);
 });
 
+context.signals.onTest.add((msg) => {
+    console.log("TEST TEST TEST ", msg);
+});
 
 
 
@@ -102,6 +105,7 @@ $('#edit-btn').on('click',function() {
     $(SELECTABLE_COMPONENTS).show();
     $(NON_SELECTABLE_COMPONENTS).hide();
     context.edit_mode = true;
+    console.log("xxxxxxxxxxxxxxxx");
 })
 
 // EXIT EDIT MODE
@@ -121,7 +125,7 @@ $('#open-btn').on('click',function() {
 
 // NEW LAYOUT
 $('#layout-choice-btn').on('click',function() {
-    LAYOUT_SELECTION_MODAL.show();   
+    LAYOUT_SELECTION_MODAL.modal('show')
 })
 
 
@@ -171,9 +175,11 @@ $('.layout-choice').on('click', function(e) {
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
             newLayout($(this).attr('data-id'));
+            $('#edit-btn').trigger('click');
         });
     } else {
         newLayout($(this).attr('data-id'));
+        $('#edit-btn').trigger('click');
     }
 });
 
@@ -208,7 +214,7 @@ $(function(){
 
 layout = new Layout(context, 'LA2');
 //setTimeout(function(){ DATA_SOURCE_MODAL.modal('show');; }, 500);
-DISPLAY_MODAL.modal('show');
+//DISPLAY_MODAL.modal('show');
 
 
 // -------------

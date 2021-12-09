@@ -8,7 +8,7 @@
 /* ********************** */
 
 .sub-menu-right.dropdown-submenu > .dropdown-menu {
-    left: -100% !important;
+    left: -150% !important;
     right: 100% !important;
 }
 
@@ -26,7 +26,6 @@
     padding-bottom: 0 !important;
     padding-top: 0 !important;
 }
-
 
 
 

@@ -24,7 +24,7 @@ def dashboards(request):
    return render(request,'dashboards/dashboards.html')
 
 
-@login_required
+#@login_required
 @api_view(["GET"])
 def list_queries(request):
    """Lists all queries."""
@@ -43,7 +43,7 @@ def list_queries(request):
 
 
 
-@login_required
+#@login_required
 @api_view(["POST"])
 def exec_query(request):
    """Executes a query."""
@@ -61,7 +61,7 @@ def exec_query(request):
 
 
 
-@login_required
+#@login_required
 @api_view(["POST"])
 def save_query(request):
    """Saves a Query."""
@@ -80,7 +80,7 @@ def save_query(request):
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-@login_required
+#@login_required
 @api_view(["POST"])
 def delete_query(request):
    """Deletes a query."""

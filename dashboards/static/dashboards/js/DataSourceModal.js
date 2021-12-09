@@ -33,6 +33,10 @@ const NEW_QUERY_DIALOG = $("#data-source-new-query-dialog");
 const NEW_QUERY_NAME = $('#data-source-new-query-name');
 const NEW_QUERY_DESCRIPTION = $('#data-source-new-query-description');
 const NEW_QUERY_SAVE_BTN = $("#data-source-new-query-save");
+const DISPLAY_MODAL = $('#display-modal');
+const VISUALIZATION_BUTTON = $('#data-source-modal-ok-btn');
+
+
 
 const DEFAULT_MAX_LINE = 10;
 
@@ -62,6 +66,11 @@ export function DataSourceModal(context) {
     // ----------------
     // BUTTONS
     // ----------------
+
+    VISUALIZATION_BUTTON.on('click',function() {
+        DATA_SOURCE_MODAL.modal('hide');
+        DISPLAY_MODAL.modal('show');
+    })
 
     // SAVE QUERY
     SAVE_BTN.on('click',function() {

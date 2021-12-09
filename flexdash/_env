@@ -1,0 +1,7 @@
+SECRET_KEY='5e8xxqe=i2qz)4)%vdm!69*rh^)!uinhctbai%6%5sbabp4to9'
+DEBUG=True
+
+
+FLEXDASH_URL=mysql://root:kh12321@127.0.0.1:3306/flexdash
+WORLD_URL=mysql://root:kh12321@127.0.0.1:3306/world
+

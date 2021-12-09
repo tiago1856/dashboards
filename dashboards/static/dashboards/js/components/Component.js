@@ -1,6 +1,18 @@
 
 import { Div, AwesomeIconAndButton, Text, Ul, Li, Link} from '../builders/BuildingBlocks.js';
 import { ComponentData } from './ComponentData.js';
+
+/*
+import { ItemsGraph } from './items/ItemsGraph.js';
+import { ItemsCommon } from './items/ItemsCommon.js';
+*/
+import { G1 } from  '../temp_graphs/g1.js';
+import { G2 } from  '../temp_graphs/g2.js';
+import { G3 } from  '../temp_graphs/g3.js';
+import { G4 } from  '../temp_graphs/g4.js';
+import { G5 } from  '../temp_graphs/g5.js';
+
+
 /**
  * 
  */
@@ -61,13 +73,40 @@ export class Component extends Div {
         add_template_btn.setAttribute('data-toggle','tooltip');
         add_template_btn.setAttribute('title','Novo/Editar Template');
 
+        const delete_btn = new AwesomeIconAndButton('','fas fa-trash').attachTo(card_tools);
+        delete_btn.addClass('btn btn-sm text-danger editable-component');
+        delete_btn.setAttribute('type','button');
+        delete_btn.setAttribute('data-toggle','tooltip');
+        delete_btn.setAttribute('title','Apagar Componente');        
+
+        this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
+        this.options_btn.addClass('btn btn-sm non-editable-component');
+        this.options_btn.setAttribute('type','button');
+        this.options_btn.setAttribute('data-toggle','tooltip');
+        this.options_btn.setAttribute('title','Configuração'); 
+
+        /*
         this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
         this.options_btn.addClass('btn btn-sm non-editable-component');    // no dropdown-toggle --- no caret
         this.options_btn.setAttribute('type','button');
         this.options_btn.setAttribute('data-toggle','dropdown');
         this.options_btn.setAttribute('role','menu');       
+        
         const ul_options = new Ul().attachTo(this.options_btn);  
         ul_options.addClass('dropdown-menu');
+        const graph_items = {...ItemsGraph};
+        const common_items = {...ItemsCommon};
+        const items = Object.assign(common_items, graph_items);
+        for (const group in items) {    
+          const _items = [];
+          for (const item in items[group]) {
+            console.log(group, item);
+            _items.push({title: item, selection: () => {context.componentsItems.onTest.dispatch(item);}});
+          }
+          new SubMenu(group, _items).attachTo(ul_options);
+        }
+        */
+        /*
         new Item("11111",() => {
             console.log("1111111111111");
         }).attachTo(ul_options);        
@@ -83,6 +122,7 @@ export class Component extends Div {
             {title:'title 2', selection: () => {console.log("title 2");}},
             {title:'title 3', selection: () => {console.log("title 3");}},
         ]).attachTo(ul_options);
+        */
 
 
         const print_btn = new AwesomeIconAndButton('','fas fa-print').attachTo(card_tools);
@@ -114,9 +154,32 @@ export class Component extends Div {
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
 
+ 
+        const n = Math.floor(Math.random() * 5);
+        console.log(n);
+        switch (n) {
+          case 0:
+            new G1(uuidv4()).attachTo(this.body);
+            break;
+          case 1:
+            new G2(uuidv4()).attachTo(this.body);
+            break;
+          case 2:
+            new G3(uuidv4()).attachTo(this.body);
+            break;
+          case 3:
+            new G4(uuidv4()).attachTo(this.body);
+            break;
+          case 4:
+            new G5(uuidv4()).attachTo(this.body);
+            break;           
+        }
+
+
         
         $(add_query_btn.dom).on('click',function() {
           context.signals.onEditComponent.dispatch(self.spot);
+          //context.componentsItems.onTest.dispatch(self.spot);
         });
         
 

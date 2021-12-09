@@ -1,8 +1,8 @@
 {% load static %}
 
 <!-- LAYOUT SELECTION MODAL -->
-<div class="modal" id="layout-selection-modal" tabindex="-1">
-    <div class="modal-dialog">
+<div class="modal" id="layout-selection-modal" tabindex="-1"  role="dialog" aria-labelledby="data-source-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -10,8 +10,8 @@
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div><!-- /modal-header -->
 
-            <div class="modal-body">
-                <div class="row">
+            <div class="modal-body ">
+                <div class="row clearfix">
                     <div class="col">
                         <img src="{% static 'dashboards/images/layouts/LA1.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="LA1">
                     </div>
@@ -83,14 +83,21 @@
                     </div>
                     <div class="col">
                         <img src="{% static 'dashboards/images/layouts/LC12.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="LC12">
-                    </div>                                                                                
+                    </div>
+                    <!--
                     <div class="col">
                         <img src="{% static 'dashboards/images/layouts/LD1.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="LD1">
                     </div>  
                     <div class="col">
                         <img src="{% static 'dashboards/images/layouts/LD2.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="LD2">
                     </div>          
+                    -->                    
                 </div><!-- /row -->
+                <div class="row">
+                    <div class="col-12">
+                        <img src="{% static 'dashboards/images/layouts/user_defined.png' %}" class="img-fluid rounded m-2" style="width: 100%;" data-id="LD2">
+                    </div>          
+                </div>
             </div><!-- /modal-body -->
 
             <div class="modal-footer">            
