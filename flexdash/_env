@@ -3,5 +3,5 @@ DEBUG=True
 
 
 FLEXDASH_URL=mysql://root:kh12321@127.0.0.1:3306/flexdash
-WORLD_URL=mysql://root:kh12321@127.0.0.1:3306/world
+#WORLD_URL=mysql://root:kh12321@127.0.0.1:3306/world
 

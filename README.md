@@ -9,6 +9,11 @@
 Use the **/flexdash/_env** example to create a **.env** file with the correct settings.
 
 
+## Databases
+
+Create the database *flexdash* and set the username, password and port in the *.env* file.
+
+
 ## Installation
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install the necessary packages.

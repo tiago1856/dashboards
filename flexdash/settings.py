@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'flexdash.wsgi.application'
 
 DATABASES = {
     'default': env.db('FLEXDASH_URL'),
-    'world': env.db('WORLD_URL'),
+    #'world': env.db('WORLD_URL'),
 }
 
 
