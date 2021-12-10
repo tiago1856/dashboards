@@ -171,7 +171,7 @@ $('#swap-btn').on('click',function() {
 
 // NEW LAYOUT CHOICE
 $('.layout-choice').on('click', function(e) {
-    LAYOUT_SELECTION_MODAL.hide();
+    LAYOUT_SELECTION_MODAL.modal('hide');
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
             newLayout($(this).attr('data-id'));

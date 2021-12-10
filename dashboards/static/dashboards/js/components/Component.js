@@ -85,46 +85,6 @@ export class Component extends Div {
         this.options_btn.setAttribute('data-toggle','tooltip');
         this.options_btn.setAttribute('title','Configuração'); 
 
-        /*
-        this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
-        this.options_btn.addClass('btn btn-sm non-editable-component');    // no dropdown-toggle --- no caret
-        this.options_btn.setAttribute('type','button');
-        this.options_btn.setAttribute('data-toggle','dropdown');
-        this.options_btn.setAttribute('role','menu');       
-        
-        const ul_options = new Ul().attachTo(this.options_btn);  
-        ul_options.addClass('dropdown-menu');
-        const graph_items = {...ItemsGraph};
-        const common_items = {...ItemsCommon};
-        const items = Object.assign(common_items, graph_items);
-        for (const group in items) {    
-          const _items = [];
-          for (const item in items[group]) {
-            console.log(group, item);
-            _items.push({title: item, selection: () => {context.componentsItems.onTest.dispatch(item);}});
-          }
-          new SubMenu(group, _items).attachTo(ul_options);
-        }
-        */
-        /*
-        new Item("11111",() => {
-            console.log("1111111111111");
-        }).attachTo(ul_options);        
-        new Item("2222",() => {
-            console.log("222222222222");
-        }).attachTo(ul_options);
-        new Item(null, null, true).attachTo(ul_options);
-        new Item("333333",() => {
-            console.log("33333333333");
-        }).attachTo(ul_options);
-        new SubMenu('title',[
-            {title:'title 1', selection: () => {console.log("title 1");}},
-            {title:'title 2', selection: () => {console.log("title 2");}},
-            {title:'title 3', selection: () => {console.log("title 3");}},
-        ]).attachTo(ul_options);
-        */
-
-
         const print_btn = new AwesomeIconAndButton('','fas fa-print').attachTo(card_tools);
         print_btn.addClass('btn btn-sm non-editable-component');
         print_btn.setAttribute('type','button');
@@ -153,8 +113,9 @@ export class Component extends Div {
 
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
+        this.body.addClass('list1');
 
- 
+        /*
         const n = Math.floor(Math.random() * 5);
         console.log(n);
         switch (n) {
@@ -174,7 +135,7 @@ export class Component extends Div {
             new G5(uuidv4()).attachTo(this.body);
             break;           
         }
-
+        */
 
         
         $(add_query_btn.dom).on('click',function() {
@@ -233,7 +194,7 @@ export class Component extends Div {
 
 
       
-
+/*
 
 class SubMenu extends Li {
     constructor(title, subitems) {
@@ -292,3 +253,4 @@ class Item extends Li {
       
     }
 }
+*/
