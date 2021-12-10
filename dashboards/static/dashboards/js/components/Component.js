@@ -113,7 +113,17 @@ export class Component extends Div {
 
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
-        this.body.addClass('list1');
+        
+
+        const n = Math.floor(Math.random() * 2);
+        switch (n) {
+          case 0:
+            this.body.addClass('list1');
+            break;
+          case 1:
+            this.body.addClass('list2');
+            break;
+        }
 
         /*
         const n = Math.floor(Math.random() * 5);
