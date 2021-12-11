@@ -58,10 +58,11 @@ export class Layout extends Div {
                 }
 
             });
-
+            /*
             $.getScript('/static/framework/js/main.3147c80c.js', function() {
-                console.log("111111111");
+                console.log("REACT SCRIPT INJECTED");
             });
+            */
 
         });
 

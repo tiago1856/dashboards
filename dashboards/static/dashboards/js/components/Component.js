@@ -114,14 +114,17 @@ export class Component extends Div {
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
         
+        
+        const id = uuidv4();
+        this.body.setId(id);
 
         const n = Math.floor(Math.random() * 2);
         switch (n) {
           case 0:
-            this.body.addClass('list1');
+            this.context.message_broker.postMessage({operation:'create_component', type:'list1', id: id});
             break;
           case 1:
-            this.body.addClass('list2');
+            this.context.message_broker.postMessage({operation:'create_component', type:'list2', id: id});
             break;
         }
 

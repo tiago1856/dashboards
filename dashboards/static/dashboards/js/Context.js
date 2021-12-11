@@ -56,6 +56,9 @@ export function Context() {
 
     this.layout = null;         // => layout and components accessible everywhere
 
+
+    this.message_broker = new BroadcastChannel('react_channel');
+
     // ready
     this.signals.onStuffDone.add((msg) => console.log("Log message > ", msg));
 
