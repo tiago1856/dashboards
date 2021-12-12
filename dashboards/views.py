@@ -69,7 +69,10 @@ def save_query(request):
       try:
          name = request.data.get('query_name')
          description = request.data.get('query_description')
-         query = Query(name=name, author=request.user, description = description)
+         if request.user.is_authenticated:
+            query = Query(name=name, author=request.user, description = description)
+         else:
+            query = Query(name=name, description = description)
          query.save()
          serializer = QuerySerializer(query)
          return Response(serializer.data, status=status.HTTP_200_OK)

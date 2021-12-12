@@ -47,6 +47,11 @@ python manage.py makemigrations
 python manage.py migrate
 ```
 
+Since this is an incomplete Django project, i.e., no login page and such, if you need to authenticate,
+do it as Admin. So login in [http://127.0.0.1:8000/admin/](http://127.0.0.1:8000/admin/) before going to any place
+that requires authentication.
+
+
 ## Execution
 
 ```bash
