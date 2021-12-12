@@ -2,16 +2,6 @@
 import { Div, AwesomeIconAndButton, Text, Ul, Li, Link} from '../builders/BuildingBlocks.js';
 import { ComponentData } from './ComponentData.js';
 
-/*
-import { ItemsGraph } from './items/ItemsGraph.js';
-import { ItemsCommon } from './items/ItemsCommon.js';
-*/
-import { G1 } from  '../temp_graphs/g1.js';
-import { G2 } from  '../temp_graphs/g2.js';
-import { G3 } from  '../temp_graphs/g3.js';
-import { G4 } from  '../temp_graphs/g4.js';
-import { G5 } from  '../temp_graphs/g5.js';
-
 
 /**
  * 
@@ -114,10 +104,10 @@ export class Component extends Div {
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
         
-        
+        // set a random id for this component
         const id = uuidv4();
         this.body.setId(id);
-
+        // randomly select and send message to the framework to create a graph 
         const n = Math.floor(Math.random() * 2);
         switch (n) {
           case 0:
@@ -127,28 +117,6 @@ export class Component extends Div {
             this.context.message_broker.postMessage({operation:'create_component', type:'list2', id: id});
             break;
         }
-
-        /*
-        const n = Math.floor(Math.random() * 5);
-        console.log(n);
-        switch (n) {
-          case 0:
-            new G1(uuidv4()).attachTo(this.body);
-            break;
-          case 1:
-            new G2(uuidv4()).attachTo(this.body);
-            break;
-          case 2:
-            new G3(uuidv4()).attachTo(this.body);
-            break;
-          case 3:
-            new G4(uuidv4()).attachTo(this.body);
-            break;
-          case 4:
-            new G5(uuidv4()).attachTo(this.body);
-            break;           
-        }
-        */
 
         
         $(add_query_btn.dom).on('click',function() {
@@ -204,66 +172,3 @@ export class Component extends Div {
       return this.data;
     }
 }
-
-
-      
-/*
-
-class SubMenu extends Li {
-    constructor(title, subitems) {
-      super();
-      this.addClass('dropdown-submenu sub-menu-right')
-      const link = new Link().attachTo(this);
-      link.addClass('dropdown-item dropdown-toggle');
-
-      //link.setAttribute('href','#');
-      link.setTextContent(title);
-      const ul = new Ul().attachTo(this);
-      ul.addClass('dropdown-menu');
-      subitems.forEach(item => {
-        new Item(item.title, item.selection).attachTo(ul);
-      })
-      
-      $(link.dom).on('click', function(e) {
-          var submenu = $(this);
-          $('.dropdown-submenu .dropdown-menu').removeClass('show');
-          submenu.next('.dropdown-menu').addClass('show');
-          e.stopPropagation();
-      });
-      $(link.dom).hover(function(e) {
-        var submenu = $(this);
-        $('.dropdown-submenu .dropdown-menu').removeClass('show');
-        submenu.next('.dropdown-menu').addClass('show');
-        e.stopPropagation();
-      });
-      
-    }
-  }
-
-// <li class="divider"></li>
-
-class Item extends Li {
-    constructor(title, onSelection, isDivider = false) {
-        super();        
-        if (isDivider) {
-            this.addClass('dropdown-divider');
-            return;
-        }
-        this.addClass('dropdown-item');
-        const link = new Link().attachTo(this);
-        //link.addClass('text-danger');
-        link.setTextContent(title);  
-        $(link.dom).on('click',function() {
-            if (onSelection) onSelection();
-        })
-        
-        $(link.dom).hover(function(e) {
-            var submenu = $(this);
-            if (!submenu.parent().parent().parent().hasClass('dropdown-submenu')) {
-            $('.dropdown-submenu .dropdown-menu').removeClass('show');
-            }      
-        });
-      
-    }
-}
-*/

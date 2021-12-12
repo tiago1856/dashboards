@@ -14,6 +14,7 @@ import {
 import { BasicTable } from './builders/BasicTable.js';
 import { ExportTable2Excel } from './export/ExportTable2Excel.js';
 import { MSG_DELETE_QUERY } from './messages.js';
+import { getAllNumbers } from './utils/jsutils.js';
 
 
 const QUERY_AREA = $('#data-source-query');
@@ -209,7 +210,11 @@ DataSourceModal.prototype = {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[dtasource::DATA_SOURCE_MODAL.on('show.bs.modal')]");
+                if (getAllNumbers(error.toString())[0] == 500)
+                    this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!");
+                else
+                    this.context.signals.onError.dispatch(error,"[dtasource::DATA_SOURCE_MODAL.on('show.bs.modal')]");
+                
             }
         );
     },
@@ -259,7 +264,11 @@ DataSourceModal.prototype = {
             },
             (error) => {
 				$("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[DataSourceModal::saveQuery");
+                if (getAllNumbers(error.toString())[0] == 500)
+                    this.context.signals.onError.dispatch("Problemas com a base de dados ou utilizador não identificado!");
+                else
+                    this.context.signals.onError.dispatch(error,"[DataSourceModal::saveQuery]");
+                                
             }
         )
     },
@@ -279,7 +288,7 @@ DataSourceModal.prototype = {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[DataSourceModal::deleteQuery");
+                this.context.signals.onError.dispatch(error,"[DataSourceModal::deleteQuery");              
             }
         )
     },
