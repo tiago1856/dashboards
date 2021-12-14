@@ -113,7 +113,7 @@ export class Component extends Div {
           case 0:
             this.context.message_broker.postMessage({
               operation:'create_component', 
-              type:'1-numerical', 
+              //type:'1-numerical', 
               id: id,
               data: data_1,
             });
@@ -121,7 +121,7 @@ export class Component extends Div {
           case 1:
             this.context.message_broker.postMessage({
               operation:'create_component', 
-              type:'1-numerical', 
+              //type:'1-numerical', 
               id: id,
               data: data_2,
             });
@@ -129,7 +129,7 @@ export class Component extends Div {
           case 2:
             this.context.message_broker.postMessage({
               operation:'create_component', 
-              type:'1-numerical', 
+              //type:'1-numerical', 
               id: id,
               data: data_3,
             });            
