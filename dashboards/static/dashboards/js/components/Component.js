@@ -1,7 +1,7 @@
 
-import { Div, AwesomeIconAndButton, Text, Ul, Li, Link} from '../builders/BuildingBlocks.js';
+import { Div, AwesomeIconAndButton, Text } from '../builders/BuildingBlocks.js';
 import { ComponentData } from './ComponentData.js';
-
+import { data_1, data_2, data_3 } from './temp_data.js';
 
 /**
  * 
@@ -108,15 +108,42 @@ export class Component extends Div {
         const id = uuidv4();
         this.body.setId(id);
         // randomly select and send message to the framework to create a graph 
-        const n = Math.floor(Math.random() * 2);
+        const n = Math.floor(Math.random() * 3);
         switch (n) {
           case 0:
-            this.context.message_broker.postMessage({operation:'create_component', type:'list1', id: id});
+            this.context.message_broker.postMessage({
+              operation:'create_component', 
+              type:'1-numerical', 
+              id: id,
+              data: data_1,
+            });
             break;
           case 1:
-            this.context.message_broker.postMessage({operation:'create_component', type:'list2', id: id});
+            this.context.message_broker.postMessage({
+              operation:'create_component', 
+              type:'1-numerical', 
+              id: id,
+              data: data_2,
+            });
+            break;
+          case 2:
+            this.context.message_broker.postMessage({
+              operation:'create_component', 
+              type:'1-numerical', 
+              id: id,
+              data: data_3,
+            });            
             break;
         }
+
+        $(this.options_btn.dom).on('click',function() {
+          self.context.message_broker.postMessage({
+            operation:'show_options', 
+            id: id,
+          }); 
+        });
+        
+
 
         
         $(add_query_btn.dom).on('click',function() {
