@@ -50,7 +50,7 @@ def exec_query(request):
    if request.method == 'POST' or 'query' not in request.data:
          try:
             with connection.cursor() as cursor:
-               cursor.execute(request.data.get('query'))
+               cursor.execute(request.data.get('query') + " limit " + request.data.get('lines'))
                results = dictfetchall(cursor)
                return Response(data=results, status=status.HTTP_200_OK)
          except Exception as e:
@@ -69,10 +69,11 @@ def save_query(request):
       try:
          name = request.data.get('query_name')
          description = request.data.get('query_description')
+         query = request.data.get('query')
          if request.user.is_authenticated:
-            query = Query(name=name, author=request.user, description = description)
+            query = Query(name=name, author=request.user, description = description, query = query)
          else:
-            query = Query(name=name, description = description)
+            query = Query(name=name, description = description, query = query)
          query.save()
          serializer = QuerySerializer(query)
          return Response(serializer.data, status=status.HTTP_200_OK)

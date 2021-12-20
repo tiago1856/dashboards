@@ -7,7 +7,7 @@ import { data_1, data_2, data_3 } from './temp_data.js';
  * 
  */
 export class Component extends Div {
-    constructor(context, spot, _title=null, h100 = false, color_scheme = 'light') {
+    constructor(context, spot, _title=null, h100 = false, color_scheme = 'light', id=null) {
         super(context);
         this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
@@ -81,7 +81,7 @@ export class Component extends Div {
         print_btn.setAttribute('data-toggle','tooltip');
         print_btn.setAttribute('title','Imprimir componente');
 
-        const zoom_btn = new AwesomeIconAndButton('','fas fa-search-plus').attachTo(card_tools);
+        const zoom_btn = new AwesomeIconAndButton('','fas fa-expand-arrows-alt').attachTo(card_tools);
         zoom_btn.addClass('btn btn-sm non-editable-component');
         zoom_btn.setAttribute('type','button');
         zoom_btn.setAttribute('data-toggle','tooltip');
@@ -104,16 +104,16 @@ export class Component extends Div {
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
         
-        // set a random id for this component
-        const id = uuidv4();
+        // set a random id for this component's body if none is provided
+        if (!id) id = uuidv4();
         this.body.setId(id);
+
         // randomly select and send message to the framework to create a graph 
         const n = Math.floor(Math.random() * 3);
         switch (n) {
           case 0:
             this.context.message_broker.postMessage({
               operation:'create_component', 
-              //type:'1-numerical', 
               id: id,
               data: data_1,
             });
@@ -121,7 +121,6 @@ export class Component extends Div {
           case 1:
             this.context.message_broker.postMessage({
               operation:'create_component', 
-              //type:'1-numerical', 
               id: id,
               data: data_2,
             });
@@ -129,7 +128,6 @@ export class Component extends Div {
           case 2:
             this.context.message_broker.postMessage({
               operation:'create_component', 
-              //type:'1-numerical', 
               id: id,
               data: data_3,
             });            
@@ -144,11 +142,12 @@ export class Component extends Div {
         });
         
 
-
+        $(zoom_btn.dom).on('click',function() {
+          context.signals.onZoomComponent.dispatch(self.spot);
+        });
         
         $(add_query_btn.dom).on('click',function() {
           context.signals.onEditComponent.dispatch(self.spot);
-          //context.componentsItems.onTest.dispatch(self.spot);
         });
         
 
@@ -162,13 +161,18 @@ export class Component extends Div {
                 self.removeClass('full-height');                
               });
               
-            } else {            
+            } else {
               $(self.dom).animate({height: '100%'}, 'slow', () => {
                 self.addClass('full-height');
               });              
             }
           });
-        }       
+        }
+
+      context.signals.onGlobalData.add((start, end) => {
+          console.log("[" + id + "] new date > ", start, end);
+      });
+      
     }
 
     getBody() {

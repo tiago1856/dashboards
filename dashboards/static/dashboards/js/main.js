@@ -21,6 +21,7 @@ const MODALS_CONTAINER = $('#modals-container');
 const SAVE_BTN = $('#save-btn');
 const LAYOUT_SELECTION_MODAL = $('#layout-selection-modal');
 const DATA_SOURCE_MODAL = $('#data-source-modal');
+const ZOOM_MODAL = $('#zoom-modal');
 const DISPLAY_MODAL = $('#display-modal');
 const DATE_INTERVAL = $('#date-interval');
 const DATA_SOURCE_SELECTION = $('#data-source-selection-ok-btn');
@@ -88,11 +89,9 @@ context.signals.onChanged.add(() => {
     changeSaveStatus(true);
 });
 
-context.signals.onTest.add((msg) => {
-    console.log("TEST TEST TEST ", msg);
+context.signals.onZoomComponent.add((msg) => {
+    ZOOM_MODAL.modal('show');
 });
-
-
 
 
 

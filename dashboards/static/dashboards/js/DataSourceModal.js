@@ -93,14 +93,7 @@ export function DataSourceModal(context) {
 
     // NEW QUERY
     NEW_QUERY_BUTTON.on('click',function() {
-        QUERY_SELECTION.val('');
-        QUERY_SELECTION.trigger('change');
-
-        NEW_QUERY_NAME.val('');
-        NEW_QUERY_DESCRIPTION.val('');
-        NEW_QUERY_DIALOG.show();
-
-        self.changeSaveStatus(false);
+        self.newQuery(QUERY_SELECTION.val() !== '');
     })
 
     // EDIT QUERY
@@ -142,6 +135,7 @@ export function DataSourceModal(context) {
         SELECTED_FIELDS.empty();
         SELECTED_FIELDS.multiselect('rebuild');
         NUMBER_LINES.val(DEFAULT_MAX_LINE);
+        SAVE_BTN.attr('disabled',true);
 
         self.fetchQueries();
 
@@ -157,7 +151,8 @@ export function DataSourceModal(context) {
         QUERY_AREA.val(original_query);
         // if NaN => no choice => disable edit
         if (query_id !== query_id) {
-            EDIT_BTN.attr('disabled', true);
+            //EDIT_BTN.attr('disabled', true);
+            EDIT_BTN.removeAttr('disabled');
             DELETE_BTN.attr('disabled', true);
             EXCEL_BTN.attr('disabled', true);
             EXEC_QUERY.attr('disabled', true);
@@ -196,6 +191,19 @@ export function DataSourceModal(context) {
 }
 
 DataSourceModal.prototype = {
+
+    newQuery: function(deleteQuery = true) {
+        if (deleteQuery) {
+            QUERY_SELECTION.val('');
+            QUERY_SELECTION.trigger('change');
+        }
+
+        NEW_QUERY_NAME.val('');
+        NEW_QUERY_DESCRIPTION.val('');
+        NEW_QUERY_DIALOG.show();
+
+        this.changeSaveStatus(false);
+    },
 
     fetchQueries: function() {
         $("body").css("cursor","progress");
@@ -238,6 +246,8 @@ DataSourceModal.prototype = {
      },
 
     changeSaveStatus: function(new_status) {
+        // not save if no query selected
+        if (QUERY_SELECTION.val() === '') return;;
         //context.changed = new_status;
         this.new_query = new_status;
         if (new_status) {
@@ -255,6 +265,7 @@ DataSourceModal.prototype = {
             {
                 query_name: NEW_QUERY_NAME.val(),
                 query_description: NEW_QUERY_DESCRIPTION.val(),
+                query: QUERY_AREA.val(),
             },
             (result) => {
                 $("body").css("cursor","auto");
@@ -298,6 +309,7 @@ DataSourceModal.prototype = {
         fetchPOST(URL_EXEC_QUERY,
             {
                 query: QUERY_AREA.val(),
+                lines: NUMBER_LINES.val(),
             },
             (result) => {
                 $("body").css("cursor","auto");
