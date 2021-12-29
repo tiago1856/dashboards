@@ -13,13 +13,15 @@ export class LayoutTitle extends Div {
      * Constructor.
      * @param {Context} context Context.
      * @param {string} _title Dashboard Title.
+     * @param {function} onTitleChanged Called when title is set/changed.
      */
-    constructor(context, _title = null) {
+    constructor(context, _title = null, onTitleChanged = null) {
         super();
 
         const self = this;
         this.value = null;
         this.context = context;
+        this.onTitleChanged = onTitleChanged;
 
         this.addClass('LayoutTitle');
         this.addClass('row');
@@ -57,7 +59,8 @@ export class LayoutTitle extends Div {
             this.title.dom.innerHTML = NO_TITLE_DEFINED;
             this.value = null;
         }
-        this.context.name = this.value;
+        if (this.onTitleChanged) this.onTitleChanged(this.value);
+        //this.context.name = this.value;
     }
 
     getTitle() {

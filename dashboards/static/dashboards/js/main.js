@@ -10,36 +10,48 @@ import {
     MSG_OVERRIDE_LAYOUT, 
     MSG_NO_SAVE 
 } from './messages.js';
-import { DataSourceModal } from './DataSourceModal.js';
-import { DisplayModal } from './DisplayModal.js';
+import { EditComponentModal } from './EditComponentModal.js';
 
 // -----------------
 // --- CONSTANTS ---
 // -----------------
 
 const MODALS_CONTAINER = $('#modals-container');
-const SAVE_BTN = $('#save-btn');
 const LAYOUT_SELECTION_MODAL = $('#layout-selection-modal');
-const DATA_SOURCE_MODAL = $('#data-source-modal');
-const ZOOM_MODAL = $('#zoom-modal');
-const DISPLAY_MODAL = $('#display-modal');
 const DATE_INTERVAL = $('#date-interval');
-const DATA_SOURCE_SELECTION = $('#data-source-selection-ok-btn');
 
-const SELECTABLE_COMPONENTS = '.editable-component';
-const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
+const ZOOM_MODAL = $('#zoom-modal');
+const SAVE_BTN = $('#save-btn');
+const EDIT_BTN = $('#edit-btn');
+const EDIT_APPLY_BTN = $('#edit-apply-btn');
+const OPEN_DASHBOARD_BTN = $('#open-btn');
+const DISPLAY_LAYOUT_MODAL = $('#layout-choice-btn');
+const LOCATION_BTN = $('#location-btn');
+const PRINT_BTN = $('#print-btn');
+const NEW_BTN = $('#new-btn');
+const CONNECTIONS_BTN = $('#network-btn');
+const DELETE_BTN = $('#delete-btn');
+const SWAP_BTN = $('#swap-btn');
 
 const PAGE_URL = '/dashboards';
+const SELECTABLE_COMPONENTS = '.editable-component';
+const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
+const DATARANGE_BTN_ID = '#daterange-btn';
+const LAYOUT_CHOICE = '.layout-choice';
 
 // ---------------------------
 // --- CONTEXT AND GLOBALS ---
 // ---------------------------
 
+/**
+ * THE CONTEXT - USED AS A GLOBAL OBJECT
+ */
 const context = new Context();
-let layout = null;
 
-const datasourcemodal = new DataSourceModal(context);
-const displaymodal = new DisplayModal(context);
+/**
+ * HOLDS THE CURRENT LAYOUT
+ */
+let layout = null;
 
 
 
@@ -48,21 +60,27 @@ const displaymodal = new DisplayModal(context);
 // ------------------------------
 
 /**
-* Error modal.
-* Triggered by onError signal.
+ * EDIT COMPONENT MODAL
+ */
+const edit_component_modal = new EditComponentModal(context);
+
+
+/**
+* ERROR MODAL.
+* TRIGGERED BY THE ONERROR SIGNAL.
 */
 const error_modal = new ErrorModal().attachTo(MODALS_CONTAINER[0]);
 
 /**
- * Are you sure modal.
- * Triggered by onAYS signal.
+ * ARE YOU SURE MODAL.
+ * TRIGGERED BY THE ONAYS SIGNAL.
  */
 const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
 
 
 /**
- * Global warning modal.
- * Triggered by onWarning signal.
+ * WARNING MODAL.
+ * TRIGGERED BY THE ONWARNING SIGNAL.
  */
  const warning_modal = new WarningModal().attachTo(MODALS_CONTAINER[0]);
 
@@ -93,22 +111,24 @@ context.signals.onZoomComponent.add((msg) => {
     ZOOM_MODAL.modal('show');
 });
 
-
+context.signals.onEditComponent.add((spot) => {
+    const component = layout.getComponentAt(spot);
+    edit_component_modal.show(component.data);
+});
 
 // ----------------
 // TOP ROW ACTIONS
 // ----------------
 
-// ENTER EDIT MODE
-$('#edit-btn').on('click',function() {
+// ENTERS EDIT MODE
+EDIT_BTN.on('click',function() {
     $(SELECTABLE_COMPONENTS).show();
     $(NON_SELECTABLE_COMPONENTS).hide();
     context.edit_mode = true;
-    console.log("xxxxxxxxxxxxxxxx");
 })
 
-// EXIT EDIT MODE
-$('#edit-apply-btn').on('click',function() {
+// EXITS EDIT MODE
+EDIT_APPLY_BTN.on('click',function() {
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_NO_SAVE, () => {
             exitEditMode()
@@ -118,30 +138,29 @@ $('#edit-apply-btn').on('click',function() {
     }
 })
 
-// OPEN DASHBOARD
-$('#open-btn').on('click',function() {
+// OPENS DASHBOARD
+OPEN_DASHBOARD_BTN.on('click',function() {
 })
 
 // NEW LAYOUT
-$('#layout-choice-btn').on('click',function() {
+DISPLAY_LAYOUT_MODAL.on('click',function() {
     LAYOUT_SELECTION_MODAL.modal('show')
 })
 
-
 // NEW GLOBAL LOCATION
-$('#location-btn').on('click',function() {
+LOCATION_BTN.on('click',function() {
 });
 
 // PRINT DASHBOARD
-$('#print-btn').on('click',function() {
+PRINT_BTN.on('click',function() {
 });
 
 // SAVE DASHBOARD
-$('#save-btn').on('click',function() {
+SAVE_BTN.on('click',function() {
 });
 
 // NEW DASHBOARD
-$('#new-btn').on('click',function() {
+NEW_BTN.on('click',function() {
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_NO_SAVE, () => {
             window.location.replace(PAGE_URL);   
@@ -153,15 +172,15 @@ $('#new-btn').on('click',function() {
 
 
 // SET COMPONENTS CONNECTORS
-$('#network-btn').on('click',function() {
+CONNECTIONS_BTN.on('click',function() {
 });
 
 // DELETE CURRENT DASHBOARD
-$('#delete-btn').on('click',function() {
+DELETE_BTN.on('click',function() {
 });
 
 // SWAP COMPONENTS POSITION
-$('#swap-btn').on('click',function() {
+SWAP_BTN.on('click',function() {
 });
 
 // -------------
@@ -169,23 +188,19 @@ $('#swap-btn').on('click',function() {
 // -------------
 
 // NEW LAYOUT CHOICE
-$('.layout-choice').on('click', function(e) {
+$(LAYOUT_CHOICE).on('click', function(e) {
     LAYOUT_SELECTION_MODAL.modal('hide');
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
             newLayout($(this).attr('data-id'));
-            $('#edit-btn').trigger('click');
+            EDIT_BTN.trigger('click');
         });
     } else {
         newLayout($(this).attr('data-id'));
-        $('#edit-btn').trigger('click');
+        EDIT_BTN.trigger('click');
     }
 });
 
-
-DATA_SOURCE_SELECTION.on('click', function(e) {
-    DATA_SOURCE_MODAL.modal('hide');
-});
 
 
 // -------------
@@ -193,7 +208,7 @@ DATA_SOURCE_SELECTION.on('click', function(e) {
 // -------------
 
 
-const date_interval = new DataRangePicker('#daterange-btn', (start, end) => {
+const date_interval = new DataRangePicker(DATARANGE_BTN_ID, (start, end) => {
     DATE_INTERVAL.html(start + ' - ' + end);
     context.date_start = start;
     context.date_end = end;  
@@ -212,8 +227,8 @@ $(function(){
 
 
 layout = new Layout(context, 'LA2');
-//setTimeout(function(){ DATA_SOURCE_MODAL.modal('show');; }, 500);
-//DISPLAY_MODAL.modal('show');
+
+
 
 
 // -------------

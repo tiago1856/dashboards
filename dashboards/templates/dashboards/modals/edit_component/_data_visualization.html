@@ -1,0 +1,148 @@
+{% load static %}
+
+<section id="section-data-visualization">
+	<div id="data-visualization-accordion">
+
+		<div class="card my-0">
+			<div class="card-header clickable collapse-header-display" data-toggle="collapse" href="#data-visualization-tables">				
+				Tabelas
+				<span class="float-right">
+					<i class="fa fa-plus"></i>
+				</span>				
+			</div><!-- /card-header -->
+		  	<div id="data-visualization-tables" class="collapse show" data-parent="#data-visualization-accordion">				  
+				<div class="card-body">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-table-simple">
+								<img src="{% static 'dashboards/images/display/table_simple.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-table-complex">
+								<img src="{% static 'dashboards/images/display/table_complex.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+					</div><!-- /row -->
+				</div><!-- /card-body -->
+			</div><!-- /collapse -->
+		</div><!-- /card -->
+
+		<div class="card my-0">
+			<div class="card-header clickable collapse-header-display" data-toggle="collapse" href="#data-visualization-graphs">
+				Gráficos
+				<span class="float-right">
+					<i class="fa fa-plus"></i>
+				</span>
+		  	</div><!-- /card-header -->
+			<div id="data-visualization-graphs" class="collapse" data-parent="#data-visualization-accordion">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-1-num">
+								<img src="{% static 'dashboards/images/display/graph_1_num.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-double-num">
+								<img src="{% static 'dashboards/images/display/graph_double_num.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-n-numerical">
+								<img src="{% static 'dashboards/images/display/graph_n_numerical.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-time-series">
+								<img src="{% static 'dashboards/images/display/graph_time_series.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+					</div><!-- /row -->	
+				</div><!-- /card-body -->
+			</div><!-- /collapse -->
+		</div><!-- /card -->
+
+		<div class="card my-0">
+			<div class="card-header clickable collapse-header-display" data-toggle="collapse" href="#data-visualization-info">
+				Informativos
+				<span class="float-right">
+					<i class="fa fa-plus"></i>
+				</span>
+			</div><!-- /card-header -->
+			<div id="data-visualization-info" class="collapse" data-parent="#data-visualization-accordion">
+				<div class="card-body">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 col-xs-6">				
+							<a href="#" class="data-visualization-selection" id="data-visualization-info-simple-left">
+								<img src="{% static 'dashboards/images/display/info_simple_left.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-info-simple-right">
+								<img src="{% static 'dashboards/images/display/info_simple_right.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">						
+							<a href="#" class="data-visualization-selection" id="data-visualization-info-complex-percentage">
+								<img src="{% static 'dashboards/images/display/info_complex_percentage.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+					</div><!-- /row -->
+				</div><!-- /card-body -->
+			</div><!-- /collapse -->
+		</div><!-- /card -->
+
+		<div class="card my-0">
+			<div class="card-header clickable collapse-header-display" data-toggle="collapse" href="#data-visualization-geo">
+				Geográficos
+				<span class="float-right">
+					<i class="fa fa-plus"></i>
+				</span>
+			</div><!-- /card-header -->
+			<div id="data-visualization-geo" class="collapse" data-parent="#data-visualization-accordion">
+			  	<div class="card-body">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-geo-dens">
+								<img src="{% static 'dashboards/images/display/geo_dens.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-geo-path">
+								<img src="{% static 'dashboards/images/display/geo_path.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+						<div class="col-lg-3 col-md-4 col-xs-6">						
+							<a href="#" class="data-visualization-selection" id="data-visualization-geo-quant">
+								<img src="{% static 'dashboards/images/display/geo_quant.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+					</div><!-- /row -->
+			  	</div><!-- /card-body -->
+			</div><!-- /collapse -->
+		</div><!-- /card -->
+
+		<div class="card my-0">
+			<div class="card-header clickable collapse-header-display" data-toggle="collapse" href="#data-visualization-templates">
+				Templates
+				<span class="float-right">
+					<i class="fa fa-plus"></i>
+				</span>				
+			</div><!-- /card-header -->
+			<div id="data-visualization-templates" class="collapse" data-parent="#data-visualization-accordion">
+			  	<div class="card-body">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-template-calendar">>
+								<img src="{% static 'dashboards/images/display/template_calendar.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->
+					</div><!-- /row -->
+			  	</div><!-- /card-body -->
+			</div><!-- /collapse -->
+		</div><!-- /card -->
+
+	</div><!-- /accordion -->
+	
+<section>

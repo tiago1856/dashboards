@@ -17,10 +17,18 @@ import { MSG_DELETE_QUERY } from './messages.js';
 import { getAllNumbers } from './utils/jsutils.js';
 
 
+const EDIT_COMPONENT_MODAL = $('#edit-component-modal');
+
+
+// GLOBAL
+const GLOBAL_NAME = $('#component-global-name');
+const GLOBAL_DESCRIPTION = $('#component-global-description');
+const GLOBAL_TITLE = $('#component-global-title');
+
+// QUERY
 const QUERY_AREA = $('#data-source-query');
 const TABLE_AREA = $('#data-source-table');
 const NUMBER_LINES = $('#data-source-lines');
-const DATA_SOURCE_MODAL = $('#data-source-modal');
 const DATA_SOURCE_TABLE_ALERT = $('#data-source-table-alert');
 const QUERY_SELECTION = $('#query-selection');
 const SAVE_BTN = $('#data-source-save-query-btn');
@@ -34,14 +42,15 @@ const NEW_QUERY_DIALOG = $("#data-source-new-query-dialog");
 const NEW_QUERY_NAME = $('#data-source-new-query-name');
 const NEW_QUERY_DESCRIPTION = $('#data-source-new-query-description');
 const NEW_QUERY_SAVE_BTN = $("#data-source-new-query-save");
-const DISPLAY_MODAL = $('#display-modal');
-const VISUALIZATION_BUTTON = $('#data-source-modal-ok-btn');
-
-
+const NEW_QUERY_CANCEL_BTN = $('#data-source-new-query-cancel');
 
 const DEFAULT_MAX_LINE = 10;
 
-export function DataSourceModal(context) {
+// VISUALIZATION
+const DATA_VISUALIZATION_SELECTION = $('.data-visualization-selection');
+
+
+export function EditComponentModal(context) {
 
     this.context = context;
     const self = this;
@@ -50,6 +59,16 @@ export function DataSourceModal(context) {
     this.new_query = false;
     this.table_id = null;
 
+    // ALL THE DATA REQUIRED TO RESTORE THE MODAL TO A SPECIFIC STATE
+    this.state = {
+        id: null,
+        name: null,
+        description: null,
+        title: null,
+        
+        visualization: null,        // SELECTED VISUALIZATION ID
+        visualization_tab: null,    // WHICH COLLAPSE CARD ID IS THE SELECTED VISUALIZATION
+    }
     
     SELECTED_FIELDS.multiselect({enableFiltering: true,
         includeSelectAllOption: true,
@@ -58,20 +77,9 @@ export function DataSourceModal(context) {
     });
 
 
-
-    context.signals.onEditComponent.add((spot) => {
-        DATA_SOURCE_MODAL.modal('show');
-        console.log("data source > ", self.context.layout.components[spot]);
-    });
-
     // ----------------
     // BUTTONS
     // ----------------
-
-    VISUALIZATION_BUTTON.on('click',function() {
-        DATA_SOURCE_MODAL.modal('hide');
-        DISPLAY_MODAL.modal('show');
-    })
 
     // SAVE QUERY
     SAVE_BTN.on('click',function() {
@@ -118,9 +126,12 @@ export function DataSourceModal(context) {
     });
 
     // cancel new query name/descr
-    $('#data-source-new-query-cancel').on('click', function() {
+    $(NEW_QUERY_CANCEL_BTN).on('click', function() {
         NEW_QUERY_DIALOG.hide();
     });
+
+
+
 
 
     // ----------------
@@ -128,7 +139,7 @@ export function DataSourceModal(context) {
     // ----------------
 
     // on modal show, fetch all available queries
-    DATA_SOURCE_MODAL.on('show.bs.modal', function (e) {
+    EDIT_COMPONENT_MODAL.on('show.bs.modal', function (e) {
         DATA_SOURCE_TABLE_ALERT.show();
         //NEW_QUERY_DIALOG.hide();
         TABLE_AREA.empty();
@@ -142,6 +153,12 @@ export function DataSourceModal(context) {
         QUERY_SELECTION.val('');
         QUERY_SELECTION.trigger('change');
     })
+
+    // ON MODAL CLOSE
+    EDIT_COMPONENT_MODAL.on('hide.bs.modal', function (e) {
+        console.log("close");
+        self.save();
+    });
 
     // on query selection
     QUERY_SELECTION.on('change', function(e) {        
@@ -187,10 +204,51 @@ export function DataSourceModal(context) {
         }
     });
 
+    // DISPLAY SELECTION
+    DATA_VISUALIZATION_SELECTION.on('click', function(e) {        
+        if (self.state.visualization) {
+            $('#' + self.state.visualization).children('.img-vis').first().removeClass('img-vis-selected');
+        }
+        $(this).children('.img-vis').first().addClass('img-vis-selected');
+        self.state.visualization = this.id;        
+        self.state.visualization_tab = $(this).closest('.collapse').attr('id');
+    });
+
 
 }
 
-DataSourceModal.prototype = {
+EditComponentModal.prototype = {
+
+
+    /**
+     * Saves the current state of the modal in the state variable, which
+     * should be holding a reference to the component's ComponentData, set in
+     * show().
+     * @returns The current state.
+     */
+    save: function() {
+        this.state.name = GLOBAL_NAME.val();
+        this.state.description = GLOBAL_DESCRIPTION.val();
+        this.state.title = GLOBAL_TITLE.val();
+
+        console.warn("SAVE > ", this.state);
+        return this.state;
+    },
+
+    /**
+     * Opens the modal and sets its inputs and selection accoding to the saved state.
+     * @param {object} state All the data required to restore the modal.
+     */
+    show: function(state) {
+        console.warn("RESTORE > ", state);
+        this.state = state;
+
+        GLOBAL_NAME.val(this.state.name);
+        GLOBAL_DESCRIPTION.val(this.state.description);
+        GLOBAL_TITLE.val(this.state.title);
+
+        EDIT_COMPONENT_MODAL.modal('show')
+    },
 
     newQuery: function(deleteQuery = true) {
         if (deleteQuery) {
@@ -221,7 +279,7 @@ DataSourceModal.prototype = {
                 if (getAllNumbers(error.toString())[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!");
                 else
-                    this.context.signals.onError.dispatch(error,"[dtasource::DATA_SOURCE_MODAL.on('show.bs.modal')]");
+                    this.context.signals.onError.dispatch(error,"[dtasource::EDIT_COMPONENT_MODAL.on('show.bs.modal')]");
                 
             }
         );
@@ -278,7 +336,7 @@ DataSourceModal.prototype = {
                 if (getAllNumbers(error.toString())[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados ou utilizador não identificado!");
                 else
-                    this.context.signals.onError.dispatch(error,"[DataSourceModal::saveQuery]");
+                    this.context.signals.onError.dispatch(error,"[EditComponentModal::saveQuery]");
                                 
             }
         )
@@ -299,7 +357,7 @@ DataSourceModal.prototype = {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[DataSourceModal::deleteQuery");              
+                this.context.signals.onError.dispatch(error,"[EditComponentModal::deleteQuery");              
             }
         )
     },
@@ -309,7 +367,7 @@ DataSourceModal.prototype = {
         fetchPOST(URL_EXEC_QUERY,
             {
                 query: QUERY_AREA.val(),
-                lines: NUMBER_LINES.val(),
+                rows: NUMBER_LINES.val(),
             },
             (result) => {
                 $("body").css("cursor","auto");
@@ -330,7 +388,7 @@ DataSourceModal.prototype = {
             },
             (error) => {
 				$("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[DataSourceModal::execQuery");
+                this.context.signals.onError.dispatch(error,"[EditComponentModal::execQuery");
             }
         )
     },

@@ -1,0 +1,81 @@
+{% load static %}
+
+<!-- COMPONENT MODAL -->
+<div class="modal" id="edit-component-modal" tabindex="-1">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Component XXX</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div><!-- /modal-header -->
+
+            <div class="modal-body pt-0">
+                <div class="row d-flex justify-content-center flex-nowrap my-3">
+                    <ul class="nav nav-tabs process-model" role="tablist">
+                        <li role="presentation" class="active">
+                            <a href="#edit-component-description-tab" aria-controls="description" role="tab" data-toggle="tab">
+                                <i class="fas fa-info" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#edit-component-data-source-tab" aria-controls="source" role="tab" data-toggle="tab">
+                                <i class="fas fa-search" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#edit-component-data-visualization-tab" aria-controls="visualization" role="tab" data-toggle="tab">
+                                <i class="fas fa-desktop" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#edit-component-connections-tab" aria-controls="connections" role="tab" data-toggle="tab">
+                                <i class="fas fa-project-diagram" aria-hidden="true"></i>
+                            </a>
+                        </li>
+                        <li role="presentation">
+                            <a href="#edit-component-save" aria-controls="save" role="tab" data-toggle="tab">
+                                <i class="fas fa-save" aria-hidden="true"></i>
+                            </a>
+                        </li>                        
+                    </ul>
+                </div>
+
+               
+
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="edit-component-description-tab">
+                        {% include 'dashboards/modals/edit_component/_component_global.html' %}                        
+                    </div>                    
+                    <div role="tabpanel" class="tab-pane" id="edit-component-data-source-tab">
+                        {% include 'dashboards/modals/edit_component/_data_source.html' %}
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="edit-component-data-visualization-tab">
+                        {% include 'dashboards/modals/edit_component/_data_visualization.html' %}
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="edit-component-connections-tab">
+                        {% include 'dashboards/modals/edit_component/_connections_component.html' %}                        
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="edit-component-save">
+                        {% include 'dashboards/modals/edit_component/_save_component.html' %}
+                    </div>                    
+                </div>
+               
+
+            </div><!-- /modal-body -->
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">
+                    <i class="fas fa-times"></i>
+                     Cancelar
+                </button>
+                <button type="button" id="edit-component-modal-ok-btn" class="btn btn-primary">
+                    <i class="fas fa-check"></i>
+                    Aplicar
+                </button>
+            </div> <!-- /modal-footer -->
+
+        </div> <!-- /modal-content -->
+    </div><!-- /modal-dialog -->
+</div>
+

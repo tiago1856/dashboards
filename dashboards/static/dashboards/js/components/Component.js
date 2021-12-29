@@ -12,10 +12,9 @@ export class Component extends Div {
         this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
         
-        this.data = { ...ComponentData};
+        this.data = { ...ComponentData };
 
         this.spot = spot;
-        this.data.spot = this.spot;
 
         //if (vh100) this.setStyle('min-height','100%');
         if (h100) this.addClass('full-height');
@@ -45,29 +44,17 @@ export class Component extends Div {
         save_btn.setAttribute('data-toggle','tooltip');
         save_btn.setAttribute('title','Guardar component');
 
-        const display_btn = new AwesomeIconAndButton('','fas fa-tv').attachTo(card_tools);
-        display_btn.addClass('btn btn-sm text-danger editable-component');
-        display_btn.setAttribute('type','button');
-        display_btn.setAttribute('data-toggle','tooltip');
-        display_btn.setAttribute('title','Editar visualização');
-
-        const add_query_btn = new AwesomeIconAndButton('','fas fa-plus').attachTo(card_tools);
-        add_query_btn.addClass('btn btn-sm text-danger editable-component');
-        add_query_btn.setAttribute('type','button');
-        add_query_btn.setAttribute('data-toggle','tooltip');
-        add_query_btn.setAttribute('title','Nova/Editar Query');        
-
-        const add_template_btn = new AwesomeIconAndButton('','fas fa-calendar-plus').attachTo(card_tools);
-        add_template_btn.addClass('btn btn-sm text-danger editable-component');
-        add_template_btn.setAttribute('type','button');
-        add_template_btn.setAttribute('data-toggle','tooltip');
-        add_template_btn.setAttribute('title','Novo/Editar Template');
+        const edit_btn = new AwesomeIconAndButton('','fas fa-pencil-alt').attachTo(card_tools);
+        edit_btn.addClass('btn btn-sm text-danger editable-component');
+        edit_btn.setAttribute('type','button');
+        edit_btn.setAttribute('data-toggle','tooltip');
+        edit_btn.setAttribute('title','Nova/Editar Query');
 
         const delete_btn = new AwesomeIconAndButton('','fas fa-trash').attachTo(card_tools);
         delete_btn.addClass('btn btn-sm text-danger editable-component');
         delete_btn.setAttribute('type','button');
         delete_btn.setAttribute('data-toggle','tooltip');
-        delete_btn.setAttribute('title','Apagar Componente');        
+        delete_btn.setAttribute('title','Apagar Componente');
 
         this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
         this.options_btn.addClass('btn btn-sm non-editable-component');
@@ -146,7 +133,7 @@ export class Component extends Div {
           context.signals.onZoomComponent.dispatch(self.spot);
         });
         
-        $(add_query_btn.dom).on('click',function() {
+        $(edit_btn.dom).on('click',function() {
           context.signals.onEditComponent.dispatch(self.spot);
         });
         

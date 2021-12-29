@@ -22,11 +22,19 @@ export class Layout extends Div {
         this.context = context;
         this.attachTo(LAYOUT_CONTAINER[0]);
 
-        context.layout = {title: null, components: {}};
+        //context.layout = {title: null, components: {}};
+        this.title = null;
+        this.components = {};
 
         const rows = LAYOUTS[layout_id];
 
-        context.layout.title = new LayoutTitle(context, data?data.title:null).attachTo(this);
+        new LayoutTitle(
+            context, 
+            data?data.title:null,
+            (new_title) => {
+                this.title = new_title;
+            }
+        ).attachTo(this);
         
 
         let spot = 0
@@ -48,25 +56,26 @@ export class Layout extends Div {
                 const _col = new Div({classes:['col-md-' + col[0], 'mb-2']});
                 _col.attachTo(new_row);
                 if (col[1] === 1 && h100) {
-                    context.layout.components[spot] = new Component(this.context, spot, 'XXX', true, 'primary').attachTo(_col);
+                    this.components[spot] = new Component(this.context, spot, 'XXX', true, 'primary').attachTo(_col);
                     spot++;
                 } else {
                     for (let i=0; i < col[1]; i++) {                        
-                        context.layout.components[spot] = new Component(this.context, spot, 'XXX', false, 'light').attachTo(_col);
+                        this.components[spot] = new Component(this.context, spot, 'XXX', false, 'light').attachTo(_col);
                         spot++;
                     }
                 }
 
             });
-            /*
-            $.getScript('/static/framework/js/main.3147c80c.js', function() {
-                console.log("REACT SCRIPT INJECTED");
-            });
-            */
 
-        });
+        });       
+    }
 
-        console.log(context.layout);
+    getComponentAt(spot) {
+        return this.components[spot];
+    }
+
+    getTitle() {
+        return this.title;
     }
 
 }

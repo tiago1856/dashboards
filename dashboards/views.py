@@ -50,7 +50,10 @@ def exec_query(request):
    if request.method == 'POST' or 'query' not in request.data:
          try:
             with connection.cursor() as cursor:
-               cursor.execute(request.data.get('query') + " limit " + request.data.get('lines'))
+               if 'rows' in request.data:                  
+                  cursor.execute(request.data.get('query') + " limit " + request.data.get('rows'))
+               else:
+                  cursor.execute(request.data.get('query'))
                results = dictfetchall(cursor)
                return Response(data=results, status=status.HTTP_200_OK)
          except Exception as e:

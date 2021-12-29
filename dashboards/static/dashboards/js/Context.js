@@ -24,10 +24,10 @@ export function Context() {
     this.dash_id = null;        // dashboard id
     this.name = null;           // dashboard name
     this.changed = false;       // indicates if there was any change (save system)
-    this.date_start = null;
-    this.date_end = null;
+    this.date_start = null;     // global starting date
+    this.date_end = null;       // global end date
 
-    this.layout = null;         // => layout and components accessible everywhere
+    //this.layout = null;         // => layout and components accessible everywhere
 
     // channel to communicate with the visualization framework
     this.message_broker = new BroadcastChannel('react_channel');
