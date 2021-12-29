@@ -189,4 +189,8 @@ export class Component extends Div {
     getComponentData() {
       return this.data;
     }
+
+    update() {
+      console.log("UPDATE COMPONENT > ", this.spot, this.title);
+    }
 }

@@ -5,8 +5,14 @@
  */
 
 export const ComponentData = {
+    // global
     name: null,
     description: null,
-    title: null,        // title [string]
-    ecm: null,          // data from/for EditComponentModal [object]
+    title: null,                // title [string]
+    // query
+    query_selection: null,
+    query: null,
+    // visualization
+    visualization: null,
+    visualization_tab: null,    // EditComponentModal display collapse 
 }

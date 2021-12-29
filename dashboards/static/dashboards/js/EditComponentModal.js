@@ -43,6 +43,7 @@ const NEW_QUERY_NAME = $('#data-source-new-query-name');
 const NEW_QUERY_DESCRIPTION = $('#data-source-new-query-description');
 const NEW_QUERY_SAVE_BTN = $("#data-source-new-query-save");
 const NEW_QUERY_CANCEL_BTN = $('#data-source-new-query-cancel');
+const APPLY_BTN = $('#edit-component-modal-ok-btn');
 
 const DEFAULT_MAX_LINE = 10;
 
@@ -60,7 +61,7 @@ export function EditComponentModal(context) {
     this.table_id = null;
 
     // ALL THE DATA REQUIRED TO RESTORE THE MODAL TO A SPECIFIC STATE
-    this.state = {
+    this.state = null; /*{
         id: null,
         name: null,
         description: null,
@@ -68,7 +69,7 @@ export function EditComponentModal(context) {
         
         visualization: null,        // SELECTED VISUALIZATION ID
         visualization_tab: null,    // WHICH COLLAPSE CARD ID IS THE SELECTED VISUALIZATION
-    }
+    }*/
     
     SELECTED_FIELDS.multiselect({enableFiltering: true,
         includeSelectAllOption: true,
@@ -126,42 +127,23 @@ export function EditComponentModal(context) {
     });
 
     // cancel new query name/descr
-    $(NEW_QUERY_CANCEL_BTN).on('click', function() {
+    NEW_QUERY_CANCEL_BTN.on('click', function() {
         NEW_QUERY_DIALOG.hide();
     });
 
-
-
+    // apply changes
+    APPLY_BTN.on('click', function() {
+        self.save();
+    });
+    
 
 
     // ----------------
     // EVENTS
     // ----------------
 
-    // on modal show, fetch all available queries
-    EDIT_COMPONENT_MODAL.on('show.bs.modal', function (e) {
-        DATA_SOURCE_TABLE_ALERT.show();
-        //NEW_QUERY_DIALOG.hide();
-        TABLE_AREA.empty();
-        SELECTED_FIELDS.empty();
-        SELECTED_FIELDS.multiselect('rebuild');
-        NUMBER_LINES.val(DEFAULT_MAX_LINE);
-        SAVE_BTN.attr('disabled',true);
-
-        self.fetchQueries();
-
-        QUERY_SELECTION.val('');
-        QUERY_SELECTION.trigger('change');
-    })
-
-    // ON MODAL CLOSE
-    EDIT_COMPONENT_MODAL.on('hide.bs.modal', function (e) {
-        console.log("close");
-        self.save();
-    });
-
     // on query selection
-    QUERY_SELECTION.on('change', function(e) {        
+    QUERY_SELECTION.on('change', function(e) {
         QUERY_AREA.attr('disabled','true');
         query_id = parseInt($(this).val());
         original_query = $(this).find(':selected').attr('data-query');
@@ -210,7 +192,7 @@ export function EditComponentModal(context) {
             $('#' + self.state.visualization).children('.img-vis').first().removeClass('img-vis-selected');
         }
         $(this).children('.img-vis').first().addClass('img-vis-selected');
-        self.state.visualization = this.id;        
+        self.state.visualization = this.id;
         self.state.visualization_tab = $(this).closest('.collapse').attr('id');
     });
 
@@ -227,27 +209,81 @@ EditComponentModal.prototype = {
      * @returns The current state.
      */
     save: function() {
+        // global
         this.state.name = GLOBAL_NAME.val();
         this.state.description = GLOBAL_DESCRIPTION.val();
         this.state.title = GLOBAL_TITLE.val();
 
+        // query
+        this.state.query_selection = QUERY_SELECTION.val();
+        this.state.query = QUERY_AREA.val();
+
         console.warn("SAVE > ", this.state);
+
+        // CLOSE MODAL
+        EDIT_COMPONENT_MODAL.modal('hide');
+
+        // UPDATE COMPONENT
+        if (this.onReady) this.onReady();
+
         return this.state;
     },
 
     /**
      * Opens the modal and sets its inputs and selection accoding to the saved state.
      * @param {object} state All the data required to restore the modal.
+     * @param {function} onReady Called to apply the changes.
      */
-    show: function(state) {
-        console.warn("RESTORE > ", state);
-        this.state = state;
+    show: function(state, onReady=null) {
+        this.onReady = onReady;
+        DATA_SOURCE_TABLE_ALERT.show();
+        //NEW_QUERY_DIALOG.hide();
+        TABLE_AREA.empty();
+        SELECTED_FIELDS.empty();
+        SELECTED_FIELDS.multiselect('rebuild');
+        NUMBER_LINES.val(DEFAULT_MAX_LINE);
+        SAVE_BTN.attr('disabled',true);
 
-        GLOBAL_NAME.val(this.state.name);
-        GLOBAL_DESCRIPTION.val(this.state.description);
-        GLOBAL_TITLE.val(this.state.title);
+        this.fetchQueries(() => {
+            /*
+            QUERY_SELECTION.val('');
+            QUERY_SELECTION.trigger('change');
+            */
+            console.warn("RESTORE > ", state);
+            this.state = state;
+            // open first tab
+            $('.process-model a[href="#edit-component-description-tab"]').tab('show');
+            $('.img-vis').removeClass('img-vis-selected');
+            // restore?
+            if (state.name != null) {
+                // global
+                GLOBAL_NAME.val(this.state.name);
+                GLOBAL_DESCRIPTION.val(this.state.description);
+                GLOBAL_TITLE.val(this.state.title);
+                // query
+                QUERY_SELECTION.val(this.state.query_selection);
+                QUERY_SELECTION.trigger('change');
+                QUERY_AREA.val(this.state.query);
+                // display
+                // open respective collapse card
+                $('#' + this.state.visualization_tab).collapse('show');
+                // select the display image
+                $('#' + this.state.visualization).children('.img-vis').first().addClass('img-vis-selected');
+            } else {
+                // global
+                GLOBAL_NAME.val('');
+                GLOBAL_DESCRIPTION.val('');
+                GLOBAL_TITLE.val('');
+                // query
+                QUERY_SELECTION.val('');
+                QUERY_SELECTION.trigger('change');
+                // open first collapse card
+                $('#data-visualization-tables').collapse('show');
+            }
 
-        EDIT_COMPONENT_MODAL.modal('show')
+            EDIT_COMPONENT_MODAL.modal('show')
+        });
+        
     },
 
     newQuery: function(deleteQuery = true) {
@@ -263,7 +299,7 @@ EditComponentModal.prototype = {
         this.changeSaveStatus(false);
     },
 
-    fetchQueries: function() {
+    fetchQueries: function(onReady=null) {
         $("body").css("cursor","progress");
         fetchGET(URL_LIST_QUERIES, 
             (result) => {
@@ -273,13 +309,14 @@ EditComponentModal.prototype = {
                     QUERY_SELECTION.append(this.createQueryItem(query));
                 });
                 $("body").css("cursor","auto");
+                if (onReady) onReady();
             },
             (error) => {
                 $("body").css("cursor","auto");
                 if (getAllNumbers(error.toString())[0] == 500)
-                    this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!");
+                    this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[EditComponentModal::fetchQueries]");
                 else
-                    this.context.signals.onError.dispatch(error,"[dtasource::EDIT_COMPONENT_MODAL.on('show.bs.modal')]");
+                    this.context.signals.onError.dispatch(error,"[EditComponentModal::fetchQueries]");
                 
             }
         );
@@ -334,7 +371,7 @@ EditComponentModal.prototype = {
             (error) => {
 				$("body").css("cursor","auto");
                 if (getAllNumbers(error.toString())[0] == 500)
-                    this.context.signals.onError.dispatch("Problemas com a base de dados ou utilizador não identificado!");
+                    this.context.signals.onError.dispatch("Problemas com a base de dados ou utilizador não identificado!","[EditComponentModal::saveQuery]");
                 else
                     this.context.signals.onError.dispatch(error,"[EditComponentModal::saveQuery]");
                                 
@@ -357,7 +394,7 @@ EditComponentModal.prototype = {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[EditComponentModal::deleteQuery");              
+                this.context.signals.onError.dispatch(error,"[EditComponentModal::deleteQuery]");              
             }
         )
     },
@@ -388,7 +425,7 @@ EditComponentModal.prototype = {
             },
             (error) => {
 				$("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[EditComponentModal::execQuery");
+                this.context.signals.onError.dispatch(error,"[EditComponentModal::execQuery]");
             }
         )
     },

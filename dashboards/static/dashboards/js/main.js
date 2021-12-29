@@ -113,7 +113,9 @@ context.signals.onZoomComponent.add((msg) => {
 
 context.signals.onEditComponent.add((spot) => {
     const component = layout.getComponentAt(spot);
-    edit_component_modal.show(component.data);
+    edit_component_modal.show(component.data, () => {
+        component.update();
+    });
 });
 
 // ----------------
