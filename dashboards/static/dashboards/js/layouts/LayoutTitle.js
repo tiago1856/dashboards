@@ -3,7 +3,7 @@
 import { Div, Hx, Text } from '../builders/BuildingBlocks.js';
 import { EditButton } from '../builders/EditButton.js';
 import { TextInputEv } from '../builders/TextInputEv.js';
-import { NO_TITLE_DEFINED } from '../constants.js';
+import { NO_DASHBOARD_TITLE_DEFINED } from '../constants.js';
 
 /**
  * Dashboard Title.
@@ -56,7 +56,7 @@ export class LayoutTitle extends Div {
             this.title.dom.innerHTML = _title;
             this.value = _title;
         } else {
-            this.title.dom.innerHTML = NO_TITLE_DEFINED;
+            this.title.dom.innerHTML = NO_DASHBOARD_TITLE_DEFINED;
             this.value = null;
         }
         if (this.onTitleChanged) this.onTitleChanged(this.value);

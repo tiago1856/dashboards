@@ -194,6 +194,7 @@ export function EditComponentModal(context) {
         $(this).children('.img-vis').first().addClass('img-vis-selected');
         self.state.visualization = this.id;
         self.state.visualization_tab = $(this).closest('.collapse').attr('id');
+        self.state.visualization_type = $(this).data('type');
     });
 
 
@@ -265,19 +266,19 @@ EditComponentModal.prototype = {
                 QUERY_SELECTION.trigger('change');
                 QUERY_AREA.val(this.state.query);
                 // display
-                // open respective collapse card
+                // open respective collapsed card
                 $('#' + this.state.visualization_tab).collapse('show');
                 // select the display image
                 $('#' + this.state.visualization).children('.img-vis').first().addClass('img-vis-selected');
             } else {
                 // global
-                GLOBAL_NAME.val('');
+                GLOBAL_NAME.val(uuidv4());
                 GLOBAL_DESCRIPTION.val('');
                 GLOBAL_TITLE.val('');
                 // query
                 QUERY_SELECTION.val('');
                 QUERY_SELECTION.trigger('change');
-                // open first collapse card
+                // open first collapsed card
                 $('#data-visualization-tables').collapse('show');
             }
 

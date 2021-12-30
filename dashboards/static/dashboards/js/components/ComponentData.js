@@ -13,6 +13,7 @@ export const ComponentData = {
     query_selection: null,
     query: null,
     // visualization
-    visualization: null,
+    visualization: null,        // visualization id
     visualization_tab: null,    // EditComponentModal display collapse 
+    visualization_type: null,   // DISPLAY (constants.js)
 }

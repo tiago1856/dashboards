@@ -1,20 +1,36 @@
 
 import { Div, AwesomeIconAndButton, Text } from '../builders/BuildingBlocks.js';
 import { ComponentData } from './ComponentData.js';
-import { data_1, data_2, data_3 } from './temp_data.js';
+import { NO_TITLE_DEFINED } from '../constants.js';
+import { Graph1Num } from './graphs/Graph1Num.js';
+import { GraphDoubleNum } from './graphs/GraphDoubleNum.js';
+import { GraphTimeSeries } from './graphs/GraphTimeSeries.js';
+import { getComponentClass } from './ComponentType.js';
 
 /**
- * 
+ * Container for all type of components.
  */
 export class Component extends Div {
-    constructor(context, spot, _title=null, h100 = false, color_scheme = 'light', id=null) {
+  /**
+   * Constructor.
+   * The component is identified not by its ID but by its spot.
+   * @param {Context} context Context.
+   * @param {number} spot Spot in the layout.
+   * @param {string} _title Card title.
+   * @param {boolean} h100 Full height. True if multirow, false otherwise.
+   * @param {string} color_scheme light/dark.
+   * @param {string} data Data to retore the component.
+   * 
+   */
+    constructor(context, spot, _title=null, h100 = false, color_scheme = 'light', data=null) {
         super(context);
         this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
         
-        this.data = { ...ComponentData };
+        this.data = data?data:{ ...ComponentData };
 
-        this.spot = spot;
+        this.spot = spot;     // place in the layout
+        this.content = null;  // content of the panel
 
         //if (vh100) this.setStyle('min-height','100%');
         if (h100) this.addClass('full-height');
@@ -91,43 +107,29 @@ export class Component extends Div {
         this.body = new Div().attachTo(this);
         this.body.addClass('card-body');
         
-        // set a random id for this component's body if none is provided
-        if (!id) id = uuidv4();
-        this.body.setId(id);
+        // set a random id for this component's body
+        this.body.setId(uuidv4());
 
-        // randomly select and send message to the framework to create a graph 
-        const n = Math.floor(Math.random() * 3);
-        switch (n) {
-          case 0:
-            this.context.message_broker.postMessage({
-              operation:'create_component', 
-              id: id,
-              data: data_1,
-            });
-            break;
-          case 1:
-            this.context.message_broker.postMessage({
-              operation:'create_component', 
-              id: id,
-              data: data_2,
-            });
-            break;
-          case 2:
-            this.context.message_broker.postMessage({
-              operation:'create_component', 
-              id: id,
-              data: data_3,
-            });            
-            break;
-        }
-
-        $(this.options_btn.dom).on('click',function() {
-          self.context.message_broker.postMessage({
-            operation:'show_options', 
-            id: id,
-          }); 
-        });
-        
+        // 
+        if (data) {
+          const component = getComponentClass(data.visualization_type, data.visualization);
+          if (component)
+            this.content = new component.class(context, data, this.body, this.options_btn);
+          /*
+          const n = Math.floor(Math.random() * 3);
+          switch (n) {
+            case 0:
+              this.content = new Graph1Num(context, null, this.body, this.options_btn);
+              break;
+            case 1:
+              this.content = new GraphDoubleNum(context, null, this.body, this.options_btn);
+              break;
+            case 2:
+              this.content = new GraphTimeSeries(context, null, this.body, this.options_btn);            
+              break;
+          }
+          */
+        }     
 
         $(zoom_btn.dom).on('click',function() {
           context.signals.onZoomComponent.dispatch(self.spot);
@@ -177,20 +179,38 @@ export class Component extends Div {
       $(this.body.dom).empty();
     }
 
+    /**
+     * Sets the title of the card.
+     * @param {string} _title Card title.
+     */
     setTitle(_title) {
       if (_title) {
         this.title.setTextContent(_title);
         this.data.title = _title;
       } else {
-        this.title.dom.innerHTML = '<span style="color: red;">Titulo não definido!</span>';
+        this.title.dom.innerHTML = NO_TITLE_DEFINED;
       }
     }
 
+    /**
+     * Get component's data.
+     * @returns All the data required to restore the entire component.
+     */
     getComponentData() {
       return this.data;
     }
 
+    /**
+     * Update component.
+     * Called when something fundamental change, like the component's type.
+     */
     update() {
-      console.log("UPDATE COMPONENT > ", this.spot, this.title);
+      console.log("UPDATE COMPONENT > ", this.spot, this.data);
+      this.setTitle(this.data.title);
+      const component = getComponentClass(this.data.visualization_type, this.data.visualization);
+      if (component) {
+        this.content = new component.class(this.context, null, this.body, this.options_btn);
+      }
+
     }
 }

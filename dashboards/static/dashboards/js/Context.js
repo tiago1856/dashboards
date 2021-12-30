@@ -30,7 +30,7 @@ export function Context() {
     //this.layout = null;         // => layout and components accessible everywhere
 
     // channel to communicate with the visualization framework
-    this.message_broker = new BroadcastChannel('react_channel');
+    this.react_message_broker = new BroadcastChannel('react_channel');
 
     // ready
     this.signals.onStuffDone.add((msg) => console.log("Log message > ", msg));

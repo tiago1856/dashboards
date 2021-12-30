@@ -56,11 +56,11 @@ export class Layout extends Div {
                 const _col = new Div({classes:['col-md-' + col[0], 'mb-2']});
                 _col.attachTo(new_row);
                 if (col[1] === 1 && h100) {
-                    this.components[spot] = new Component(this.context, spot, 'XXX', true, 'primary').attachTo(_col);
+                    this.components[spot] = new Component(this.context, spot, null, true, 'primary').attachTo(_col);
                     spot++;
                 } else {
                     for (let i=0; i < col[1]; i++) {                        
-                        this.components[spot] = new Component(this.context, spot, 'XXX', false, 'light').attachTo(_col);
+                        this.components[spot] = new Component(this.context, spot, null, false, 'light').attachTo(_col);
                         spot++;
                     }
                 }
