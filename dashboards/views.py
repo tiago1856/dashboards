@@ -52,7 +52,7 @@ def exec_query(request):
             #print(request.data.get('query'))
             with connection.cursor() as cursor:
                if 'rows' in request.data:                  
-                  cursor.execute(request.data.get('query') + " limit " + request.data.get('rows'))
+                  cursor.execute(request.data.get('query') + " limit " + str(request.data.get('rows')))
                else:
                   cursor.execute(request.data.get('query'))
                results = dictfetchall(cursor)
@@ -87,6 +87,34 @@ def save_query(request):
          return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
    else:
       return Response(status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(["POST"])
+def update_query(request):
+   """Updates a Query."""
+   if request.method == 'POST' or 'query_name' not in request.data:
+      try:
+         query_id = request.data.get('query_id')
+         #name = request.data.get('query_name')
+         description = request.data.get('query_description')
+         query = request.data.get('query')         
+
+         if request.user.is_authenticated:
+            new_data = {'author':request.user, 'description':description, 'query':query}
+         else:
+            new_data = {'description':description, 'query':query}
+
+         Query.objects.filter(pk=query_id).update(**new_data)
+
+         #query_obj = Query.objects.get(pk=query_id)
+         #serializer = QuerySerializer(query_obj)
+         return Response({'message':'ok'}, status=status.HTTP_200_OK)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
 
 
 #@login_required

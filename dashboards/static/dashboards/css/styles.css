@@ -123,9 +123,9 @@
     height: 4px;
     margin: 0 auto;
     position: absolute;
-    right: 90px;
+    right: 80px;
     top: 15px;
-    width: 75%;
+    width: 85%;
     z-index: -1;
 }
 .process-model li.visited::after {

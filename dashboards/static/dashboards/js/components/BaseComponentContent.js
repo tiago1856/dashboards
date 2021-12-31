@@ -4,7 +4,9 @@ import { URL_EXEC_QUERY } from "../urls.js";
 export class BaseComponentContent {
     constructor(context, data, parent) {
         this.context = context;
-        this.component_data = this.prepareData(data);
+
+        this.component_data = null;
+        //this.component_data = this.prepareData(data);
     }
 
     prepareData(_data) {
@@ -12,14 +14,18 @@ export class BaseComponentContent {
 
 
 
-    execQuery(query, rows) {
+    execQuery(query=null, rows=null, onReady=null) {
+        if (!query) return null;
+        let options = null;
+        if (rows) 
+            options = { query: query, rows: rows };
+        else
+            options = { query: query };
         fetchPOST(URL_EXEC_QUERY,
-            {
-                query: query,
-                rows: rows,
-            },
+            options,
             (result) => {
                 console.log(result);
+                if (onReady) onReady(result);
                 /*
                 if (result.length == 0) return;                
 

@@ -4,11 +4,14 @@ import { BaseComponentContent } from '../BaseComponentContent.js';
 export class Graph1Num extends BaseComponentContent {
     constructor(context, data, parent, opt_btn) {
         super(context, data, parent);
+        this.execQuery(data.query, 10, (results) => {
+            const component_data = this.prepareData(results);
+            context.react_message_broker.postMessage({
+                operation:'create_component', 
+                id: parent.getId(),
+                data: component_data,
+            });
 
-        context.react_message_broker.postMessage({
-            operation:'create_component', 
-            id: parent.getId(),
-            data: this.component_data,
         });
 
         $(opt_btn).on('click',function() {
@@ -21,6 +24,7 @@ export class Graph1Num extends BaseComponentContent {
 
     prepareData(_data) {
         super.prepareData(_data);
+        // _data.query_selected_fields
 
         const header = {
             "type": "one_numerical", // Data Type

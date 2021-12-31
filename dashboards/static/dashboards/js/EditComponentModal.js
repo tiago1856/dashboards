@@ -9,7 +9,8 @@ import {
     URL_LIST_QUERIES, 
     URL_EXEC_QUERY, 
     URL_SAVE_QUERY,
-    URL_DELETE_QUERY
+    URL_DELETE_QUERY,
+    URL_UPDATE_QUERY
 } from "./urls.js";
 import { BasicTable } from './builders/BasicTable.js';
 import { ExportTable2Excel } from './export/ExportTable2Excel.js';
@@ -84,6 +85,10 @@ export function EditComponentModal(context) {
 
     // SAVE QUERY
     SAVE_BTN.on('click',function() {
+        console.log("TODO: SAVE QUERY");
+        self.updateQuery(() => {
+            self.changeSaveStatus(false);
+        });
     })
 
     // DELETE QUERY
@@ -141,6 +146,7 @@ export function EditComponentModal(context) {
     // ----------------
     // EVENTS
     // ----------------
+   
 
     // on query selection
     QUERY_SELECTION.on('change', function(e) {
@@ -218,6 +224,7 @@ EditComponentModal.prototype = {
         // query
         this.state.query_selection = QUERY_SELECTION.val();
         this.state.query = QUERY_AREA.val();
+        this.state.query_selected_fields = SELECTED_FIELDS.val();
 
         console.warn("SAVE > ", this.state);
 
@@ -261,10 +268,12 @@ EditComponentModal.prototype = {
                 GLOBAL_NAME.val(this.state.name);
                 GLOBAL_DESCRIPTION.val(this.state.description);
                 GLOBAL_TITLE.val(this.state.title);
+
                 // query
                 QUERY_SELECTION.val(this.state.query_selection);
                 QUERY_SELECTION.trigger('change');
                 QUERY_AREA.val(this.state.query);
+
                 // display
                 // open respective collapsed card
                 $('#' + this.state.visualization_tab).collapse('show');
@@ -275,11 +284,20 @@ EditComponentModal.prototype = {
                 GLOBAL_NAME.val(uuidv4());
                 GLOBAL_DESCRIPTION.val('');
                 GLOBAL_TITLE.val('');
+
                 // query
                 QUERY_SELECTION.val('');
                 QUERY_SELECTION.trigger('change');
+
+                // visualization
+                // by default select simple table
                 // open first collapsed card
                 $('#data-visualization-tables').collapse('show');
+                // select tabe
+                $('#data-visualization-table-simple').children('.img-vis').first().addClass('img-vis-selected');
+                this.state.visualization = 'data-visualization-table-simple';
+                this.state.visualization_tab = 'data-visualization-tables';
+                this.state.visualization_type = 'TABLE';
             }
 
             EDIT_COMPONENT_MODAL.modal('show')
@@ -333,6 +351,12 @@ EditComponentModal.prototype = {
        return option;
     },
 
+    updateQueryItem : function(query) {
+        const option = QUERY_SELECTION.find("option:selected");
+        option.attr('data-query', query);
+        return option;
+     },    
+
     createFieldItem : function(value, selected=false) {
         const option = $('<option/>')
         option.text(value);
@@ -343,7 +367,7 @@ EditComponentModal.prototype = {
 
     changeSaveStatus: function(new_status) {
         // not save if no query selected
-        if (QUERY_SELECTION.val() === '') return;;
+        if (QUERY_SELECTION.val() === '') return;
         //context.changed = new_status;
         this.new_query = new_status;
         if (new_status) {
@@ -379,6 +403,38 @@ EditComponentModal.prototype = {
             }
         )
     },
+
+
+    updateQuery: function(onReady=null) {
+        $("body").css("cursor","progress");
+        const description = NEW_QUERY_DESCRIPTION.val();
+        const query = QUERY_AREA.val();
+        const name = NEW_QUERY_NAME.val();
+        const id = QUERY_SELECTION.val();
+        fetchPOST(URL_UPDATE_QUERY,
+            {
+                query_name: name,
+                query_description: description,
+                query: query,
+                query_id: id,
+            },
+            (result) => {
+                $("body").css("cursor","auto");
+                console.log(result);
+                this.updateQueryItem(query);
+                if (onReady) onReady();
+            },
+            (error) => {
+				$("body").css("cursor","auto");
+                if (getAllNumbers(error.toString())[0] == 500)
+                    this.context.signals.onError.dispatch("Problemas com a base de dados ou utilizador não identificado!","[EditComponentModal::saveQuery]");
+                else
+                    this.context.signals.onError.dispatch(error,"[EditComponentModal::saveQuery]");
+                                
+            }
+        )
+    },
+
 
     deleteQuery: function() {
         $("body").css("cursor","progress");

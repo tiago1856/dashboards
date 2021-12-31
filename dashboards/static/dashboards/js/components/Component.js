@@ -209,7 +209,7 @@ export class Component extends Div {
       this.setTitle(this.data.title);
       const component = getComponentClass(this.data.visualization_type, this.data.visualization);
       if (component) {
-        this.content = new component.class(this.context, null, this.body, this.options_btn);
+        this.content = new component.class(this.context, this.data, this.body, this.options_btn);
       }
 
     }

@@ -29,6 +29,11 @@
                             </a>
                         </li>
                         <li role="presentation">
+                            <a href="#edit-component-data-config-tab" aria-controls="visualization" role="tab" data-toggle="tab">
+                                <i class="fas fa-user-edit" aria-hidden="true"></i>
+                            </a>
+                        </li>                        
+                        <li role="presentation">
                             <a href="#edit-component-connections-tab" aria-controls="connections" role="tab" data-toggle="tab">
                                 <i class="fas fa-project-diagram" aria-hidden="true"></i>
                             </a>
@@ -53,8 +58,11 @@
                     <div role="tabpanel" class="tab-pane" id="edit-component-data-visualization-tab">
                         {% include 'dashboards/modals/edit_component/_data_visualization.html' %}
                     </div>
+                    <div role="tabpanel" class="tab-pane" id="edit-component-data-config-tab">
+                        {% include 'dashboards/modals/edit_component/_data_config.html' %}
+                    </div>                    
                     <div role="tabpanel" class="tab-pane" id="edit-component-connections-tab">
-                        {% include 'dashboards/modals/edit_component/_connections_component.html' %}                        
+                        {% include 'dashboards/modals/edit_component/_connections_component.html' %}
                     </div>
                     <div role="tabpanel" class="tab-pane" id="edit-component-save">
                         {% include 'dashboards/modals/edit_component/_save_component.html' %}

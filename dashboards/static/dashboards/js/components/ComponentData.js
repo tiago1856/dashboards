@@ -6,12 +6,13 @@
 
 export const ComponentData = {
     // global
-    name: null,
-    description: null,
+    name: null,                 // [string]
+    description: null,          // [string]
     title: null,                // title [string]
     // query
     query_selection: null,
     query: null,
+    query_selected_fields: null,    // query's selected fields [array of strings]
     // visualization
     visualization: null,        // visualization id
     visualization_tab: null,    // EditComponentModal display collapse 

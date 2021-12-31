@@ -12,7 +12,7 @@ export const COMPONENT_TYPE = {
         classes: [
             {id:'data-visualization-graph-1-num', class:Graph1Num},
             {id:'data-visualization-graph-double-num', class:GraphDoubleNum},
-            {id:'data-visualization-graph-n-numerical', class:GraphTimeSeries},
+            {id:'data-visualization-graph-time-series', class:GraphTimeSeries},
         ]        
     },
     INFO: {
@@ -28,7 +28,7 @@ export const COMPONENT_TYPE = {
 
 
 export function getComponentClass(type, id) {
-    if (!type || !id) return null;
+    if (!type || !id || !COMPONENT_TYPE[type].hasOwnProperty('classes')) return null;
     for (let k=0; k<COMPONENT_TYPE[type].classes.length; k++) {
         if (COMPONENT_TYPE[type].classes[k].id === id) {
             return COMPONENT_TYPE[type].classes[k];
