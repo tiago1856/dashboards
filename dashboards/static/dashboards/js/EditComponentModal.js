@@ -16,7 +16,7 @@ import { BasicTable } from './builders/BasicTable.js';
 import { ExportTable2Excel } from './export/ExportTable2Excel.js';
 import { MSG_DELETE_QUERY } from './messages.js';
 import { getAllNumbers } from './utils/jsutils.js';
-
+import { VISUALIZATION_TYPE } from "./components/VisualizationType.js";
 
 const EDIT_COMPONENT_MODAL = $('#edit-component-modal');
 
@@ -62,15 +62,8 @@ export function EditComponentModal(context) {
     this.table_id = null;
 
     // ALL THE DATA REQUIRED TO RESTORE THE MODAL TO A SPECIFIC STATE
-    this.state = null; /*{
-        id: null,
-        name: null,
-        description: null,
-        title: null,
-        
-        visualization: null,        // SELECTED VISUALIZATION ID
-        visualization_tab: null,    // WHICH COLLAPSE CARD ID IS THE SELECTED VISUALIZATION
-    }*/
+    this.state = null;
+    this.component = null;
     
     SELECTED_FIELDS.multiselect({enableFiltering: true,
         includeSelectAllOption: true,
@@ -194,13 +187,17 @@ export function EditComponentModal(context) {
 
     // DISPLAY SELECTION
     DATA_VISUALIZATION_SELECTION.on('click', function(e) {        
-        if (self.state.visualization) {
-            $('#' + self.state.visualization).children('.img-vis').first().removeClass('img-vis-selected');
+        if (self.state.visualization.visualization_type) {
+            $("[data-vis='" + self.state.visualization.visualization_type + "'").children('.img-vis').first().removeClass('img-vis-selected');
         }
         $(this).children('.img-vis').first().addClass('img-vis-selected');
-        self.state.visualization = this.id;
-        self.state.visualization_tab = $(this).closest('.collapse').attr('id');
-        self.state.visualization_type = $(this).data('type');
+        //self.state.visualization_type = this.id;
+        self.state.visualization.visualization_type = $(this).data('vis');
+        console.log( self.state.visualization.visualization_type);
+        self.state.visualization.visualization_tab = $(this).closest('.collapse').attr('id');
+        self.state.component_type = $(this).data('type');
+        //self.context.signals.onVisualizationSelected.dispatch(this.id);
+        self.setVisualizationConfigPanel();
     });
 
 
@@ -208,6 +205,19 @@ export function EditComponentModal(context) {
 
 EditComponentModal.prototype = {
 
+    /**
+     * Displays the respective panel and sets it's initial state or restore one.
+     */
+    setVisualizationConfigPanel: function() {
+        $('.cdc-config-panel').hide();
+        $("[data-vis='" + this.state.visualization.visualization_type + "'").show();
+        switch(this.state.visualization.visualization_type) {
+            case VISUALIZATION_TYPE.G1N:                 
+                break;
+            case VISUALIZATION_TYPE.GDN:
+                break;
+        }        
+    },
 
     /**
      * Saves the current state of the modal in the state variable, which
@@ -222,9 +232,9 @@ EditComponentModal.prototype = {
         this.state.title = GLOBAL_TITLE.val();
 
         // query
-        this.state.query_selection = QUERY_SELECTION.val();
-        this.state.query = QUERY_AREA.val();
-        this.state.query_selected_fields = SELECTED_FIELDS.val();
+        this.state.query.query_selection = QUERY_SELECTION.val();
+        this.state.query.query = QUERY_AREA.val();
+        this.state.query.query_selected_fields = SELECTED_FIELDS.val();
 
         console.warn("SAVE > ", this.state);
 
@@ -239,16 +249,17 @@ EditComponentModal.prototype = {
 
     /**
      * Opens the modal and sets its inputs and selection accoding to the saved state.
-     * @param {object} state All the data required to restore the modal.
+     * @param {Component} component Component to edit.
      * @param {function} onReady Called to apply the changes.
      */
-    show: function(state, onReady=null) {
+    show: function(component, onReady=null) {
         this.onReady = onReady;
         DATA_SOURCE_TABLE_ALERT.show();
         //NEW_QUERY_DIALOG.hide();
         TABLE_AREA.empty();
         SELECTED_FIELDS.empty();
         SELECTED_FIELDS.multiselect('rebuild');
+        
         NUMBER_LINES.val(DEFAULT_MAX_LINE);
         SAVE_BTN.attr('disabled',true);
 
@@ -257,33 +268,42 @@ EditComponentModal.prototype = {
             QUERY_SELECTION.val('');
             QUERY_SELECTION.trigger('change');
             */
-            console.warn("RESTORE > ", state);
-            this.state = state;
+            console.warn("RESTORE > ", component.data);
+            this.state = component.data;
             // open first tab
             $('.process-model a[href="#edit-component-description-tab"]').tab('show');
             $('.img-vis').removeClass('img-vis-selected');
             // restore?
-            if (state.name != null) {
+            // a component must always have a name
+            if (component.data.name != null) {
                 // global
                 GLOBAL_NAME.val(this.state.name);
                 GLOBAL_DESCRIPTION.val(this.state.description);
                 GLOBAL_TITLE.val(this.state.title);
 
                 // query
-                QUERY_SELECTION.val(this.state.query_selection);
+                QUERY_SELECTION.val(this.state.query.query_selection);
                 QUERY_SELECTION.trigger('change');
-                QUERY_AREA.val(this.state.query);
+                QUERY_AREA.val(this.state.query.query);
+                // restore only the previous selected fields
+                // if others are needed, exec the query
+                this.state.query.query_selected_fields.forEach(field => {
+                    SELECTED_FIELDS.append(createFieldItem(field, true));
+                });
+                SELECTED_FIELDS.multiselect('rebuild');
 
                 // display
                 // open respective collapsed card
-                $('#' + this.state.visualization_tab).collapse('show');
+                $('#' + this.state.visualization.visualization_tab).collapse('show');
                 // select the display image
-                $('#' + this.state.visualization).children('.img-vis').first().addClass('img-vis-selected');
+                //$('#' + this.state.visualization.visualization).children('.img-vis').first().addClass('img-vis-selected');
+                $("[data-vis='" + this.state.visualization.visualization_type + "'").children('.img-vis').first().addClass('img-vis-selected');
             } else {
                 // global
                 GLOBAL_NAME.val(uuidv4());
                 GLOBAL_DESCRIPTION.val('');
                 GLOBAL_TITLE.val('');
+                this.state.component_type = 'TABLE';
 
                 // query
                 QUERY_SELECTION.val('');
@@ -295,11 +315,12 @@ EditComponentModal.prototype = {
                 $('#data-visualization-tables').collapse('show');
                 // select tabe
                 $('#data-visualization-table-simple').children('.img-vis').first().addClass('img-vis-selected');
-                this.state.visualization = 'data-visualization-table-simple';
-                this.state.visualization_tab = 'data-visualization-tables';
-                this.state.visualization_type = 'TABLE';
+                this.state.visualization.visualization_type = VISUALIZATION_TYPE.TS;
+                this.state.visualization.visualization_tab = 'data-visualization-tables';
+                
             }
-
+            this.setVisualizationConfigPanel();
+            // this.setConnections();
             EDIT_COMPONENT_MODAL.modal('show')
         });
         
@@ -322,10 +343,10 @@ EditComponentModal.prototype = {
         $("body").css("cursor","progress");
         fetchGET(URL_LIST_QUERIES, 
             (result) => {
-                QUERY_SELECTION.empty();                
-                QUERY_SELECTION.append(this.createQueryItem({name:'Selecione ou crie uma Query nova', id:'', "data-query":''}, true));
+                QUERY_SELECTION.empty();
+                QUERY_SELECTION.append(createQueryItem({name:'Selecione ou crie uma Query nova', id:'', "data-query":''}, true));
                 result.forEach(query => {
-                    QUERY_SELECTION.append(this.createQueryItem(query));
+                    QUERY_SELECTION.append(createQueryItem(query));
                 });
                 $("body").css("cursor","auto");
                 if (onReady) onReady();
@@ -341,29 +362,6 @@ EditComponentModal.prototype = {
         );
     },
 
-    createQueryItem : function(item, selected=false) {
-       const option = $('<option/>')
-       option.text(item.name);
-       option.attr('value', item.id);
-       option.attr('name', item.id);
-       option.attr('data-query', item.query);
-       if (selected) option.attr('selected', true);
-       return option;
-    },
-
-    updateQueryItem : function(query) {
-        const option = QUERY_SELECTION.find("option:selected");
-        option.attr('data-query', query);
-        return option;
-     },    
-
-    createFieldItem : function(value, selected=false) {
-        const option = $('<option/>')
-        option.text(value);
-        option.attr('value', value);
-        if (selected) option.attr('selected', true);
-        return option;
-     },
 
     changeSaveStatus: function(new_status) {
         // not save if no query selected
@@ -390,7 +388,7 @@ EditComponentModal.prototype = {
             (result) => {
                 $("body").css("cursor","auto");
                 console.log(result);
-                QUERY_SELECTION.append(this.createQueryItem(result));
+                QUERY_SELECTION.append(createQueryItem(result));
                 if (onReady) onReady(result.id)
             },
             (error) => {
@@ -421,7 +419,7 @@ EditComponentModal.prototype = {
             (result) => {
                 $("body").css("cursor","auto");
                 console.log(result);
-                this.updateQueryItem(query);
+                updateQueryItem(query);
                 if (onReady) onReady();
             },
             (error) => {
@@ -472,7 +470,7 @@ EditComponentModal.prototype = {
                 if (result.length == 0) return;                
 
                 Object.keys(result[0]).forEach(column => {
-                    SELECTED_FIELDS.append(this.createFieldItem(column, true));
+                    SELECTED_FIELDS.append(createFieldItem(column, true));
                 });
                 SELECTED_FIELDS.multiselect('rebuild');
 
@@ -487,3 +485,44 @@ EditComponentModal.prototype = {
         )
     },
 }
+
+/**
+ * 
+ * @param {*} item 
+ * @param {*} selected 
+ * @returns 
+ */
+const createQueryItem = (item, selected=false) => {
+    const option = $('<option/>')
+    option.text(item.name);
+    option.attr('value', item.id);
+    option.attr('name', item.id);
+    option.attr('data-query', item.query);
+    if (selected) option.attr('selected', true);
+    return option;
+ },
+
+/**
+ * 
+ * @param {*} query 
+ * @returns 
+ */
+const updateQueryItem = (query) => {
+     const option = QUERY_SELECTION.find("option:selected");
+     option.attr('data-query', query);
+     return option;
+},    
+
+/**
+ * 
+ * @param {*} value 
+ * @param {*} selected 
+ * @returns 
+ */
+const createFieldItem = (value, selected=false) => {
+     const option = $('<option/>')
+     option.text(value);
+     option.attr('value', value);
+     if (selected) option.attr('selected', true);
+     return option;
+},

@@ -1,5 +1,102 @@
 {% load static %}
 
+<!--
+	data-vis defined in VisualizationType.js
+-->
+
 <section id="section-component-data-config">
-	  
+	<section id="section-cdc-graph-1-num" class="collapse cdc-config-panel" data-vis='G1N'>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="cdc-graph-1-num-x-axis">Eixo x: </label>
+                    <select class="form-control" id="cdc-graph-1-num-x-axis">
+                    </select>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <label for="cdc-graph-1-num-x-axis-label">Rótulo:</label>
+                    <input type="text" class="form-control" placeholder="Rótulo do campo" id="cdc-graph-1-num-x-axis-label">
+                </div>
+            </div>        
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="cdc-graph-1-num-series">Série:</label>
+                    <select class="form-control" id="cdc-graph-1-num-series">
+                    </select>            
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <label for="cdc-graph-1-num-series-label">Rótulo:</label>
+                    <input type="text" class="form-control" placeholder="Rótulo do campo" id="cdc-graph-1-num-series-label">
+                </div>                
+            </div>
+        </div>
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" id="cdc-graph-1-num-invert">Inverter Linhas/Colunas
+            </label>
+        </div>
+    </section>
+
+	<section id="section-cdc-graph-double-num" class="collapse cdc-config-panel" data-vis='GDN'>
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="cdc-graph-double-num-x-axis">Eixo x: </label>
+                    <select class="form-control" id="cdc-graph-double-num-x-axis">
+                    </select>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <label for="cdc-graph-double-num-x-axis-label">Rótulo:</label>
+                    <input type="text" class="form-control" placeholder="Rótulo do campo" id="cdc-graph-double-num-x-axis-label">
+                </div>
+            </div>        
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="cdc-graph-double-num-series-1">Série #1: </label>
+                    <select class="form-control" id="cdc-graph-double-num-series-1">
+                    </select>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <label for="cdc-graph-double-num-series-1-label">Rótulo:</label>
+                    <input type="text" class="form-control" placeholder="Rótulo do campo" id="cdc-graph-double-num-series-1-label">
+                </div>
+            </div>        
+        </div>
+
+        <div class="row">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="cdc-graph-double-num-series-2">Série #2: </label>
+                    <select class="form-control" id="cdc-graph-double-num-series-2">
+                    </select>
+                </div>
+            </div>
+            <div class="col-8">
+                <div class="form-group">
+                    <label for="cdc-graph-double-num-series-2-label">Rótulo:</label>
+                    <input type="text" class="form-control" placeholder="Rótulo do campo" id="cdc-graph-double-num-series-2-label">
+                </div>
+            </div>        
+        </div>        
+
+        <div class="form-check">
+            <label class="form-check-label">
+                <input type="checkbox" class="form-check-input" id="cdc-graph-double-num-invert">Inverter Linhas/Colunas
+            </label>
+        </div>
+    </section>    
+
 <section>

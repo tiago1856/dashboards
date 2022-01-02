@@ -113,10 +113,30 @@ context.signals.onZoomComponent.add((msg) => {
 
 context.signals.onEditComponent.add((spot) => {
     const component = layout.getComponentAt(spot);
+    edit_component_modal.show(component, () => {
+        component.update();
+    });
+    /*
     edit_component_modal.show(component.data, () => {
         component.update();
     });
+    */
 });
+
+/*
+context.signals.onVisualizationSelected.add((selected_id) => {
+    $('.cdc-config-panel').hide();
+    switch(selected_id) {
+        case 'data-visualization-graph-1-num': 
+            $("[data-vis='G1N'").show();
+            break;
+        case 'data-visualization-graph-double-num': 
+            $("[data-vis='GDN'").show();
+            break;
+    }
+});
+*/
+
 
 // ----------------
 // TOP ROW ACTIONS

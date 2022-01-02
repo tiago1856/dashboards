@@ -1,5 +1,9 @@
 {% load static %}
 
+<!--
+	data-vis defined in VisualizationType.js
+-->
+
 <section id="section-data-visualization">
 	<div id="data-visualization-accordion">
 
@@ -14,12 +18,12 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-table-simple" data-type="TABLE">
+							<a href="#" class="data-visualization-selection" id="data-visualization-table-simple" data-type="TABLE" data-vis='TS'>
 								<img src="{% static 'dashboards/images/display/table_simple.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-table-complex" data-type="TABLE">
+							<a href="#" class="data-visualization-selection" id="data-visualization-table-complex" data-type="TABLE" data-vis='TC'>
 								<img src="{% static 'dashboards/images/display/table_complex.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
@@ -39,22 +43,22 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-graph-1-num" data-type="GRAPH">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-1-num" data-type="GRAPH" data-vis='G1N'>
 								<img src="{% static 'dashboards/images/display/graph_1_num.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-graph-double-num" data-type="GRAPH">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-double-num" data-type="GRAPH" data-vis='GDN'>
 								<img src="{% static 'dashboards/images/display/graph_double_num.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-graph-n-numerical" data-type="GRAPH">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-n-numerical" data-type="GRAPH" data-vis='GNN'>
 								<img src="{% static 'dashboards/images/display/graph_n_numerical.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-graph-time-series" data-type="GRAPH">
+							<a href="#" class="data-visualization-selection" id="data-visualization-graph-time-series" data-type="GRAPH" data-vis='GTS'>
 								<img src="{% static 'dashboards/images/display/graph_time_series.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
@@ -74,17 +78,17 @@
 				<div class="card-body">
 					<div class="row">
 						<div class="col-lg-3 col-md-4 col-xs-6">				
-							<a href="#" class="data-visualization-selection" id="data-visualization-info-simple-left" data-type="INFO">
+							<a href="#" class="data-visualization-selection" id="data-visualization-info-simple-left" data-type="INFO" data-vis='ISL'>
 								<img src="{% static 'dashboards/images/display/info_simple_left.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-info-simple-right" data-type="INFO">
+							<a href="#" class="data-visualization-selection" id="data-visualization-info-simple-right" data-type="INFO" data-vis='ISR'>
 								<img src="{% static 'dashboards/images/display/info_simple_right.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">						
-							<a href="#" class="data-visualization-selection" id="data-visualization-info-complex-percentage" data-type="INFO">
+							<a href="#" class="data-visualization-selection" id="data-visualization-info-complex-percentage" data-type="INFO" data-vis='ICP'>
 								<img src="{% static 'dashboards/images/display/info_complex_percentage.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
@@ -104,17 +108,17 @@
 			  	<div class="card-body">
 					<div class="row">
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-geo-dens" data-type="GEO">
+							<a href="#" class="data-visualization-selection" id="data-visualization-geo-dens" data-type="GEO" data-vis='GD'>
 								<img src="{% static 'dashboards/images/display/geo_dens.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-geo-path" data-type="GEO">
+							<a href="#" class="data-visualization-selection" id="data-visualization-geo-path" data-type="GEO" data-vis='GP'>
 								<img src="{% static 'dashboards/images/display/geo_path.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
 						<div class="col-lg-3 col-md-4 col-xs-6">						
-							<a href="#" class="data-visualization-selection" id="data-visualization-geo-quant" data-type="GEO">
+							<a href="#" class="data-visualization-selection" id="data-visualization-geo-quant" data-type="GEO" data-vis='GQ'>
 								<img src="{% static 'dashboards/images/display/geo_quant.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->
@@ -134,7 +138,7 @@
 			  	<div class="card-body">
 					<div class="row">
 						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-template-calendar" data-type="TEMPLATE">
+							<a href="#" class="data-visualization-selection" id="data-visualization-template-calendar" data-type="TEMPLATE" data-vis='TC'>
 								<img src="{% static 'dashboards/images/display/template_calendar.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
 						</div><!-- /col -->

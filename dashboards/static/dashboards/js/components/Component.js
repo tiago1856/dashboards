@@ -31,6 +31,8 @@ export class Component extends Div {
 
         this.spot = spot;     // place in the layout
         this.content = null;  // content of the panel
+        this.new_subcomponent = false;  // whether or not to create/re-recreate the subcomponent
+                                        // example: when new visualizaton type, new data, ...
 
         //if (vh100) this.setStyle('min-height','100%');
         if (h100) this.addClass('full-height');
@@ -47,88 +49,26 @@ export class Component extends Div {
         const card_tools = new Div().attachTo(header);
         card_tools.addClass('card-tools');
 
+        const open_btn = toolButton('fas fa-folder-open', 'text-danger editable-component', 'Abrir component').attachTo(card_tools);
+        const save_btn = toolButton('fas fa-save', 'text-danger editable-component', 'Guardar component').attachTo(card_tools);
+        const edit_btn = toolButton('fas fa-pencil-alt', 'text-danger editable-component', 'Nova/Editar Query').attachTo(card_tools);
+        const delete_btn = toolButton('fas fa-trash', 'text-danger editable-component', 'Apagar component').attachTo(card_tools);
+        this.options_btn = toolButton('fas fa-cog', 'non-editable-component', 'Configuração').attachTo(card_tools);
+        const print_btn = toolButton('fas fa-print', 'non-editable-component', 'Imprimir component').attachTo(card_tools);
+        const zoom_btn = toolButton('fas fa-expand-arrows-alt', 'non-editable-component', 'Ampliar component').attachTo(card_tools);
+        const collapse_btn = toolButton('fas fa-minus', 'non-editable-component', 'Collapsar component').attachTo(card_tools);
+        const close_btn = toolButton('fas fa-times', 'non-editable-component', 'Remover component').attachTo(card_tools);
 
-        const open_btn = new AwesomeIconAndButton('','fas fa-folder-open').attachTo(card_tools);
-        open_btn.addClass('btn btn-sm text-danger editable-component');
-        open_btn.setAttribute('type','button');
-        open_btn.setAttribute('data-toggle','tooltip');
-        open_btn.setAttribute('title','Abrir component');
 
-        const save_btn = new AwesomeIconAndButton('','fas fa-save').attachTo(card_tools);
-        save_btn.addClass('btn btn-sm text-danger editable-component');
-        save_btn.setAttribute('type','button');
-        save_btn.setAttribute('data-toggle','tooltip');
-        save_btn.setAttribute('title','Guardar component');
-
-        const edit_btn = new AwesomeIconAndButton('','fas fa-pencil-alt').attachTo(card_tools);
-        edit_btn.addClass('btn btn-sm text-danger editable-component');
-        edit_btn.setAttribute('type','button');
-        edit_btn.setAttribute('data-toggle','tooltip');
-        edit_btn.setAttribute('title','Nova/Editar Query');
-
-        const delete_btn = new AwesomeIconAndButton('','fas fa-trash').attachTo(card_tools);
-        delete_btn.addClass('btn btn-sm text-danger editable-component');
-        delete_btn.setAttribute('type','button');
-        delete_btn.setAttribute('data-toggle','tooltip');
-        delete_btn.setAttribute('title','Apagar Componente');
-
-        this.options_btn = new AwesomeIconAndButton('','fas fa-cog').attachTo(card_tools);
-        this.options_btn.addClass('btn btn-sm non-editable-component');
-        this.options_btn.setAttribute('type','button');
-        this.options_btn.setAttribute('data-toggle','tooltip');
-        this.options_btn.setAttribute('title','Configuração'); 
-
-        const print_btn = new AwesomeIconAndButton('','fas fa-print').attachTo(card_tools);
-        print_btn.addClass('btn btn-sm non-editable-component');
-        print_btn.setAttribute('type','button');
-        print_btn.setAttribute('data-toggle','tooltip');
-        print_btn.setAttribute('title','Imprimir componente');
-
-        const zoom_btn = new AwesomeIconAndButton('','fas fa-expand-arrows-alt').attachTo(card_tools);
-        zoom_btn.addClass('btn btn-sm non-editable-component');
-        zoom_btn.setAttribute('type','button');
-        zoom_btn.setAttribute('data-toggle','tooltip');
-        zoom_btn.setAttribute('title','Ampliar componente');
-
-        const collapse_btn = new AwesomeIconAndButton('','fas fa-minus').attachTo(card_tools);
-        collapse_btn.addClass('btn btn-sm non-editable-component');
-        collapse_btn.setAttribute('type','button');
-        collapse_btn.setAttribute('data-card-widget','collapse');
-        collapse_btn.setAttribute('data-toggle','tooltip');
-        collapse_btn.setAttribute('title','Collapsar componente');
-
-        const close_btn = new AwesomeIconAndButton('','fas fa-times').attachTo(card_tools);
-        close_btn.addClass('btn btn-sm non-editable-component');
-        close_btn.setAttribute('type','button');
-        close_btn.setAttribute('data-card-widget','remove');
-        close_btn.setAttribute('data-toggle','tooltip');
-        close_btn.setAttribute('title','Remover componente');
-
-        this.body = new Div().attachTo(this);
-        this.body.addClass('card-body');
-        
-        // set a random id for this component's body
-        this.body.setId(uuidv4());
-
-        // 
+        // restoring a saved component
         if (data) {
+          this.body = new Div().attachTo(this);
+          this.body.addClass('card-body');
+          this.body.setId(uuidv4());   // set a random id for this component's body       
           const component = getComponentClass(data.visualization_type, data.visualization);
-          if (component)
-            this.content = new component.class(context, data, this.body, this.options_btn);
-          /*
-          const n = Math.floor(Math.random() * 3);
-          switch (n) {
-            case 0:
-              this.content = new Graph1Num(context, null, this.body, this.options_btn);
-              break;
-            case 1:
-              this.content = new GraphDoubleNum(context, null, this.body, this.options_btn);
-              break;
-            case 2:
-              this.content = new GraphTimeSeries(context, null, this.body, this.options_btn);            
-              break;
+          if (component) {
+            this.content = new component.class(context, data, this.body, this.options_btn.dom);
           }
-          */
         }     
 
         $(zoom_btn.dom).on('click',function() {
@@ -207,10 +147,26 @@ export class Component extends Div {
     update() {
       console.log("UPDATE COMPONENT > ", this.spot, this.data);
       this.setTitle(this.data.title);
-      const component = getComponentClass(this.data.visualization_type, this.data.visualization);
-      if (component) {
-        this.content = new component.class(this.context, this.data, this.body, this.options_btn);
+      //if (this.new_subcomponent) {
+        const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
+        if (component) {
+          if (this.body) $(this.body.dom).remove();
+          this.body = new Div().attachTo(this);
+          this.body.addClass('card-body');
+          this.body.setId(uuidv4());
+          this.content = null;          
+          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom);
+        }
       }
-
-    }
 }
+
+const toolButton = (icon, classes, title) => {
+  const btn = new AwesomeIconAndButton('',icon);
+  btn.addClass('btn btn-sm ' + classes);
+  btn.setAttribute('type','button');
+  btn.setAttribute('data-toggle','tooltip');
+  btn.setAttribute('title',title);
+  return btn;
+}
+
+

@@ -9,12 +9,17 @@ export const ComponentData = {
     name: null,                 // [string]
     description: null,          // [string]
     title: null,                // title [string]
+    component_type: null,       // COMPONENT_TYPE (ComponentType.js) [string]
     // query
-    query_selection: null,
-    query: null,
-    query_selected_fields: null,    // query's selected fields [array of strings]
+    query: {
+        query_selection: null,
+        query: null,
+        query_selected_fields: null,    // query's selected fields [array of strings]
+    },
     // visualization
-    visualization: null,        // visualization id
-    visualization_tab: null,    // EditComponentModal display collapse 
-    visualization_type: null,   // DISPLAY (constants.js)
+    visualization: {
+        visualization_type: null,     // VISUALIZATION_TYPE (VisualizationType.js) [string]
+        visualization_tab: null,    // EditComponentModal display collapse [string] 
+    }   
+    
 }

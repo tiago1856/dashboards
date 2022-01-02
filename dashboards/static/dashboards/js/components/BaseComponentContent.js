@@ -1,6 +1,9 @@
 import { fetchPOST } from "../Fetch.js";
 import { URL_EXEC_QUERY } from "../urls.js";
 
+/**
+ * Component's inside.
+ */
 export class BaseComponentContent {
     constructor(context, data, parent) {
         this.context = context;

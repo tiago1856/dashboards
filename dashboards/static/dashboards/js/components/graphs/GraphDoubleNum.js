@@ -5,18 +5,21 @@ export class GraphDoubleNum extends BaseComponentContent {
     constructor(context, data, parent, opt_btn) {
         super(context, data, parent);
 
-        context.react_message_broker.postMessage({
-            operation:'create_component', 
-            id: parent.getId(),
-            data: this.component_data,
+        this.execQuery(data.query.query, 10, (results) => {
+            const component_data = this.prepareData(results);
+            context.react_message_broker.postMessage({
+                operation:'create_component', 
+                id: parent.getId(),
+                data: component_data,
+            });
         });
 
         $(opt_btn).on('click',function() {
-            self.context.react_message_broker.postMessage({
+            context.react_message_broker.postMessage({
               operation:'show_options', 
-              id: id,
+              id: parent.getId(),
             }); 
-        });        
+        });
     }
 
     prepareData(_data) {
