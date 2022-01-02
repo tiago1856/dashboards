@@ -500,7 +500,7 @@ const createQueryItem = (item, selected=false) => {
     option.attr('data-query', item.query);
     if (selected) option.attr('selected', true);
     return option;
- },
+ }
 
 /**
  * 
@@ -511,7 +511,7 @@ const updateQueryItem = (query) => {
      const option = QUERY_SELECTION.find("option:selected");
      option.attr('data-query', query);
      return option;
-},    
+}
 
 /**
  * 
@@ -525,4 +525,4 @@ const createFieldItem = (value, selected=false) => {
      option.attr('value', value);
      if (selected) option.attr('selected', true);
      return option;
-},
+}
