@@ -2,7 +2,6 @@
 import { VISUALIZATION_TYPE } from './VisualizationType.js'
 import { Graph1Num } from "./graphs/Graph1Num.js"
 import { GraphDoubleNum } from "./graphs/GraphDoubleNum.js"
-import { GraphTimeSeries } from "./graphs/GraphTimeSeries.js"
 
 export const COMPONENT_TYPE = {
     TABLE: {
@@ -13,7 +12,6 @@ export const COMPONENT_TYPE = {
         classes: [
             {id: VISUALIZATION_TYPE.G1N, class:Graph1Num},
             {id: VISUALIZATION_TYPE.GDN, class:GraphDoubleNum},
-            {id: VISUALIZATION_TYPE.GTS, class:GraphTimeSeries},
         ]        
     },
     INFO: {

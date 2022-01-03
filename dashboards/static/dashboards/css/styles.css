@@ -8,6 +8,18 @@
     cursor: pointer;   
 }
 
+/* INPUT VALIDATIONS */
+.invalid-input,
+input:focus.invalid-input  {
+    background-color: rgb(255, 184, 184);
+}
+
+.valid-input,
+input:focus.valid-input  {
+    background-color: rgb(167, 255, 167);
+}
+
+
 /* ********************** */
 /*  ADMINLTE OVERRIDES    */
 /* ********************** */

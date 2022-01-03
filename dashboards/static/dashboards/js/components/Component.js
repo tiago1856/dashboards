@@ -2,9 +2,6 @@
 import { Div, AwesomeIconAndButton, Text } from '../builders/BuildingBlocks.js';
 import { ComponentData } from './ComponentData.js';
 import { NO_TITLE_DEFINED } from '../constants.js';
-import { Graph1Num } from './graphs/Graph1Num.js';
-import { GraphDoubleNum } from './graphs/GraphDoubleNum.js';
-import { GraphTimeSeries } from './graphs/GraphTimeSeries.js';
 import { getComponentClass } from './ComponentType.js';
 
 /**
@@ -27,7 +24,7 @@ export class Component extends Div {
         this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
         
-        this.data = data?data:{ ...ComponentData };
+        this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
 
         this.spot = spot;     // place in the layout
         this.content = null;  // content of the panel
@@ -72,7 +69,7 @@ export class Component extends Div {
         }     
 
         $(zoom_btn.dom).on('click',function() {
-          context.signals.onZoomComponent.dispatch(self.spot);
+          context.signals.onZoomComponent.dispatch(self.spot, self.body);
         });
         
         $(edit_btn.dom).on('click',function() {
@@ -154,7 +151,7 @@ export class Component extends Div {
           this.body = new Div().attachTo(this);
           this.body.addClass('card-body');
           this.body.setId(uuidv4());
-          this.content = null;          
+          this.content = null;
           this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom);
         }
       }

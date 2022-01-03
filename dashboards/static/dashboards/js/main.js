@@ -107,8 +107,12 @@ context.signals.onChanged.add(() => {
     changeSaveStatus(true);
 });
 
-context.signals.onZoomComponent.add((msg) => {
+context.signals.onZoomComponent.add((msg, body) => {
     ZOOM_MODAL.modal('show');
+    /*
+    $("#zoom-modal-body").empty();
+    $(body.dom).clone().appendTo($("#zoom-modal-body"))
+    */
 });
 
 context.signals.onEditComponent.add((spot) => {

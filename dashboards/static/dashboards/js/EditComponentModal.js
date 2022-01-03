@@ -51,6 +51,15 @@ const DEFAULT_MAX_LINE = 10;
 // VISUALIZATION
 const DATA_VISUALIZATION_SELECTION = $('.data-visualization-selection');
 
+// GRAPH 1 NUM
+const G1N_INVERT_BTN = $('#cdc-graph-1-num-invert-btn')
+const G1N_X_AXIS = $('#cdc-graph-1-num-x-axis')
+const G1N_SERIES = $('#cdc-graph-1-num-series')
+
+const GDN_X_AXIS = $('#cdc-graph-double-num-x-axis');
+const GDN_SERIES_1 = $('#cdc-graph-double-num-series-1');
+const GDN_SERIES_2 = $('#cdc-graph-double-num-series-2');
+
 
 export function EditComponentModal(context) {
 
@@ -139,7 +148,18 @@ export function EditComponentModal(context) {
     // ----------------
     // EVENTS
     // ----------------
-   
+    GLOBAL_NAME.on('change focus keyup paste', function(e) {
+        if (e.target.value === '') {
+            console.log("invalid");
+            GLOBAL_NAME.addClass('invalid-input');
+            GLOBAL_NAME.removeClass('valid-input ');            
+        } else {
+            console.log("valid");
+            GLOBAL_NAME.removeClass('invalid-input');
+            GLOBAL_NAME.addClass('valid-input');
+            // check name
+        }
+    });
 
     // on query selection
     QUERY_SELECTION.on('change', function(e) {
@@ -187,6 +207,7 @@ export function EditComponentModal(context) {
 
     // DISPLAY SELECTION
     DATA_VISUALIZATION_SELECTION.on('click', function(e) {        
+        if (self.state.visualization.visualization_type === $(this).data('vis')) return;
         if (self.state.visualization.visualization_type) {
             $("[data-vis='" + self.state.visualization.visualization_type + "'").children('.img-vis').first().removeClass('img-vis-selected');
         }
@@ -197,9 +218,45 @@ export function EditComponentModal(context) {
         self.state.visualization.visualization_tab = $(this).closest('.collapse').attr('id');
         self.state.component_type = $(this).data('type');
         //self.context.signals.onVisualizationSelected.dispatch(this.id);
-        self.setVisualizationConfigPanel();
+        self.setVisualizationConfigPanel(false);
     });
 
+    // -------------------
+    // GRAPH 1 NUM
+    // -------------------
+    // GRAPH NUM 1 SWITCH LINES/COLUMNS
+    G1N_INVERT_BTN.on('change', function() {
+        const val_1 = G1N_X_AXIS.val();
+        const val_2 = G1N_SERIES.val();
+        G1N_X_AXIS.val(val_2);
+        G1N_SERIES.val(val_1);
+        self.state.data_config = {
+            fields: [
+                G1N_X_AXIS.val(),
+                G1N_SERIES.val(),        
+            ]
+        }
+    });
+
+    G1N_X_AXIS.on('change', function(e) {
+        self.state.data_config.fields[0] = e.target.value;
+    });
+    G1N_SERIES.on('change', function(e) {
+        self.state.data_config.fields[1] = e.target.value;
+    });
+
+    // -------------------
+    // GRAPH DOUBLE NUM
+    // -------------------    
+    GDN_X_AXIS.on('change', function(e) {
+        self.state.data_config.fields[0] = e.target.value;
+    });
+    GDN_SERIES_1.on('change', function(e) {
+        self.state.data_config.fields[1] = e.target.value;
+    });
+    GDN_SERIES_2.on('change', function(e) {
+        self.state.data_config.fields[2] = e.target.value;
+    });
 
 }
 
@@ -208,14 +265,67 @@ EditComponentModal.prototype = {
     /**
      * Displays the respective panel and sets it's initial state or restore one.
      */
-    setVisualizationConfigPanel: function() {
+    setVisualizationConfigPanel: function(restore=true) {
         $('.cdc-config-panel').hide();
         $("[data-vis='" + this.state.visualization.visualization_type + "'").show();
         switch(this.state.visualization.visualization_type) {
-            case VISUALIZATION_TYPE.G1N:                 
+            case VISUALIZATION_TYPE.G1N: 
+            {                
+                G1N_X_AXIS.empty();
+                G1N_SERIES.empty();                                
+                const fields = SELECTED_FIELDS.val();
+                fields.forEach(field => {
+                    const option = createFieldItem(field, false);
+                    G1N_X_AXIS.append(option);
+                    G1N_SERIES.append(option.clone());
+                })
+                if (restore) {
+                    G1N_X_AXIS.val(this.state.data_config.fields[0]);
+                    G1N_SERIES.val(this.state.data_config.fields[1]);
+                } else {
+                    G1N_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
+                    G1N_SERIES.val($("#cdc-graph-1-num-series option:eq(1)").val());
+                    this.state.data_config = {};
+                    this.state.data_config = {
+                        fields: [
+                            G1N_X_AXIS.val(),
+                            G1N_SERIES.val(),
+                        ]
+                    };
+                }
                 break;
+            }
             case VISUALIZATION_TYPE.GDN:
+            {
+                GDN_X_AXIS.empty();
+                GDN_SERIES_1.empty();
+                GDN_SERIES_2.empty();
+                const fields = SELECTED_FIELDS.val();
+                fields.forEach(field => {
+                    const option = createFieldItem(field, false);
+                    GDN_X_AXIS.append(option);
+                    GDN_SERIES_1.append(option.clone());
+                    GDN_SERIES_2.append(option.clone());
+                });
+                if (restore) {
+                    GDN_X_AXIS.val(this.state.data_config.fields[0]);
+                    GDN_SERIES_1.val(this.state.data_config.fields[1]);
+                    GDN_SERIES_2.val(this.state.data_config.fields[2]);
+                } else {
+                    GDN_X_AXIS.val($("#cdc-graph-double-num-x-axis option:first").val());
+                    GDN_SERIES_1.val($("#cdc-graph-double-num-series-1 option:eq(1)").val());
+                    GDN_SERIES_2.val($("#cdc-graph-double-num-series-2 option:eq(2)").val());
+                    this.state.data_config = {};
+                    this.state.data_config = { 
+                        fields: [
+                            GDN_X_AXIS.val(),
+                            GDN_SERIES_1.val(),
+                            GDN_SERIES_2.val(),
+                        ]
+                    }
+                }
                 break;
+            }
         }        
     },
 
@@ -276,6 +386,7 @@ EditComponentModal.prototype = {
             // restore?
             // a component must always have a name
             if (component.data.name != null) {
+                console.log(">>>RESTORE<<<");
                 // global
                 GLOBAL_NAME.val(this.state.name);
                 GLOBAL_DESCRIPTION.val(this.state.description);
@@ -298,7 +409,10 @@ EditComponentModal.prototype = {
                 // select the display image
                 //$('#' + this.state.visualization.visualization).children('.img-vis').first().addClass('img-vis-selected');
                 $("[data-vis='" + this.state.visualization.visualization_type + "'").children('.img-vis').first().addClass('img-vis-selected');
+
+                this.setVisualizationConfigPanel(true);
             } else {
+                console.log(">>>NEW<<<");
                 // global
                 GLOBAL_NAME.val(uuidv4());
                 GLOBAL_DESCRIPTION.val('');
@@ -317,9 +431,9 @@ EditComponentModal.prototype = {
                 $('#data-visualization-table-simple').children('.img-vis').first().addClass('img-vis-selected');
                 this.state.visualization.visualization_type = VISUALIZATION_TYPE.TS;
                 this.state.visualization.visualization_tab = 'data-visualization-tables';
-                
+                this.setVisualizationConfigPanel(false);
             }
-            this.setVisualizationConfigPanel();
+            
             // this.setConnections();
             EDIT_COMPONENT_MODAL.modal('show')
         });
@@ -477,6 +591,8 @@ EditComponentModal.prototype = {
                 const table = new BasicTable(result, parseInt(NUMBER_LINES.val())).attachTo(TABLE_AREA.get(0));
                 this.table_id = table.getId();
                 EXCEL_BTN.removeAttr('disabled');
+
+                this.setVisualizationConfigPanel(false);
             },
             (error) => {
 				$("body").css("cursor","auto");
@@ -526,3 +642,5 @@ const createFieldItem = (value, selected=false) => {
      if (selected) option.attr('selected', true);
      return option;
 }
+
+

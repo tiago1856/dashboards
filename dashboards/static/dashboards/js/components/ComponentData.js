@@ -20,6 +20,7 @@ export const ComponentData = {
     visualization: {
         visualization_type: null,     // VISUALIZATION_TYPE (VisualizationType.js) [string]
         visualization_tab: null,    // EditComponentModal display collapse [string] 
-    }   
+    },
+    data_config: {},                // visualization configuration panel [object]
     
 }
