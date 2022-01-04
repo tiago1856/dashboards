@@ -295,9 +295,11 @@ EditComponentModal.prototype = {
                     // no order or selection was done yet by the user
                     // and therefore, default = all fields and data_config
                     // still not set
+                    /*
                     if (this.state.data_config.fields === undefined ) {
                         this.state.data_config = { fields: fields };
                     }
+                    */
                     this.state.data_config.fields.forEach(field => {
                         const item = createSortableListItem(field);
                         TS_SORTABLE_YES.append(item);
@@ -396,6 +398,15 @@ EditComponentModal.prototype = {
         this.state.query.query_fields = $.map($('#data-source-selected-fields option') ,function(option) {
             return option.value;
         });
+
+        // visuzalization
+        // no order or selection was done yet by the user
+        // and therefore, default = all fields and data_config
+        // still not set
+        // if fields = [] => nothing selected => all fields selected
+        if (this.state.data_config.fields === undefined ) {
+            this.state.data_config = { fields: SELECTED_FIELDS.val() };
+        }
 
         console.warn("SAVE > ", this.state);
 

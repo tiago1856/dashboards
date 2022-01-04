@@ -6,7 +6,7 @@ import { Table, TableTr, TableTd, TableTh, TableTbody, TableThead } from './Buil
  * 
  * @param {array} data Array of objects.
  * @param {number} max_lines Maximum number of lines (<0 => ALL).
- * @param {array of strings} order Order of the columns.
+ * @param {array of strings} order Order of the columns. If none or empty, then all and default order.
  * @returns HTML Table or null if empty.
  */
 export function BasicTable(data, max_lines = 10, order=null) {
@@ -16,7 +16,7 @@ export function BasicTable(data, max_lines = 10, order=null) {
     //table.setId(uuidv4());
     const head = new TableThead().attachTo(table);
     const head_row = new TableTr().attachTo(head);
-    if (order) {
+    if (order && order.length > 0) {
         order.forEach(column => {
             const col = new TableTh().attachTo(head_row);
             col.setTextContent(column.toUpperCase());
@@ -34,7 +34,7 @@ export function BasicTable(data, max_lines = 10, order=null) {
     data.forEach((row, index) => {
         if (max_lines >= 0 && index >= max_lines) return false;
         const _row = new TableTr().attachTo(body);
-        if (order) {
+        if (order && order.length > 0) {
             order.forEach(_order => {
                 const td = new TableTd().attachTo(_row);
                 td.setTextContent(row[_order]);

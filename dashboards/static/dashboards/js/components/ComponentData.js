@@ -6,10 +6,10 @@
 
 export const ComponentData = {
     // global
-    name: null,                 // [string]
-    description: null,          // [string]
-    title: null,                // title [string]
-    component_type: null,       // COMPONENT_TYPE (ComponentType.js) [string]
+    name: null,                         // [string]
+    description: null,                  // [string]
+    title: null,                        // title [string]
+    component_type: null,               // COMPONENT_TYPE (ComponentType.js) [string]
     // query
     query: {
         query_selection: null,
@@ -19,9 +19,11 @@ export const ComponentData = {
     },
     // visualization
     visualization: {
-        visualization_type: null,     // VISUALIZATION_TYPE (VisualizationType.js) [string]
-        visualization_tab: null,    // EditComponentModal display collapse [string] 
+        visualization_type: null,       // VISUALIZATION_TYPE (VisualizationType.js) [string]
+        visualization_tab: null,        // EditComponentModal display collapse [string] 
     },
-    data_config: {},                // visualization configuration panel [object]
+    // data
+    data_config: {                      // visualization configuration panel [object]
+    },
     
 }

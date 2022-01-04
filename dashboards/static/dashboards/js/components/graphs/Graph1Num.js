@@ -1,5 +1,6 @@
 
 import { BaseComponentContent } from '../BaseComponentContent.js';
+import { getNumberField, getStringField, isNumber } from '../Discovery.js';
 
 export class Graph1Num extends BaseComponentContent {
     constructor(context, data, parent, opt_btn) {
@@ -25,12 +26,22 @@ export class Graph1Num extends BaseComponentContent {
     prepareData(data_2_display, _data=null) {
         super.prepareData(data_2_display);
 
-       const id = _data.data_config.fields[0];
-       const value = _data.data_config.fields[1];
-       if (!id || !value) {
-        this.context.signals.onError.dispatch("Erros nos dados!","[Graph1Num::prepareData]");
+        let id = null;
+        let value = null;
+
+        // nothing defined by the user => find the first string and number column
+        if (!_data.data_config.fields[0] || !_data.data_config.fields[1] || _data.data_config.fields.length < 2) {
+            id = getStringField(data_2_display,1);
+            value = getNumberField(data_2_display,1);
+        } else {
+            id = _data.data_config.fields[0];
+            value = _data.data_config.fields[1];
+        }
+
+        if (!id || !value || (data_2_display.length > 0 && !isNumber(data_2_display[0][value]))) {
+            this.context.signals.onError.dispatch("Erros nos dados!","[Graph1Num::prepareData]");
         }       
-       const data = data_2_display;
+        const data = data_2_display;
 
         const header = {
             "type": "one_numerical", // Data Type
@@ -38,23 +49,7 @@ export class Graph1Num extends BaseComponentContent {
             "value": [value]  // Identifier of the field containing the numerical value (y axis)
         };
         return {header, data};
+
     }
 }
 
-
-
-        /*
-        const data = data_2_display;
-        // get the first 2 keys
-        const keys = Object.keys(data_2_display[0]);
-        let id = null;
-        let value = null;
-        // if number
-        if (parseFloat(data[keys[0]]) == parseFloat(data[keys[0]])) {
-            id = keys[1];
-            value = keys[0];
-        } else {
-            id = keys[0];
-            value = keys[1];
-        }
-        */
