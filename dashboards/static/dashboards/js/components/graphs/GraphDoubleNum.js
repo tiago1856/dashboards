@@ -1,5 +1,6 @@
 
 import { BaseComponentContent } from '../BaseComponentContent.js';
+import { getNumberField, getStringField, isNumber } from '../Discovery.js';
 
 export class GraphDoubleNum extends BaseComponentContent {
     constructor(context, data, parent, opt_btn) {
@@ -25,11 +26,47 @@ export class GraphDoubleNum extends BaseComponentContent {
     prepareData(data_2_display, _data=null) {
         super.prepareData(data_2_display);
 
+        let id = null;
+        let value1 = null;
+        let value2 = null;
+
+        // nothing defined by the user => find the first string and first/second number columns
+        if (!_data.data_config.fields[0] || 
+            !_data.data_config.fields[1] || 
+            !_data.data_config.fields[2] || 
+            _data.data_config.fields.length < 3) {
+                id = getStringField(data_2_display,1);
+                value1 = getNumberField(data_2_display,1);
+                value2 = getNumberField(data_2_display,2);
+        } else {
+            id = _data.data_config.fields[0];
+            value1 = _data.data_config.fields[1];
+            value2 = _data.data_config.fields[2];
+        }
+
+        if (!id || 
+            !value1 || 
+            !value2 || 
+            (data_2_display.length > 0 && (!isNumber(data_2_display[0][value1] || !isNumber(data_2_display[0][value2]))))) {
+            this.context.signals.onError.dispatch("Erros nos dados!","[GraphDoubleNum::prepareData]");
+        }       
+        const data = data_2_display;
+
+        const header = {
+            "type": "double_numerical", // Data Type
+            "id": [id],       // Identifier of the field containing the name (x axis)
+            "value": [value1,value2]  // Identifier of the field containing the numerical value (y axis)
+        }; 
+
+        return {header, data};
+
+
+        /*
        const id = _data.data_config.fields[0];
        const value1 = _data.data_config.fields[1];
        const value2 = _data.data_config.fields[2];
        if (!id || !value1 || !value2) {
-        this.context.signals.onError.dispatch("Erros nos dados!","[Graph1Num::prepareData]");
+        this.context.signals.onError.dispatch("Erros nos dados!","[GraphDoubleNum::prepareData]");
         }       
        const data = data_2_display;
 
@@ -39,6 +76,7 @@ export class GraphDoubleNum extends BaseComponentContent {
             "value": [value1,value2]  // Identifier of the field containing the numerical value (y axis)
          };        
         return {header, data};
+        */
     }
 
     /*
