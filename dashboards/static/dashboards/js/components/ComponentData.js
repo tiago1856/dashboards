@@ -15,6 +15,7 @@ export const ComponentData = {
         query_selection: null,
         query: null,
         query_selected_fields: null,    // query's selected fields [array of strings]
+        query_fields: null,             // all query's resuling fields [array of strings]
     },
     // visualization
     visualization: {

@@ -23,6 +23,7 @@ export class Component extends Div {
         super(context);
         this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
+        this.h100 = h100;
         
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
 
@@ -61,10 +62,12 @@ export class Component extends Div {
         if (data) {
           this.body = new Div().attachTo(this);
           this.body.addClass('card-body');
-          this.body.setId(uuidv4());   // set a random id for this component's body       
+          this.body.setId(uuidv4());   // set a random id for this component's body
+          this.body.setStyle("max-width","100%");
+          this.body.setStyle("overflow","auto");  
           const component = getComponentClass(data.visualization_type, data.visualization);
           if (component) {
-            this.content = new component.class(context, data, this.body, this.options_btn.dom);
+            this.content = new component.class(context, data, this.body, this.options_btn.dom, h100);
           }
         }     
 
@@ -151,8 +154,10 @@ export class Component extends Div {
           this.body = new Div().attachTo(this);
           this.body.addClass('card-body');
           this.body.setId(uuidv4());
+          this.body.setStyle("max-width","100%");
+          this.body.setStyle("overflow","auto"); 
           this.content = null;
-          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom);
+          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, this.h100);
         }
       }
 }

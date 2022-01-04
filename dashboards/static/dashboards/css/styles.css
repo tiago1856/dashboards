@@ -247,7 +247,7 @@ input:focus.valid-input  {
 /* DISPLAY SELECTION */
 
 img.img-vis {
-    outline: 2px dotted black;
+   /* outline: 2px dotted black; */
 }
 
 img.img-vis-selected {
@@ -278,6 +278,15 @@ img.img-zoom {
     font-weight: bold;
 }
 
+/* VIS-TABLE - TABLE COLUMNS VISIBILITY AND SORTABLE */
+.vis-table-sortable {
+    border: 1px solid rgb(116, 114, 114);
+    min-height: 20px;
+    list-style-type: none;
+    margin: 0;
+    padding: 5px 5px 5px 5px;
+}
+
 
 /* *********************** */
 /*  ZOOM MODAL    */
@@ -294,3 +303,6 @@ img.img-zoom {
     height: 90vh;
     display: flex;
 }
+
+
+

@@ -107,3 +107,13 @@ export function getAllNumbers(str) {
     const r = /\d+/;
     return str.match(r);
 }
+
+
+/**
+ * Returns all elements in arr1 but not in arr2, filter by key.
+ * @param {array of objects} arr1 
+ * @param {array of objects} arr2 
+ * @param {string} key 
+ * @returns Array of all elements in arr1 not in arr2.
+ */
+ export const exclude = (arr1, arr2, key) => arr1.filter(o1 => arr2.map(o2 => o2[key]).indexOf(o1[key]) === -1);

@@ -2,10 +2,16 @@
 import { VISUALIZATION_TYPE } from './VisualizationType.js'
 import { Graph1Num } from "./graphs/Graph1Num.js"
 import { GraphDoubleNum } from "./graphs/GraphDoubleNum.js"
+import { SimpleTable } from "./tables/SimpleTable.js"
+import { ComplexTable } from "./tables/ComplexTable.js"
 
 export const COMPONENT_TYPE = {
     TABLE: {
         name: 'TABLE',
+        classes: [
+            {id: VISUALIZATION_TYPE.TS, class:SimpleTable},
+            {id: VISUALIZATION_TYPE.TC, class:ComplexTable},
+        ]
     },
     GRAPH: {
         name: 'GRAPH',

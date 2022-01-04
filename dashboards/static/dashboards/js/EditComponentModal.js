@@ -51,11 +51,14 @@ const DEFAULT_MAX_LINE = 10;
 // VISUALIZATION
 const DATA_VISUALIZATION_SELECTION = $('.data-visualization-selection');
 
+// TABLE SIMPLE
+const TS_SORTABLE_NO = $("#vis-ts-no");
+const TS_SORTABLE_YES = $("#vis-ts-yes");
 // GRAPH 1 NUM
 const G1N_INVERT_BTN = $('#cdc-graph-1-num-invert-btn')
 const G1N_X_AXIS = $('#cdc-graph-1-num-x-axis')
 const G1N_SERIES = $('#cdc-graph-1-num-series')
-
+// GRAPH DOUBLE NUM
 const GDN_X_AXIS = $('#cdc-graph-double-num-x-axis');
 const GDN_SERIES_1 = $('#cdc-graph-double-num-series-1');
 const GDN_SERIES_2 = $('#cdc-graph-double-num-series-2');
@@ -258,6 +261,20 @@ export function EditComponentModal(context) {
         self.state.data_config.fields[2] = e.target.value;
     });
 
+
+    // -------------------------------
+    // INIT AND SETUP JQUERY PLUGINS 
+    // -------------------------------
+    $( "#vis-ts-no, #vis-ts-yes" ).sortable({
+        connectWith: ".connectedSortable",
+        stop: function( event, ui ) {
+            self.state.data_config = { fields: [] };
+            $.each($( "#vis-ts-yes" ).children(), function(key, value) {
+                self.state.data_config.fields.push(value.textContent);
+            });
+        }
+    }).disableSelection();
+
 }
 
 EditComponentModal.prototype = {
@@ -269,6 +286,35 @@ EditComponentModal.prototype = {
         $('.cdc-config-panel').hide();
         $("[data-vis='" + this.state.visualization.visualization_type + "'").show();
         switch(this.state.visualization.visualization_type) {
+            case VISUALIZATION_TYPE.TS:
+            {
+                TS_SORTABLE_NO.empty();
+                TS_SORTABLE_YES.empty();
+                const fields = SELECTED_FIELDS.val();
+                if (restore && fields.length > 0) {
+                    // no order or selection was done yet by the user
+                    // and therefore, default = all fields and data_config
+                    // still not set
+                    if (this.state.data_config.fields === undefined ) {
+                        this.state.data_config = { fields: fields };
+                    }
+                    this.state.data_config.fields.forEach(field => {
+                        const item = createSortableListItem(field);
+                        TS_SORTABLE_YES.append(item);
+                    })
+                    fields.forEach(field => {
+                        if (this.state.data_config.fields.includes(field)) return false;
+                        const item = createSortableListItem(field);
+                        TS_SORTABLE_NO.append(item);
+                    })
+                } else {
+                    fields.forEach(field => {
+                        const item = createSortableListItem(field);
+                        TS_SORTABLE_YES.append(item);
+                    })
+                }
+                break;
+            }
             case VISUALIZATION_TYPE.G1N: 
             {                
                 G1N_X_AXIS.empty();
@@ -336,6 +382,7 @@ EditComponentModal.prototype = {
      * @returns The current state.
      */
     save: function() {
+        const self = this;
         // global
         this.state.name = GLOBAL_NAME.val();
         this.state.description = GLOBAL_DESCRIPTION.val();
@@ -345,6 +392,10 @@ EditComponentModal.prototype = {
         this.state.query.query_selection = QUERY_SELECTION.val();
         this.state.query.query = QUERY_AREA.val();
         this.state.query.query_selected_fields = SELECTED_FIELDS.val();
+        //this.state.query.query_fields = [];
+        this.state.query.query_fields = $.map($('#data-source-selected-fields option') ,function(option) {
+            return option.value;
+        });
 
         console.warn("SAVE > ", this.state);
 
@@ -398,8 +449,13 @@ EditComponentModal.prototype = {
                 QUERY_AREA.val(this.state.query.query);
                 // restore only the previous selected fields
                 // if others are needed, exec the query
+                /*
                 this.state.query.query_selected_fields.forEach(field => {
                     SELECTED_FIELDS.append(createFieldItem(field, true));
+                });
+                */
+                this.state.query.query_fields.forEach(field => {
+                    SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
                 });
                 SELECTED_FIELDS.multiselect('rebuild');
 
@@ -644,3 +700,14 @@ const createFieldItem = (value, selected=false) => {
 }
 
 
+/**
+ * 
+ * @param {*} value 
+ * @returns 
+ */
+const createSortableListItem = (value) => {
+    const item = $('<li/>')
+    item.addClass('ui-state-highlight list-group-item py-0');
+    item.text(value);
+    return item;
+}
