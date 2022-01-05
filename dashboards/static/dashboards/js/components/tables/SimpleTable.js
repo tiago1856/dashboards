@@ -14,7 +14,7 @@ export class SimpleTable extends BaseComponentContent {
                 parent.setStyle("height","600px");
             }
             const component_data = this.prepareData(results, data);
-            const container = new Div().attachTo(parent);        
+            const container = new Div().attachTo(parent);
             new BasicTable(component_data, 20, data.data_config.fields).attachTo(container);
         });
 

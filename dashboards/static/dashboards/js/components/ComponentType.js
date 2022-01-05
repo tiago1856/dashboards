@@ -4,6 +4,9 @@ import { Graph1Num } from "./graphs/Graph1Num.js"
 import { GraphDoubleNum } from "./graphs/GraphDoubleNum.js"
 import { SimpleTable } from "./tables/SimpleTable.js"
 import { ComplexTable } from "./tables/ComplexTable.js"
+import { InfoSimpleRight } from './info/InfoSimpleRight.js'
+import { InfoSimpleLeft } from './info/InfoSimpleLeft.js'
+
 
 export const COMPONENT_TYPE = {
     TABLE: {
@@ -22,6 +25,10 @@ export const COMPONENT_TYPE = {
     },
     INFO: {
         name: 'INFO',
+        classes: [
+            {id: VISUALIZATION_TYPE.ISR, class:InfoSimpleRight},
+            {id: VISUALIZATION_TYPE.ISL, class:InfoSimpleLeft}
+        ]
     },
     GEO: {
         name: 'GEO',

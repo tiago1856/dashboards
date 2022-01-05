@@ -27,3 +27,16 @@ export const ComponentData = {
     },
     
 }
+
+
+/*
+
+data_config:
+
+TS: {fields:[]} --- fields: selected fields
+TC: {fields:[]} --- fields: selected fields
+G1N: {fields:[x-axis,series],}              --- fields: selected fields in respective select | no fields => null, null, null
+GDN: {fields:[x-axis,series1, series2],}    --- fields: selected fields in respective select | no fields => null, null, null
+ISL: {fields:[], icon:"", text_1:"", text_2:"",value:null} --- fields: selected fields
+
+*/

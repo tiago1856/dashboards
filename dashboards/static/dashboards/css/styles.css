@@ -287,6 +287,17 @@ img.img-zoom {
     padding: 5px 5px 5px 5px;
 }
 
+/* VIS-INFO */
+/*
+.right-icon > i {
+	font-size: 90px;
+	position: absolute;
+	right: 15px;
+	top: 10px;
+	transition: transform .3s linear
+}
+*/
+
 
 /* *********************** */
 /*  ZOOM MODAL    */
@@ -304,5 +315,76 @@ img.img-zoom {
     display: flex;
 }
 
+/* *********************** */
+/*  ICONS MODAL    */
+/* *********************** */
+
+			
+.selected-icon {
+    background-color: #E3E3E3;
+    border: 1px solid black;
+    border-radius: 5px;
+}
 
 
+
+.icon-results__cell>.ion {
+    width: 42px;
+    height: 42px;
+    font-size: 32px;
+    color: #373737
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-pack: center;
+    justify-content: center
+}
+
+.icon-results__cell>.ion:hover {
+    border-radius: 5px;
+    -webkit-animation-name: shadowIn;
+    animation-name: shadowIn;
+    -webkit-animation-duration: 0.3s;
+    animation-duration: 0.3s;
+    -webkit-animation-fill-mode: forwards;
+    animation-fill-mode: forwards
+}
+
+@-webkit-keyframes shadowIn {
+    from {
+        -webkit-box-shadow: 0;
+        box-shadow: 0
+    }
+    to {
+        -webkit-box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+        box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.08)
+    }
+}
+
+@keyframes shadowIn {
+    from {
+        -webkit-box-shadow: 0;
+        box-shadow: 0
+    }
+    to {
+        -webkit-box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.08);
+        box-shadow: 0px 3px 6px 0px rgba(0, 0, 0, 0.1), 0px 1px 3px 0px rgba(0, 0, 0, 0.08)
+    }
+}
+
+
+
+.icon-preview {
+	background-color: cyan;
+	width: 256px;
+	height: 256px;
+	font-size: 216px;
+	color: #373737
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	-ms-flex-align: center;
+	align-items: center;
+	-ms-flex-pack: center;
+	justify-content: center
+}

@@ -416,6 +416,13 @@ class Hx extends BasicBlock {
 	}
 }
 
+class I extends BasicBlock {
+	constructor(x, settings) {
+		super(document.createElement('i'), settings);
+	}
+}
+
+
 
 /**
  * Create n newlines.
@@ -539,7 +546,7 @@ export {
 	Select, 
 	Button, 
 	Table, TableCol, TableTr, TableTd, TableTh, TableThead, TableTbody,
-	Hx, Br, Hr,
+	Hx, Br, Hr, I,
 	AwesomeIcon, ButtonAndAwesomeIcon, AwesomeIconAndButton,
 	Img,
 	TextArea,
