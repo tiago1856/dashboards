@@ -76,7 +76,7 @@ export class Component extends Div {
         });
         
         $(edit_btn.dom).on('click',function() {
-          context.signals.onEditComponent.dispatch(self.spot);
+          context.signals.onEditComponent.dispatch(self.spot, self.data.component_type);
         });
         
 
@@ -102,6 +102,16 @@ export class Component extends Div {
           console.log("[" + id + "] new date > ", start, end);
       });
       
+    }
+
+    setEditMode(mode) {
+      if (mode) {
+        $(this.dom).find('.editable-component').show();
+        $(this.dom).find('.non-editable-component').hide();
+      } else {
+        $(this.dom).find('.editable-component').hide();
+        $(this.dom).find('.non-editable-component').show();
+      }
     }
 
     getBody() {

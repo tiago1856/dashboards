@@ -115,31 +115,23 @@ context.signals.onZoomComponent.add((msg, body) => {
     */
 });
 
-context.signals.onEditComponent.add((spot) => {
+context.signals.onEditComponent.add((spot, original_type) => {
     const component = layout.getComponentAt(spot);
     edit_component_modal.show(component, () => {
-        component.update();
+        if (component.data.component_type === 'INFO' && original_type !== 'INFO') {
+            console.log("CHANGE COMPONENT COJNTAINER");
+            const new_comp = layout.changeComponentContainer(spot, true);
+            new_comp.update();
+        } else if (component.data.component_type !== 'INFO' && original_type === 'INFO') {
+            console.log("CHANGE COMPONENT COJNTAINER");
+            const new_comp = layout.changeComponentContainer(spot, false);
+            new_comp.update();
+        } else {           
+            console.warn("UPDATE >>>> ", component.data.component_type);
+            component.update();
+        }       
     });
-    /*
-    edit_component_modal.show(component.data, () => {
-        component.update();
-    });
-    */
 });
-
-/*
-context.signals.onVisualizationSelected.add((selected_id) => {
-    $('.cdc-config-panel').hide();
-    switch(selected_id) {
-        case 'data-visualization-graph-1-num': 
-            $("[data-vis='G1N'").show();
-            break;
-        case 'data-visualization-graph-double-num': 
-            $("[data-vis='GDN'").show();
-            break;
-    }
-});
-*/
 
 
 // ----------------

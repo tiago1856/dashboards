@@ -3,6 +3,7 @@ import { Div } from '../builders/BuildingBlocks.js';
 import { Component } from '../components/Component.js';
 import { LAYOUTS } from '../constants.js';
 import { LayoutTitle } from './LayoutTitle.js';
+import { InfoComponent } from '../components/InfoComponent.js';
 
 
 
@@ -77,6 +78,22 @@ export class Layout extends Div {
     getTitle() {
         return this.title;
     }
+
+
+    changeComponentContainer(spot, info = false) {
+        const original = this.getComponentAt(spot);
+        const data = JSON.parse(JSON.stringify(original.data));
+        let comp = null;
+        if (info)
+            comp = new InfoComponent(this.context, spot, null, true, 'light', data);
+        else
+            comp = new Component(this.context, spot, null, true, 'light', data);
+        $(original.dom).replaceWith($(comp.dom));
+        comp.setEditMode(true);
+        this.components[spot] = comp;       
+        return this.components[spot];
+    }
+    
 
 }
 
