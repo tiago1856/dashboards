@@ -8,7 +8,7 @@ export class InfoSimpleRight extends Div {
 
       this.addClass("small-box bg-danger");
       this.attachTo(parent);
-      //this.setStyle('height','100%');
+      this.setStyle('height','100%');
       const inner = new Div().attachTo(this);
       inner.addClass('inner');
       const value = new Hx(3).attachTo(inner);
@@ -19,10 +19,9 @@ export class InfoSimpleRight extends Div {
       icon_div.addClass('icon');
       const icon = new I().attachTo(icon_div);
       icon.addClass("icon ion-md-alert");
-      /*
-      $(this.dom).closest('.card').addClass('collapse');      
-      console.log($(this.dom).closest('.card'));
-      */
+
+
+      
     }
 }
 

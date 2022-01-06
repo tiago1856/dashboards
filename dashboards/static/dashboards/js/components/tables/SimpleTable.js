@@ -24,6 +24,13 @@ export class SimpleTable extends BaseComponentContent {
 
     prepareData(data_2_display, _data=null) {
         super.prepareData(data_2_display);
+        // no config was provided => all fields selected
+        if (_data.data_config.fields.length == 0 &&
+            data_2_display.length > 0) {
+                _data.data_config.fields = Object.keys(data_2_display[0]);
+                _data.query.query_selected_fields =  Object.keys(data_2_display[0]);
+                _data.query.query_fields =  Object.keys(data_2_display[0]);
+        }
         return data_2_display;
     }
 }

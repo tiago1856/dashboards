@@ -1,8 +1,12 @@
 
 import { BaseComponentContent } from '../BaseComponentContent.js';
 import { Div, I, Span } from '../../builders/BuildingBlocks.js';
+import { getNumberField, getStringField, isNumber } from '../Discovery.js';
 
 
+/**
+ * 
+ */
 export class InfoSimpleLeft extends BaseComponentContent {
     constructor(context, data, parent, opt_btn) {
         super(context, data, parent);
@@ -28,7 +32,7 @@ export class InfoSimpleLeft extends BaseComponentContent {
      
 
         this.execQuery(data.query.query, null, (results) => {
-            const component_data = this.prepareData(results, data);            
+            const component_data = this.prepareData(results, data);
             if (data.data_config.icon !== '') {
                 $(icon.dom).removeClass();
                 $(icon.dom).addClass(data.data_config.icon);
@@ -44,8 +48,34 @@ export class InfoSimpleLeft extends BaseComponentContent {
         });
     }
 
+    /**
+     * 
+     * @param {object} data_2_display 
+     * @param {object} _data {fields:[], icon:"", text_1:"", text_2:"", value:null}
+     * @returns 
+     */
     prepareData(data_2_display, _data=null) {
         super.prepareData(data_2_display);
+
+        // nothing defined by the user => find the first number column and key
+
+        /*
+        // nothing defined by the user => find the first string and number column
+        if (!_data.data_config.fields[0] || !_data.data_config.fields[1] || _data.data_config.fields.length < 2) {
+            id = getStringField(data_2_display,1);
+            value = getNumberField(data_2_display,1);
+        } else {
+            id = _data.data_config.fields[0];
+            value = _data.data_config.fields[1];
+        }
+
+        if (!id || !value || (data_2_display.length > 0 && !isNumber(data_2_display[0][value]))) {
+            this.context.signals.onError.dispatch("Erros nos dados!","[Graph1Num::prepareData]");
+        }   
+        */
+
+
+
 
         if (data_2_display.length > 0) {
             return data_2_display[0][_data.data_config.value];

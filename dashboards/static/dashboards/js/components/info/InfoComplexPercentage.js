@@ -3,8 +3,12 @@ import { Div } from '../../builders/BuildingBlocks.js';
 
 
 export class InfoComplexPercentage extends Div {
-    constructor() {
+  constructor(context, data, parent, opt_btn) {
+    super(context, data, parent);
 
+    this.addClass("small-box bg-danger");
+    this.attachTo(parent);
+    this.setStyle('height','100%');
     }
 }
 

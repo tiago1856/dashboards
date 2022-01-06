@@ -6,6 +6,8 @@ import { SimpleTable } from "./tables/SimpleTable.js"
 import { ComplexTable } from "./tables/ComplexTable.js"
 import { InfoSimpleRight } from './info/InfoSimpleRight.js'
 import { InfoSimpleLeft } from './info/InfoSimpleLeft.js'
+import { InfoComplexPercentage } from './info/InfoComplexPercentage.js'
+
 
 
 export const COMPONENT_TYPE = {
@@ -27,7 +29,8 @@ export const COMPONENT_TYPE = {
         name: 'INFO',
         classes: [
             {id: VISUALIZATION_TYPE.ISR, class:InfoSimpleRight},
-            {id: VISUALIZATION_TYPE.ISL, class:InfoSimpleLeft}
+            {id: VISUALIZATION_TYPE.ISL, class:InfoSimpleLeft},
+            {id: VISUALIZATION_TYPE.ICP, class:InfoComplexPercentage},
         ]
     },
     GEO: {

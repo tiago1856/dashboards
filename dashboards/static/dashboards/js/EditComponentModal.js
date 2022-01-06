@@ -56,7 +56,6 @@ const DATA_VISUALIZATION_SELECTION = $('.data-visualization-selection');
 const TS_SORTABLE_NO = $("#vis-ts-no");
 const TS_SORTABLE_YES = $("#vis-ts-yes");
 // GRAPH 1 NUM
-const G1N_INVERT_BTN = $('#cdc-graph-1-num-invert-btn')
 const G1N_X_AXIS = $('#cdc-graph-1-num-x-axis')
 const G1N_SERIES = $('#cdc-graph-1-num-series')
 // GRAPH DOUBLE NUM
@@ -161,6 +160,11 @@ export function EditComponentModal(context) {
     // ----------------
     // EVENTS
     // ----------------
+
+    SELECTED_FIELDS.on('change', function(e) {
+        self.setVisualizationConfigPanel(self.state.data_config.fields !== undefined);
+    })
+
     GLOBAL_NAME.on('change focus keyup paste', function(e) {
         if (e.target.value === '') {
             console.log("invalid");
@@ -234,42 +238,6 @@ export function EditComponentModal(context) {
         self.setVisualizationConfigPanel(false);
     });
 
-    // -------------------
-    // GRAPH 1 NUM
-    // -------------------
-    // GRAPH NUM 1 SWITCH LINES/COLUMNS
-    G1N_INVERT_BTN.on('change', function() {
-        const val_1 = G1N_X_AXIS.val();
-        const val_2 = G1N_SERIES.val();
-        G1N_X_AXIS.val(val_2);
-        G1N_SERIES.val(val_1);
-        self.state.data_config = {
-            fields: [
-                G1N_X_AXIS.val(),
-                G1N_SERIES.val(),        
-            ]
-        }
-    });
-
-    G1N_X_AXIS.on('change', function(e) {
-        self.state.data_config.fields[0] = e.target.value;
-    });
-    G1N_SERIES.on('change', function(e) {
-        self.state.data_config.fields[1] = e.target.value;
-    });
-
-    // -------------------
-    // GRAPH DOUBLE NUM
-    // -------------------    
-    GDN_X_AXIS.on('change', function(e) {
-        self.state.data_config.fields[0] = e.target.value;
-    });
-    GDN_SERIES_1.on('change', function(e) {
-        self.state.data_config.fields[1] = e.target.value;
-    });
-    GDN_SERIES_2.on('change', function(e) {
-        self.state.data_config.fields[2] = e.target.value;
-    });
 
 
     // -------------------
@@ -281,30 +249,15 @@ export function EditComponentModal(context) {
         self.icons_modal.show(self.state.data_config.icon, (icon) => {
             ISL_ICON_PREVIEW_AREA.removeClass();
             ISL_ICON_PREVIEW_AREA.addClass(icon);
-            self.state.data_config.icon = icon;
         });
     });
-    ISL_TEXT_1.on('change', function(e) {
-        self.state.data_config.text_1 = e.target.value;
-    });
-    ISL_TEXT_2.on('change', function(e) {
-        self.state.data_config.text_2 = e.target.value;
-    });
-    ISL_VALUE.on('change', function(e) {
-        self.state.data_config.value = e.target.value;
-    });    
+
 
     // -------------------------------
     // INIT AND SETUP JQUERY PLUGINS 
     // -------------------------------
     $( "#vis-ts-no, #vis-ts-yes" ).sortable({
         connectWith: ".connectedSortable",
-        stop: function( event, ui ) {
-            self.state.data_config = { fields: [] };
-            $.each($( "#vis-ts-yes" ).children(), function(key, value) {
-                self.state.data_config.fields.push(value.textContent);
-            });
-        }
     }).disableSelection();
 
 }
@@ -323,7 +276,7 @@ EditComponentModal.prototype = {
                 TS_SORTABLE_NO.empty();
                 TS_SORTABLE_YES.empty();
                 const fields = SELECTED_FIELDS.val();
-                if (restore && fields.length > 0) {
+                if (restore && SELECTED_FIELDS.children().length > 0) {
                     this.state.data_config.fields.forEach(field => {
                         const item = createSortableListItem(field);
                         TS_SORTABLE_YES.append(item);
@@ -334,37 +287,66 @@ EditComponentModal.prototype = {
                         TS_SORTABLE_NO.append(item);
                     })
                 } else {
-                    this.state.data_config = {};
-                    fields.forEach(field => {
-                        const item = createSortableListItem(field);
-                        TS_SORTABLE_YES.append(item);
-                    })
+                    // no config |=> no field selected = all fields selected => show all fields
+                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config) {
+                        SELECTED_FIELDS.empty();
+                        this.state.data_config.fields.forEach(field => {
+                            const item = createSortableListItem(field);
+                            TS_SORTABLE_YES.append(item);                            
+                            SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
+                        })
+                        SELECTED_FIELDS.multiselect('rebuild');
+                        SELECTED_FIELDS.multiselect('selectAll', true);
+                    } else {
+                        // all new => everything is visible
+                        this.state.data_config = {};
+                        fields.forEach(field => {
+                            const item = createSortableListItem(field);
+                            TS_SORTABLE_YES.append(item);
+                        })
+                    }
                 }
                 break;
             }
             case VISUALIZATION_TYPE.G1N: 
-            {                
+            {
                 G1N_X_AXIS.empty();
-                G1N_SERIES.empty();                                
+                G1N_SERIES.empty();
                 const fields = SELECTED_FIELDS.val();
                 fields.forEach(field => {
                     const option = createFieldItem(field, false);
                     G1N_X_AXIS.append(option);
                     G1N_SERIES.append(option.clone());
-                })
+                })                 
                 if (restore) {
+                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config) {
+                        //SELECTED_FIELDS.empty();
+                        this.state.data_config.fields.forEach(field => {
+                            SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
+                            const option = createFieldItem(field, false);
+                            G1N_X_AXIS.append(option);
+                            G1N_SERIES.append(option.clone());
+                        })
+                        SELECTED_FIELDS.multiselect('rebuild');
+                        SELECTED_FIELDS.multiselect('selectAll', true);
+                    } else {
+                        fields.forEach(field => {
+                            const option = createFieldItem(field, false);
+                            G1N_X_AXIS.append(option);
+                            G1N_SERIES.append(option.clone());
+                        })
+                    }
                     G1N_X_AXIS.val(this.state.data_config.fields[0]);
                     G1N_SERIES.val(this.state.data_config.fields[1]);
                 } else {
-                    G1N_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
-                    G1N_SERIES.val($("#cdc-graph-1-num-series option:eq(1)").val());
-                    this.state.data_config = {};
-                    this.state.data_config = {
-                        fields: [
-                            G1N_X_AXIS.val(),
-                            G1N_SERIES.val(),
-                        ]
-                    };
+                    if ('fields' in this.state.data_config) {
+                        G1N_X_AXIS.val(this.state.data_config.fields[0]);
+                        G1N_SERIES.val(this.state.data_config.fields[1]);
+                    } else {
+                        G1N_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
+                        G1N_SERIES.val($("#cdc-graph-1-num-series option:eq(1)").val());
+                    }                    
+                    this.state.data_config.fields = [G1N_X_AXIS.val(),G1N_SERIES.val()];
                 }
                 break;
             }
@@ -379,24 +361,42 @@ EditComponentModal.prototype = {
                     GDN_X_AXIS.append(option);
                     GDN_SERIES_1.append(option.clone());
                     GDN_SERIES_2.append(option.clone());
-                });
+                })                 
                 if (restore) {
+                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config) {
+                        //SELECTED_FIELDS.empty();
+                        this.state.data_config.fields.forEach(field => {
+                            SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
+                            const option = createFieldItem(field, false);
+                            GDN_X_AXIS.append(option);
+                            GDN_SERIES_1.append(option.clone());
+                            GDN_SERIES_2.append(option.clone());
+                        })
+                        SELECTED_FIELDS.multiselect('rebuild');
+                        SELECTED_FIELDS.multiselect('selectAll', true);
+                    } else {
+                        fields.forEach(field => {
+                            const option = createFieldItem(field, false);
+                            GDN_X_AXIS.append(option);
+                            GDN_SERIES_1.append(option.clone());
+                            GDN_SERIES_2.append(option.clone());
+                        })
+                    }
                     GDN_X_AXIS.val(this.state.data_config.fields[0]);
                     GDN_SERIES_1.val(this.state.data_config.fields[1]);
                     GDN_SERIES_2.val(this.state.data_config.fields[2]);
-                } else {                    
-                    GDN_X_AXIS.val($("#cdc-graph-double-num-x-axis option:first").val());
-                    GDN_SERIES_1.val($("#cdc-graph-double-num-series-1 option:eq(1)").val());
-                    GDN_SERIES_2.val($("#cdc-graph-double-num-series-2 option:eq(2)").val());
-                    this.state.data_config = {};
-                    this.state.data_config = { 
-                        fields: [
-                            GDN_X_AXIS.val(),
-                            GDN_SERIES_1.val(),
-                            GDN_SERIES_2.val(),
-                        ]
-                    }
-                }
+                } else {
+                    if ('fields' in this.state.data_config) {
+                        GDN_X_AXIS.val(this.state.data_config.fields[0]);
+                        GDN_SERIES_1.val(this.state.data_config.fields[1]);
+                        GDN_SERIES_2.val(this.state.data_config.fields[2]);
+                    } else {
+                        GDN_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
+                        GDN_SERIES_1.val($("#cdc-graph-1-num-series option:eq(1)").val());
+                        GDN_SERIES_2.val($("#cdc-graph-1-num-series option:eq(2)").val());
+                    }                    
+                    this.state.data_config.fields = [GDN_X_AXIS.val(),GDN_SERIES_1.val(),GDN_SERIES_2.val()];
+                }                
                 break;
             }
             case VISUALIZATION_TYPE.ISL:
@@ -452,6 +452,39 @@ EditComponentModal.prototype = {
         });
 
         // visuzalization
+        switch(this.state.visualization.visualization_type) {
+            case VISUALIZATION_TYPE.TS:
+            {
+                self.state.data_config = { fields: [] };
+                $.each($( "#vis-ts-yes" ).children(), function(key, value) {
+                    self.state.data_config.fields.push(value.textContent);
+                });
+                break;
+            }
+            case VISUALIZATION_TYPE.G1N:
+            {
+                self.state.data_config.fields[0] = G1N_X_AXIS.val();
+                self.state.data_config.fields[1] = G1N_SERIES.val();
+                break;
+            }
+            case VISUALIZATION_TYPE.GDN:            
+            {
+                self.state.data_config.fields[0] = GDN_X_AXIS.val();
+                self.state.data_config.fields[1] = GDN_SERIES_1.val();
+                self.state.data_config.fields[2] = GDN_SERIES_2.val();
+                break;
+            }
+            case VISUALIZATION_TYPE.ISL:
+            {
+                self.state.data_config.icon = ISL_ICON_PREVIEW_AREA.attr('class');
+                self.state.data_config.text_1 = ISL_TEXT_1.val();
+                self.state.data_config.text_2 = ISL_TEXT_2.val();
+                self.state.data_config.value = ISL_VALUE.val();
+                break;
+            }
+        }
+
+
         // no order or selection was done yet by the user
         // and therefore, default = all fields and data_config
         // still not set
@@ -510,13 +543,6 @@ EditComponentModal.prototype = {
                 QUERY_SELECTION.val(this.state.query.query_selection);
                 QUERY_SELECTION.trigger('change');
                 QUERY_AREA.val(this.state.query.query);
-                // restore only the previous selected fields
-                // if others are needed, exec the query
-                /*
-                this.state.query.query_selected_fields.forEach(field => {
-                    SELECTED_FIELDS.append(createFieldItem(field, true));
-                });
-                */
                 this.state.query.query_fields.forEach(field => {
                     SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
                 });

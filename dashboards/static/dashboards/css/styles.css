@@ -60,20 +60,26 @@ input:focus.valid-input  {
     display: inline;
 }
 
+
+
+/* **************************** */
+/*  INFO EDITABLE COMPONENTS    */
+/* **************************** */
+
+/*
 .info-component-container:hover {
     border: 2px solid black;
 }
-
-.info-component-container:hover > .info-component-container-buttons  {
-   /* visibility: hidden;*/
+*/
+.info-component-container:hover .info-component-container-buttons   {
+   display: inline-block;
 }
-
 
 .info-component-container-buttons {
     position: absolute;
     right: 10px;
     z-index: 99;
-    /*visibility: show;*/
+     display: none; 
 }
 
 .info-component-button {
@@ -90,8 +96,9 @@ input:focus.valid-input  {
     transition: 0.25s ease-in-out;
     transform: scale(1.2);    
     background-color: rgb(0, 47, 255) !important;
-    color: white !important;    
+    color: white !important;
 }
+
 
 
 

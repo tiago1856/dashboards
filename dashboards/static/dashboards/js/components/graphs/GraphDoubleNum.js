@@ -38,6 +38,7 @@ export class GraphDoubleNum extends BaseComponentContent {
                 id = getStringField(data_2_display,1);
                 value1 = getNumberField(data_2_display,1);
                 value2 = getNumberField(data_2_display,2);
+                _data.data_config.fields = [id,value1,value2];
         } else {
             id = _data.data_config.fields[0];
             value1 = _data.data_config.fields[1];

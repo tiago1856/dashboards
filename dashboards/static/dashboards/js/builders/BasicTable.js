@@ -13,7 +13,6 @@ export function BasicTable(data, max_lines = 10, order=null) {
 
     if (data.length == 0) return null;
     const table = new Table({classes:['table','table-bordered', 'table-hover','table-sm']});
-    //table.setId(uuidv4());
     const head = new TableThead().attachTo(table);
     const head_row = new TableTr().attachTo(head);
     if (order && order.length > 0) {
@@ -23,7 +22,6 @@ export function BasicTable(data, max_lines = 10, order=null) {
         })        
     } else {
         Object.keys(data[0]).forEach(column => {
-            //if (order && !order.includes(column)) return false;
             const col = new TableTh().attachTo(head_row);
             col.setTextContent(column.toUpperCase());
         })
