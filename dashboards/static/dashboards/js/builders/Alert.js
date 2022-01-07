@@ -13,7 +13,7 @@ export class Alert extends Div {
      * @param {boolean} bold True for Bold text.
      * @param {number} size Text size in em. Default: 1em.
      */
-    constructor(color, text=null, center=true, bold=false, size='1em') {
+    constructor(color='info', text=null, center=true, bold=false, size='1em') {
         super();
         this.addClass('alert');
         this.addClass('alert-' + color);

@@ -8,7 +8,7 @@ import { NO_DASHBOARD_TITLE_DEFINED } from '../constants.js';
 /**
  * Dashboard Title.
  */
-export class LayoutTitle extends Div {
+export class DashboardTitle extends Div {
     /**
      * Constructor.
      * @param {Context} context Context.
@@ -23,7 +23,7 @@ export class LayoutTitle extends Div {
         this.context = context;
         this.onTitleChanged = onTitleChanged;
 
-        this.addClass('LayoutTitle');
+        this.addClass('DashboardTitle');
         this.addClass('row');
         const title_col = new Div().attachTo(this);
         title_col.addClass('col');

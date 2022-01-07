@@ -5,13 +5,14 @@ import { ErrorModal } from './modals/ErrorModal.js';
 import { AreYouSureModal } from './modals/AreYouSureModal.js';
 import { WarningModal } from './modals/WarningModal.js';
 import { DataRangePicker } from './temporal/DataRangePicker.js';
-import { Layout } from './layouts/Layout.js';
+import { Dashboard } from './dashboards/Dashboard.js';
 import { 
     MSG_OVERRIDE_LAYOUT, 
     MSG_NO_SAVE 
 } from './messages.js';
-import { EditComponentModal } from './EditComponentModal.js';
-import { SelectComponentModal } from './SelectComponentModal.js';
+import { EditComponentModal } from './modals/EditComponentModal.js';
+import { SelectComponentModal } from './modals/SelectComponentModal.js';
+import { SelectDashboardModal } from './modals/SelectDashboardModal.js';
 
 
 
@@ -24,6 +25,7 @@ import { SelectComponentModal } from './SelectComponentModal.js';
 const MODALS_CONTAINER = $('#modals-container');
 const LAYOUT_SELECTION_MODAL = $('#layout-selection-modal');
 const DATE_INTERVAL = $('#date-interval');
+const DASHBOARD_PROPERTIES_MODAL = $("#dashboard-properties-modal");
 
 const ZOOM_MODAL = $('#zoom-modal');
 const SAVE_BTN = $('#save-btn');
@@ -37,6 +39,8 @@ const NEW_BTN = $('#new-btn');
 const CONNECTIONS_BTN = $('#network-btn');
 const DELETE_BTN = $('#delete-btn');
 const SWAP_BTN = $('#swap-btn');
+
+
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -54,9 +58,9 @@ const LAYOUT_CHOICE = '.layout-choice';
 const context = new Context();
 
 /**
- * HOLDS THE CURRENT LAYOUT
+ * HOLDS THE CURRENT DASHBOARD
  */
-let layout = null;
+let dashboard = null;
 
 
 
@@ -74,6 +78,13 @@ const edit_component_modal = new EditComponentModal(context);
  */
 
 const select_component_modal = new SelectComponentModal(context);
+
+/**
+ * SELECT DASHBOARD MODAL
+ */
+
+ const select_dashboard_modal = new SelectDashboardModal(context);
+
 
 
 /**
@@ -127,15 +138,15 @@ context.signals.onZoomComponent.add((msg, body) => {
 });
 
 context.signals.onEditComponent.add((spot, original_type) => {
-    const component = layout.getComponentAt(spot);
+    const component = dashboard.getComponentAt(spot);
     edit_component_modal.show(component, () => {
         if (component.data.component_type === 'INFO' && original_type !== 'INFO') {
             console.log("CHANGE COMPONENT COJNTAINER");
-            const new_comp = layout.changeComponentContainer(spot, true);
+            const new_comp = dashboard.changeComponentContainer(spot, true);
             new_comp.update();
         } else if (component.data.component_type !== 'INFO' && original_type === 'INFO') {
             console.log("CHANGE COMPONENT COJNTAINER");
-            const new_comp = layout.changeComponentContainer(spot, false);
+            const new_comp = dashboard.changeComponentContainer(spot, false);
             new_comp.update();
         } else {           
             console.warn("UPDATE >>>> ", component.data.component_type);
@@ -146,7 +157,7 @@ context.signals.onEditComponent.add((spot, original_type) => {
 
 context.signals.onLoadComponent.add((spot) => {
     select_component_modal.show((component_id => {
-        layout.loadComponent(spot, component_id);
+        dashboard.loadComponent(spot, component_id);
     }));
 });
 
@@ -175,9 +186,10 @@ EDIT_APPLY_BTN.on('click',function() {
 
 // OPENS DASHBOARD
 OPEN_DASHBOARD_BTN.on('click',function() {
+    select_dashboard_modal.show();
 })
 
-// NEW LAYOUT
+// NEW DASHBOARD
 DISPLAY_LAYOUT_MODAL.on('click',function() {
     LAYOUT_SELECTION_MODAL.modal('show')
 })
@@ -192,6 +204,7 @@ PRINT_BTN.on('click',function() {
 
 // SAVE DASHBOARD
 SAVE_BTN.on('click',function() {
+    DASHBOARD_PROPERTIES_MODAL.modal('show');
 });
 
 // NEW DASHBOARD
@@ -227,11 +240,11 @@ $(LAYOUT_CHOICE).on('click', function(e) {
     LAYOUT_SELECTION_MODAL.modal('hide');
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
-            newLayout($(this).attr('data-id'));
+            newDashboard($(this).attr('data-id'));
             EDIT_BTN.trigger('click');
         });
     } else {
-        newLayout($(this).attr('data-id'));
+        newDashboard($(this).attr('data-id'));
         EDIT_BTN.trigger('click');
     }
 });
@@ -261,7 +274,7 @@ $(function(){
 
 
 
-layout = new Layout(context, 'LA2');
+dashboard = new Dashboard(context, 'LA2');
 
 
 
@@ -288,8 +301,8 @@ function exitEditMode() {
 
 
 
-function newLayout(layout_id) {
-    $(layout.dom).remove();
-    layout = new Layout(context, layout_id, null);
+function newDashboard(dashboard_id) {
+    $(dashboard.dom).remove();
+    dashboard = new Dashboard(context, dashboard_id, null);
     $(SELECTABLE_COMPONENTS).show();
 }

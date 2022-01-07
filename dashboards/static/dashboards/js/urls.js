@@ -17,10 +17,13 @@ export const URL_SAVE_QUERY = "/dashboards/api/save_query/";
 export const URL_DELETE_QUERY = "/dashboards/api/delete_query/";
 export const URL_UPDATE_QUERY = "/dashboards/api/update_query/";
 
-export const URL_COMPONENT_CHECKNAME = "/dashboards/api/check_component_name/";
+export const URL_CHECK_NAME_COMPONENT = "/dashboards/api/check_name_component/";
 export const URL_SAVE_COMPONENT = "/dashboards/api/save_component/";
 export const URL_LIST_COMPONENTS = "/dashboards/api/list_components/";
 export const URL_GET_COMPONENT = "/dashboards/api/get_component/";
 
-
+export const URL_CHECK_NAME_LAYOUT = "/dashboards/api/check_name_layout/";
+export const URL_SAVE_LAYOUT = "/dashboards/api/save_layout/";
+export const URL_LIST_LAYOUTS = "/dashboards/api/list_layouts/";
+export const URL_GET_LAYOUT = "/dashboards/api/get_layout/";
 

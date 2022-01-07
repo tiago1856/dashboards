@@ -2,18 +2,18 @@
 import { Div } from '../builders/BuildingBlocks.js';
 import { Component } from '../components/Component.js';
 import { LAYOUTS } from '../constants.js';
-import { LayoutTitle } from './LayoutTitle.js';
+import { DashboardTitle } from './DashboardTitle.js';
 import { InfoComponent } from '../components/InfoComponent.js';
 import { URL_GET_COMPONENT } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
 import { fetchGET } from "../Fetch.js";
 import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 
-const LAYOUT_CONTAINER = $('#layout-container');
+const DASHBOARD_CONTAINER = $('#layout-container');
 
 
 
-export class Layout extends Div {
+export class Dashboard extends Div {
     /**
      * 
      * @param {Context} context Context.
@@ -23,7 +23,7 @@ export class Layout extends Div {
     constructor (context, layout_id, data=null) {
         super();
         this.context = context;
-        this.attachTo(LAYOUT_CONTAINER[0]);
+        this.attachTo(DASHBOARD_CONTAINER[0]);
 
         //context.layout = {title: null, components: {}};
         this.title = null;
@@ -31,7 +31,7 @@ export class Layout extends Div {
 
         const rows = LAYOUTS[layout_id];
 
-        new LayoutTitle(
+        new DashboardTitle(
             context, 
             data?data.title:null,
             (new_title) => {
@@ -98,7 +98,7 @@ export class Layout extends Div {
 
     /**
      * Loads a component from the database and sets the component.
-     * @param {number} spot Spot in the layout.
+     * @param {number} spot Spot in the Dashboard.
      * @param {number} component_id Component ID in the database.
      */
     loadComponent(spot, component_id) {

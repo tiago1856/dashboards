@@ -7,8 +7,10 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 
-from dashboards.serializers import QuerySerializer, ComponentSerializer, ComponentSerializer2
-from dashboards.models import Query, Component
+from dashboards.serializers import QuerySerializer
+from dashboards.serializers import ComponentSerializer, ComponentSerializer2
+from dashboards.serializers import LayoutSerializer, LayoutSerializer2
+from dashboards.models import Query, Component, Layout
 
 
 # required for the raw queries
@@ -144,9 +146,9 @@ def delete_query(request):
 
 #@login_required
 @api_view(["POST"])
-def check_component_name(request):
+def check_name_component(request):
    """
-      Checks if a form with a specific name already exists.
+      Checks if a component with a specific name already exists.
       If yes then returns a CONFLICT message else OK.
 
       Body params:
@@ -261,6 +263,137 @@ def get_component(request, pk):
          serializer = ComponentSerializer(component)
          return Response(serializer.data, status=status.HTTP_200_OK)
       except Component.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+##########
+# LAYOUT #
+##########
+
+#@login_required
+@api_view(["POST"])
+def check_name_layout(request):
+   """
+      Checks if a layout with a specific name already exists.
+      If yes then returns a CONFLICT message else OK.
+
+      Body params:
+         id (number): Component ID
+         name (string): Component name
+
+      Returns:
+         {'status': 666, 'result': 'CONFLICT'}
+
+         {'status': 200, 'result': 'OK'}
+   """
+   if request.method == 'POST':
+      try:    
+         if (request.data.get('id')):
+            layouts = Layout.objects.filter(~Q(id=request.data.get('id')) & Q(name = request.data.get('name')))
+         else:
+            layouts = Layout.objects.filter(name = request.data.get('name'))
+         if layouts.count() > 0:
+            data = {'status': 666, 'result': 'CONFLICT'}
+         else: 
+            data = {'status': 200, 'result': 'OK'}
+         return Response(data, status=status.HTTP_200_OK)
+      except Layout.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["POST"])
+def save_layout(request):
+   """
+      Saves a layout 
+
+      Body params:
+         id (number): Layout ID
+         data (object): Layout data
+        
+   """
+   if request.method == 'POST':
+      try:
+         id = request.data.get('id')
+         name = request.data.get('name')
+         description = request.data.get('description')
+         title = request.data.get('title')
+         data = request.data.get('data')
+         user = None
+         if request.user.is_authenticated:
+            user = request.user
+         # exists => update
+         if (id):
+            layout = Layout.objects.get(pk=id)
+            layout.name = name
+            layout.description = description
+            layout.title = title
+            layout.data = data
+            layout.updated_by = user
+         else:
+            layout = Layout(
+               name = name,
+               description = description,
+               title = title,
+               data = data,
+               author = user, 
+               updated_by = user
+            )
+
+         layout.save()
+
+         serializer = LayoutSerializer(layout)
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Layout.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+#@login_required
+@api_view(["GET"])
+def list_layouts(request):
+   """Lists all layouts."""
+   if request.method == 'GET':
+      try:
+         layouts = Layout.objects.all()
+         serializer = LayoutSerializer2(layouts, many=True)         
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Layout.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["GET"])
+def get_layout(request, pk):
+   """
+      Gets a specific layout.
+
+      Params:
+         pk (number): Layout ID
+   """
+   if request.method == 'GET':
+      try:
+         layout = Layout.objects.get(id=pk)
+         serializer = LayoutSerializer(layout)
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Layout.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)
       except Exception as e:
          print (e)

@@ -1,15 +1,14 @@
-import { fetchGET } from "./Fetch.js";
-import { URL_LIST_COMPONENTS } from "./urls.js";
-import { getAllNumbers } from './utils/jsutils.js';
+import { fetchGET } from "../Fetch.js";
+import { URL_LIST_COMPONENTS } from "../urls.js";
+import { getAllNumbers } from '../utils/jsutils.js';
 
-const LOAD_COMPONENT_MODAL = $('#load-component-modal');
+const SELECT_COMPONENT_MODAL = $('#select-component-modal');
 const TABLE_BODY = $("#scm-table-components");
+const ALERT_MSG = $('#scm-no-component-alert');
 
 export function SelectComponentModal(context) {
     this.context = context;
     this.onSelected = null;
-    const self = this;
-
 }
 
 
@@ -21,10 +20,10 @@ SelectComponentModal.prototype = {
         this.fetchComponents(() => {
             $('.scm-component-row').on('click', function(e) {
                 self.onSelected($(this).attr('data-id'));
-                LOAD_COMPONENT_MODAL.modal('hide');
+                SELECT_COMPONENT_MODAL.modal('hide');
             })
         });
-        LOAD_COMPONENT_MODAL.modal('show');
+        SELECT_COMPONENT_MODAL.modal('show');
     },
 
 
@@ -33,11 +32,16 @@ SelectComponentModal.prototype = {
         fetchGET(URL_LIST_COMPONENTS, 
             (result) => {
                 TABLE_BODY.empty();
-                result.forEach(component => {
-                    TABLE_BODY.append(createRow(component));
-                })                
+                if (result.length == 0) {
+                    ALERT_MSG.show();
+                } else {
+                    ALERT_MSG.hide();
+                    result.forEach(component => {
+                        TABLE_BODY.append(createRow(component));
+                    })
+                    if (onReady) onReady();
+                }
                 $("body").css("cursor","auto");
-                if (onReady) onReady();
             },
             (error) => {
                 $("body").css("cursor","auto");

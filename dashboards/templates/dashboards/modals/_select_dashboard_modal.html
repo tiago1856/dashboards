@@ -1,12 +1,12 @@
 {% load static %}
 
 <!-- LOAD COMPONENT MODAL -->
-<div class="modal" id="select-component-modal" tabindex="-1"  role="dialog" aria-labelledby="data-source-modal-label" aria-hidden="true">
+<div class="modal" id="load-dashboard-modal" tabindex="-1"  role="dialog" aria-labelledby="data-source-modal-label" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-scrollable">
         <div class="modal-content">
 
             <div class="modal-header">
-                <h4 class="modal-title">Selecione o Componente:</h4>
+                <h4 class="modal-title">Selecione o Dashboard:</h4>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div><!-- /modal-header -->
 
@@ -21,15 +21,14 @@
                             <th scope="col">Titulo</th>
                         </tr>
                         </thead>
-                        <tbody id="scm-table-components">
+                        <tbody id="sdm-table-dashboards">                            
                         </tbody>
                     </table>
-                    <div class="alert alert-info collapse mx-5 text-center" id="scm-no-component-alert" role="alert">
-                        Não existem Componentes na Base de Dados!
-                    </div>                    
                 </div><!-- /table-responsive -->        
             </div><!-- /modal-body -->
-
+            <div class="alert alert-info collapse mx-5 text-center" id="ldm-no-dash-alert" role="alert">
+                Não existem Dashboards na Base de Dados!
+            </div>
             <div class="modal-footer">            
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
             </div> <!-- /modal-footer -->

@@ -4,21 +4,21 @@
 
 
 
-import { fetchGET, fetchPOST } from "./Fetch.js";
+import { fetchGET, fetchPOST } from "../Fetch.js";
 import { 
     URL_LIST_QUERIES, 
     URL_EXEC_QUERY, 
     URL_SAVE_QUERY,
     URL_DELETE_QUERY,
     URL_UPDATE_QUERY,
-    URL_COMPONENT_CHECKNAME,
+    URL_CHECK_NAME_COMPONENT,
     URL_SAVE_COMPONENT
-} from "./urls.js";
-import { BasicTable } from './builders/BasicTable.js';
-import { ExportTable2Excel } from './export/ExportTable2Excel.js';
-import { MSG_DELETE_QUERY } from './messages.js';
-import { getAllNumbers } from './utils/jsutils.js';
-import { VISUALIZATION_TYPE } from "./components/VisualizationType.js";
+} from "../urls.js";
+import { BasicTable } from '../builders/BasicTable.js';
+import { ExportTable2Excel } from '../export/ExportTable2Excel.js';
+import { MSG_DELETE_QUERY } from '../messages.js';
+import { getAllNumbers } from '../utils/jsutils.js';
+import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
 import { IconsModal } from './IconsModal.js';
 
 const EDIT_COMPONENT_MODAL = $('#edit-component-modal');
@@ -840,7 +840,7 @@ EditComponentModal.prototype = {
      */
     checkName: function(id, name) {
         fetchPOST(
-            URL_COMPONENT_CHECKNAME, 
+            URL_CHECK_NAME_COMPONENT, 
             {
                 id: id,
                 name: name
