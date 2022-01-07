@@ -339,6 +339,23 @@ img.img-zoom {
 }
 */
 
+/* SAVE COMPONENT */ 
+/*
+.icon-save-component {
+	background-color: rgb(255, 255, 255);
+	width: 100%;
+	font-size: 100px;
+	color: #373737
+	display: -ms-inline-flexbox;
+	display: inline-flex;
+	-ms-flex-align: center;
+	align-items: center;
+	-ms-flex-pack: center;
+	justify-content: center;
+    border: dashed 1px black;
+}
+*/
+
 
 /* *********************** */
 /*  ZOOM MODAL    */

@@ -62,6 +62,10 @@ export class InfoComponent extends Div {
           context.signals.onEditComponent.dispatch(self.spot, self.data.component_type);
         });
 
+        $(open_btn.dom).on('click',function() {
+          context.signals.onLoadComponent.dispatch(self.spot);
+        });
+
 
       context.signals.onGlobalData.add((start, end) => {
           console.log("[" + id + "] new date > ", start, end);

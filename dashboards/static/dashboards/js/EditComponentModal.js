@@ -10,7 +10,9 @@ import {
     URL_EXEC_QUERY, 
     URL_SAVE_QUERY,
     URL_DELETE_QUERY,
-    URL_UPDATE_QUERY
+    URL_UPDATE_QUERY,
+    URL_COMPONENT_CHECKNAME,
+    URL_SAVE_COMPONENT
 } from "./urls.js";
 import { BasicTable } from './builders/BasicTable.js';
 import { ExportTable2Excel } from './export/ExportTable2Excel.js';
@@ -26,6 +28,7 @@ const EDIT_COMPONENT_MODAL = $('#edit-component-modal');
 const GLOBAL_NAME = $('#component-global-name');
 const GLOBAL_DESCRIPTION = $('#component-global-description');
 const GLOBAL_TITLE = $('#component-global-title');
+const GLOBAL_NAME_ALERT = $('.component-global-name-alert');
 
 // QUERY
 const QUERY_AREA = $('#data-source-query');
@@ -68,6 +71,10 @@ const ISL_ICON_PREVIEW_AREA = $("#cdc-info-simple-left-icon-preview");
 const ISL_TEXT_1 = $("#cdc-info-simple-left-text-1");
 const ISL_VALUE = $("#cdc-info-simple-left-value");
 const ISL_TEXT_2 = $("#cdc-info-simple-left-text-2");
+
+// SAVE
+const SAVE_COMPONENT_BTN = $("#scs-save-btn");
+
 
 export function EditComponentModal(context) {
 
@@ -154,7 +161,12 @@ export function EditComponentModal(context) {
     });
 
 
-    
+    // save component
+    // save the current state and then save the component in the db
+    SAVE_COMPONENT_BTN.on('click', function() {
+        self.save(false);
+        self.saveComponent();
+    });
 
 
     // ----------------
@@ -176,6 +188,7 @@ export function EditComponentModal(context) {
             GLOBAL_NAME.addClass('valid-input');
             // check name
         }
+        self.checkName(self.state.id, e.target.value);
     });
 
     // on query selection
@@ -201,6 +214,8 @@ export function EditComponentModal(context) {
         SELECTED_FIELDS.empty();
         SELECTED_FIELDS.multiselect('rebuild');
         NEW_QUERY_DIALOG.hide();
+        //self.setVisualizationConfigPanel(false);
+        self.clearVisualizationConfigPanel();
     })
 
     // query edited
@@ -264,6 +279,30 @@ export function EditComponentModal(context) {
 
 EditComponentModal.prototype = {
 
+    clearVisualizationConfigPanel: function() {
+        switch(this.state.visualization.visualization_type) {
+            case VISUALIZATION_TYPE.TS:
+                TS_SORTABLE_NO.empty();
+                TS_SORTABLE_YES.empty();
+                break;
+            case VISUALIZATION_TYPE.G1N:
+                G1N_X_AXIS.empty();
+                G1N_SERIES.empty();
+                break;
+            case VISUALIZATION_TYPE.GDN:
+                GDN_X_AXIS.empty();
+                GDN_SERIES_1.empty();
+                GDN_SERIES_2.empty();                
+                break;
+            case VISUALIZATION_TYPE.ISL:
+                ISL_TEXT_1.val("");
+                ISL_TEXT_2.val("");   
+                ISL_VALUE.empty();  
+                break;
+        }
+
+    },
+
     /**
      * Displays the respective panel and sets it's initial state or restore one.
      */
@@ -288,7 +327,7 @@ EditComponentModal.prototype = {
                     })
                 } else {
                     // no config |=> no field selected = all fields selected => show all fields
-                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config) {
+                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config &&  this.state.query.query_selected_fields) {
                         SELECTED_FIELDS.empty();
                         this.state.data_config.fields.forEach(field => {
                             const item = createSortableListItem(field);
@@ -339,13 +378,17 @@ EditComponentModal.prototype = {
                     G1N_X_AXIS.val(this.state.data_config.fields[0]);
                     G1N_SERIES.val(this.state.data_config.fields[1]);
                 } else {
-                    if ('fields' in this.state.data_config) {
+                    if ('fields' in this.state.data_config && this.state.data_config.fields[0]) {
                         G1N_X_AXIS.val(this.state.data_config.fields[0]);
                         G1N_SERIES.val(this.state.data_config.fields[1]);
+                        if (!G1N_X_AXIS.val()) {
+                            G1N_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
+                            G1N_SERIES.val($("#cdc-graph-1-num-series option:eq(1)").val());
+                        }
                     } else {
                         G1N_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
                         G1N_SERIES.val($("#cdc-graph-1-num-series option:eq(1)").val());
-                    }                    
+                    } 
                     this.state.data_config.fields = [G1N_X_AXIS.val(),G1N_SERIES.val()];
                 }
                 break;
@@ -386,10 +429,15 @@ EditComponentModal.prototype = {
                     GDN_SERIES_1.val(this.state.data_config.fields[1]);
                     GDN_SERIES_2.val(this.state.data_config.fields[2]);
                 } else {
-                    if ('fields' in this.state.data_config) {
+                    if ('fields' in this.state.data_config && this.state.data_config.fields[0]) {
                         GDN_X_AXIS.val(this.state.data_config.fields[0]);
                         GDN_SERIES_1.val(this.state.data_config.fields[1]);
                         GDN_SERIES_2.val(this.state.data_config.fields[2]);
+                        if (!GDN_X_AXIS.val()) {
+                            GDN_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
+                            GDN_SERIES_1.val($("#cdc-graph-1-num-series option:eq(1)").val());
+                            GDN_SERIES_2.val($("#cdc-graph-1-num-series option:eq(2)").val());                            
+                        }
                     } else {
                         GDN_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
                         GDN_SERIES_1.val($("#cdc-graph-1-num-series option:eq(1)").val());
@@ -406,6 +454,43 @@ EditComponentModal.prototype = {
                 fields.forEach(field => {
                     const option = createFieldItem(field, false);
                     ISL_VALUE.append(option);
+                });
+                console.log("1111111 > ", fields);
+
+                if (restore) {
+                    if (SELECTED_FIELDS.children().length == 0 && this.state.data_config.text_1 && this.state.data_config.text_1!== '') {
+                        SELECTED_FIELDS.append(createFieldItem(this.state.data_config.text_1, true));
+                        SELECTED_FIELDS.multiselect('rebuild');
+                        SELECTED_FIELDS.multiselect('selectAll', true);
+                        const option = createFieldItem(this.state.data_config.text_1, false);
+                        ISL_VALUE.append(option); 
+                        ISL_TEXT_1.val(this.state.data_config.text_1);
+                    } else {
+                        ISL_ICON_PREVIEW_AREA.removeClass();
+                        ISL_ICON_PREVIEW_AREA.addClass(this.state.data_config.icon);
+                        ISL_TEXT_1.val(this.state.data_config.text_1);
+                        ISL_TEXT_2.val(this.state.data_config.text_2);
+                        ISL_VALUE.val(this.state.data_config.value);
+                    }
+                } else {
+                    this.state.data_config = {};
+                    //ISL_ICON_PREVIEW_AREA.removeClass();                    
+                    ISL_TEXT_1.val("");
+                    ISL_TEXT_2.val("");
+                    ISL_VALUE.val($("#cdc-info-simple-left-value option:first").val());
+                    this.state.data_config.value = ISL_VALUE.val();
+                    this.state.data_config.text_1 = "";
+                    this.state.data_config.text_2 = "";
+                    this.state.data_config.icon = "icon ion-md-alert";
+                    console.log("222222 > ", fields);
+                }
+
+                /*
+                ISL_VALUE.empty();
+                const fields = SELECTED_FIELDS.val();
+                fields.forEach(field => {
+                    const option = createFieldItem(field, false);
+                    ISL_VALUE.append(option);
                 }); 
                 if (restore) {
                     ISL_ICON_PREVIEW_AREA.removeClass();
@@ -415,7 +500,7 @@ EditComponentModal.prototype = {
                     ISL_VALUE.val(this.state.data_config.value);
                 } else {
                     this.state.data_config = {};
-                    ISL_ICON_PREVIEW_AREA.removeClass();                    
+                    //ISL_ICON_PREVIEW_AREA.removeClass();                    
                     ISL_TEXT_1.val("");
                     ISL_TEXT_2.val("");                   
                     ISL_VALUE.val($("#cdc-info-simple-left-value option:first").val());
@@ -424,18 +509,21 @@ EditComponentModal.prototype = {
                     this.state.data_config.text_2 = "";
                     this.state.data_config.icon = null;
                 }
+                */
                 break;
             }                 
         }        
     },
 
+
     /**
      * Saves the current state of the modal in the state variable, which
      * should be holding a reference to the component's ComponentData, set in
      * show().
+     * @param {boolean} close If true, closes the modal after save.
      * @returns The current state.
      */
-    save: function() {
+    save: function(close = true) {
         const self = this;
         // global
         this.state.name = GLOBAL_NAME.val();
@@ -496,7 +584,7 @@ EditComponentModal.prototype = {
         console.warn("SAVE > ", this.state);
 
         // CLOSE MODAL
-        EDIT_COMPONENT_MODAL.modal('hide');
+        if (close) EDIT_COMPONENT_MODAL.modal('hide');
 
         // UPDATE COMPONENT
         if (this.onReady) this.onReady();
@@ -554,7 +642,6 @@ EditComponentModal.prototype = {
                 // select the display image
                 //$('#' + this.state.visualization.visualization).children('.img-vis').first().addClass('img-vis-selected');
                 $("[data-vis='" + this.state.visualization.visualization_type + "'").children('.img-vis').first().addClass('img-vis-selected');
-
                 this.setVisualizationConfigPanel(true);
             } else {
                 console.log(">>>NEW<<<");
@@ -745,6 +832,56 @@ EditComponentModal.prototype = {
             }
         )
     },
+
+
+    /**
+     * Checks if name exists,
+     * if so, show error message
+     */
+    checkName: function(id, name) {
+        fetchPOST(
+            URL_COMPONENT_CHECKNAME, 
+            {
+                id: id,
+                name: name
+            }, 
+            result => {
+                if (result.status == 200) {
+                    GLOBAL_NAME_ALERT.hide();
+                    SAVE_COMPONENT_BTN.attr('disabled','false');
+                } else {
+                    GLOBAL_NAME_ALERT.show();
+                    SAVE_COMPONENT_BTN.attr('disabled','true'); 
+                }
+            },
+            (error) => {
+                    this.context.signals.onError.dispatch(error,"[EditComponentModal::checkName]");                
+            }
+        )
+    },
+
+    saveComponent: function() {
+        fetchPOST(
+            URL_SAVE_COMPONENT, 
+            {
+                id: this.state.id,
+                name: this.state.name,
+                description: this.state.description,
+                title: this.state.title,
+                data: this.state,
+            }, 
+            result => {
+                //console.log(result);
+                this.state.id = result.id;
+            },
+            (error) => {
+                    this.context.signals.onError.dispatch(error,"[EditComponentModal::saveComponent]");                
+            }
+        )
+    },    
+
+
+      
 }
 
 /**

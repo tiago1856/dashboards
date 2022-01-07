@@ -11,6 +11,11 @@ import {
     MSG_NO_SAVE 
 } from './messages.js';
 import { EditComponentModal } from './EditComponentModal.js';
+import { SelectComponentModal } from './SelectComponentModal.js';
+
+
+
+
 
 // -----------------
 // --- CONSTANTS ---
@@ -63,6 +68,12 @@ let layout = null;
  * EDIT COMPONENT MODAL
  */
 const edit_component_modal = new EditComponentModal(context);
+
+/**
+ * SELECT COMPONENT MODAL
+ */
+
+const select_component_modal = new SelectComponentModal(context);
 
 
 /**
@@ -131,6 +142,12 @@ context.signals.onEditComponent.add((spot, original_type) => {
             component.update();
         }       
     });
+});
+
+context.signals.onLoadComponent.add((spot) => {
+    select_component_modal.show((component_id => {
+        layout.loadComponent(spot, component_id);
+    }));
 });
 
 

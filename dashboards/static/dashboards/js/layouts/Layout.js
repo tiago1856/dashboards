@@ -4,8 +4,10 @@ import { Component } from '../components/Component.js';
 import { LAYOUTS } from '../constants.js';
 import { LayoutTitle } from './LayoutTitle.js';
 import { InfoComponent } from '../components/InfoComponent.js';
-
-
+import { URL_GET_COMPONENT } from "../urls.js";
+import { getAllNumbers } from '../utils/jsutils.js';
+import { fetchGET } from "../Fetch.js";
+import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 
 const LAYOUT_CONTAINER = $('#layout-container');
 
@@ -90,10 +92,42 @@ export class Layout extends Div {
             comp = new Component(this.context, spot, null, true, 'light', data);
         $(original.dom).replaceWith($(comp.dom));
         comp.setEditMode(true);
-        this.components[spot] = comp;       
+        this.components[spot] = comp;
         return this.components[spot];
     }
-    
+
+    /**
+     * Loads a component from the database and sets the component.
+     * @param {number} spot Spot in the layout.
+     * @param {number} component_id Component ID in the database.
+     */
+    loadComponent(spot, component_id) {
+        $("body").css("cursor","progress");
+        fetchGET(URL_GET_COMPONENT + component_id, 
+            (result) => {
+                const original = this.getComponentAt(spot);
+                const data = JSON.parse(JSON.stringify(result.data));
+                let comp = null;
+                if (data.component_type === COMPONENT_TYPE.INFO)
+                    comp = new InfoComponent(this.context, spot, null, true, 'light', data);
+                else
+                    comp = new Component(this.context, spot, null, true, 'light', data);
+                $(original.dom).replaceWith($(comp.dom));
+                comp.setEditMode(true);
+                this.components[spot] = comp;
+                $("body").css("cursor","auto");
+            },
+            (error) => {
+                $("body").css("cursor","auto");
+                if (getAllNumbers(error.toString())[0] == 500)
+                    this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[EditComponentModal::fetchQueries]");
+                else
+                    this.context.signals.onError.dispatch(error,"[main::onLoadComponent]");
+                
+            }
+        );
+    }
+ 
 
 }
 

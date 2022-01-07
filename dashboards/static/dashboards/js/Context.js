@@ -17,6 +17,7 @@ export function Context() {
         onGlobalData: new Signal(),             // new temporal interval
         onEditComponent: new Signal(),          // edit a specific component
         onZoomComponent: new Signal(),
+        onLoadComponent: new Signal(),
         //onVisualizationSelected: new Signal(),  // visualization type selected
 
     }

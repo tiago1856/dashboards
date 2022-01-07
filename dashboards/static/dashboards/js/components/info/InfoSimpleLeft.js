@@ -19,6 +19,7 @@ export class InfoSimpleLeft extends BaseComponentContent {
         span.addClass('info-box-icon bg-danger');
         const icon = new I().attachTo(span);
         icon.addClass("icon ion-md-alert");
+        icon.setStyle("font-size","56px");
 
 
         const content = new Div().attachTo(div);
@@ -32,14 +33,14 @@ export class InfoSimpleLeft extends BaseComponentContent {
      
 
         this.execQuery(data.query.query, null, (results) => {
-            const component_data = this.prepareData(results, data);
+            const [comp_text_1, comp_value] = this.prepareData(results, data);
             if (data.data_config.icon !== '') {
                 $(icon.dom).removeClass();
                 $(icon.dom).addClass(data.data_config.icon);
             }
-            if (data.data_config.text_1 !== '') text.setTextContent(data.data_config.text_1);            
-            if (component_data) {
-                const _value = component_data + (data.data_config.text_2!==''?data.data_config.text_2:"");
+            if (comp_text_1 !== '') text.setTextContent(comp_text_1,);            
+            if (comp_value) {
+                const _value = comp_value + (data.data_config.text_2!==''?data.data_config.text_2:"");
                 value.setTextContent(_value);
             }
         });
@@ -57,31 +58,37 @@ export class InfoSimpleLeft extends BaseComponentContent {
     prepareData(data_2_display, _data=null) {
         super.prepareData(data_2_display);
 
-        // nothing defined by the user => find the first number column and key
+        let value = null;
+        let text_1 = null;
 
-        /*
-        // nothing defined by the user => find the first string and number column
-        if (!_data.data_config.fields[0] || !_data.data_config.fields[1] || _data.data_config.fields.length < 2) {
-            id = getStringField(data_2_display,1);
-            value = getNumberField(data_2_display,1);
-        } else {
-            id = _data.data_config.fields[0];
-            value = _data.data_config.fields[1];
+        if (data_2_display.length>0) {
+            // nothing defined by the user => find the first number column and its name
+            if (!_data.data_config.value) {
+                const _text_1 = getNumberField(data_2_display,1);
+                value = data_2_display[0][_text_1];
+                _data.data_config.value = _text_1;
+                if (_data.data_config.text_1 === '') {
+                    text_1 = _text_1;
+                    _data.data_config.text_1 = text_1;
+                } else {
+                    text_1 = _data.data_config.text_1;
+                }                
+            } else {
+                value = data_2_display[0][_data.data_config.value];
+                if (_data.data_config.text_1 === '') {
+                    text_1 = getNumberField(data_2_display,1);
+                    _data.data_config.text_1 = text_1;
+                } else {
+                    text_1 = _data.data_config.text_1;
+                }                                
+            }
         }
 
-        if (!id || !value || (data_2_display.length > 0 && !isNumber(data_2_display[0][value]))) {
-            this.context.signals.onError.dispatch("Erros nos dados!","[Graph1Num::prepareData]");
-        }   
-        */
+        if (!value || !text_1) {
+            this.context.signals.onError.dispatch("Erros nos dados!","[InfoSimpleLeft::prepareData]");
+        } 
 
-
-
-
-        if (data_2_display.length > 0) {
-            return data_2_display[0][_data.data_config.value];
-        }
-
-        return null;
+        return [text_1, value];
     }    
 }
 

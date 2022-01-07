@@ -6,6 +6,7 @@
 
 export const ComponentData = {
     // global
+    id: null,                           // [number] [read only]
     name: null,                         // [string]
     description: null,                  // [string]
     title: null,                        // title [string]

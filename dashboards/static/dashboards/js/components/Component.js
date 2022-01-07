@@ -64,7 +64,8 @@ export class Component extends Div {
           this.body.addClass('card-body');
           this.body.setId(uuidv4());   // set a random id for this component's body
           this.body.setStyle("max-width","100%");
-          this.body.setStyle("overflow","auto");  
+          this.body.setStyle("overflow","auto");
+          this.setTitle(data.title);
           const component = getComponentClass(data.visualization_type, data.visualization);
           if (component) {
             this.content = new component.class(context, data, this.body, this.options_btn.dom, h100);
@@ -78,7 +79,10 @@ export class Component extends Div {
         $(edit_btn.dom).on('click',function() {
           context.signals.onEditComponent.dispatch(self.spot, self.data.component_type);
         });
-        
+
+        $(open_btn.dom).on('click',function() {
+          context.signals.onLoadComponent.dispatch(self.spot);
+        });
 
         
         // necessary, otherwise only the contents collapse/show and not the box itself.
