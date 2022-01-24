@@ -24,6 +24,7 @@ export class Component extends Div {
         this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
         this.h100 = h100;
+        const self = this;
         
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
         console.warn(this.data);
