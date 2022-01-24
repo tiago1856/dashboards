@@ -1,5 +1,5 @@
 import { fetchGET } from "../Fetch.js";
-import { URL_LIST_LAYOUTS } from "../urls.js";
+import { URL_LIST_DASHBOARDS } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
 
 
@@ -21,8 +21,8 @@ SelectDashboardModal.prototype = {
         const self = this;
         this.fetchLayouts(() => {
             $('.sdm-dashboard-row').on('click', function(e) {
-                self.onSelected($(this).attr('data-id'));
                 SELECT_DASHBOARD_MODAL.modal('hide');
+                onSelected($(this).attr('data-id'));                
             })
         });
         SELECT_DASHBOARD_MODAL.modal('show');
@@ -31,7 +31,7 @@ SelectDashboardModal.prototype = {
 
     fetchLayouts: function(onReady=null) {
         $("body").css("cursor","progress");
-        fetchGET(URL_LIST_LAYOUTS, 
+        fetchGET(URL_LIST_DASHBOARDS, 
             (result) => {
                 TABLE_BODY.empty();
                 if (result.length == 0) {

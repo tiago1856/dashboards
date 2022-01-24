@@ -18,11 +18,11 @@ urlpatterns = [
     path('api/list_components/', views.list_components, name="list_components"),
     path('api/get_component/<int:pk>/', views.get_component, name="get_component"),
 
-    # layout
-    path('api/check_name_layout/', views.check_name_layout, name="check_name_layout"),
-    path('api/save_layout/', views.save_layout, name="save_layout"),
-    path('api/list_layouts/', views.list_layouts, name="list_layouts"),
-    path('api/get_layout/<int:pk>/', views.get_layout, name="get_layout"),
+    # dashboard
+    path('api/check_name_dashboard/', views.check_name_dashboard, name="check_name_dashboard"),
+    path('api/save_dashboard/', views.save_dashboard, name="save_dashboard"),
+    path('api/list_dashboards/', views.list_dashboards, name="list_dashboards"),
+    path('api/get_dashboard/<int:pk>/', views.get_dashboard, name="get_dashboard"),
 
 
 ]

@@ -1,5 +1,10 @@
 from rest_framework import serializers
-from dashboards.models import Query, Component, Layout
+from dashboards.models import Query, Component, Dashboard, Layout
+
+class LayoutSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Layout
+        fields = '__all__'
 
 class QuerySerializer(serializers.ModelSerializer):
     author_name = serializers.ReadOnlyField(source='author.username', read_only=True)
@@ -18,12 +23,19 @@ class ComponentSerializer2(serializers.ModelSerializer):
         model = Component
         fields = ['id', 'name', 'description','title']
 
-class LayoutSerializer(serializers.ModelSerializer):
+class DashboardSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Layout
+        model = Dashboard
         fields = '__all__'
 
-class LayoutSerializer2(serializers.ModelSerializer):
+class DashboardSerializer2(serializers.ModelSerializer):
+    layout_name = serializers.ReadOnlyField(source='layout.name', read_only=True)
     class Meta:
-        model = Layout
-        fields = ['id', 'name', 'description']
+        model = Dashboard
+        fields = ['id', 'name', 'description', 'layout', 'layout_name']
+
+class DashboardSerializer3(serializers.ModelSerializer):
+    layout_name = serializers.ReadOnlyField(source='layout.name', read_only=True)
+    class Meta:
+        model = Dashboard
+        fields = ['id', 'name', 'description', 'layout', 'layout_name', 'title','data']

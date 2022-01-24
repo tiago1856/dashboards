@@ -2,6 +2,22 @@ from django.db import models
 
 # Create your models here.
 
+class Layout(models.Model):
+    name = models.CharField(null=False, max_length = 80)
+    description = models.CharField(blank=True, null=True, max_length = 128)
+    date = models.DateTimeField(null=False, auto_now=True)
+    author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="layout_author")
+
+    class Meta:
+        db_table = 'layout'
+        verbose_name_plural = "Layouts"
+        constraints = [ models.UniqueConstraint(fields=['name'], name="layout_name") ]
+
+    def __str__(self):
+        return self.name
+
+
+
 class Query(models.Model):
     name = models.CharField(null=False, max_length = 80)
     description = models.CharField(blank=True, null=True, max_length = 128)
@@ -38,20 +54,21 @@ class Component(models.Model):
         return self.name
 
 
-class Layout(models.Model):
+class Dashboard(models.Model):
     name = models.CharField(null=False, max_length = 80)
     description = models.CharField(blank=True, null=True, max_length = 128)
     title = models.CharField(blank=True, null=True, max_length = 128)
     date_created = models.DateTimeField(null=False, auto_now_add=True)
     date_updated = models.DateTimeField(null=False, auto_now=True)
-    author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="layout_author")
-    updated_by = models.ForeignKey('accounts.User', models.SET_NULL, db_column='updated_by', blank=True, null=True, default=None, related_name="layout_updated_by")
+    author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="dashboard_author")
+    updated_by = models.ForeignKey('accounts.User', models.SET_NULL, db_column='updated_by', blank=True, null=True, default=None, related_name="dashboard_updated_by")
+    layout = models.ForeignKey(Layout, models.SET_NULL, db_column='layout', blank=True, null=True, default=None, related_name="dashboard_layout")
     data = models.JSONField(blank=True, null=True)
 
     class Meta:
-        db_table = 'layout'
-        verbose_name_plural = "Layouts"
-        constraints = [ models.UniqueConstraint(fields=['name'], name="layout_name") ]
+        db_table = 'dashboard'
+        verbose_name_plural = "Dashboards"
+        constraints = [ models.UniqueConstraint(fields=['name'], name="dashboard_name") ]
 
     def __str__(self):
         return self.name

@@ -4,14 +4,61 @@ import { Component } from '../components/Component.js';
 import { LAYOUTS } from '../constants.js';
 import { DashboardTitle } from './DashboardTitle.js';
 import { InfoComponent } from '../components/InfoComponent.js';
-import { URL_GET_COMPONENT, URL_SAVE_LAYOUT } from "../urls.js";
+import { URL_GET_COMPONENT, URL_SAVE_DASHBOARD } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
 import { fetchGET, fetchPOST } from "../Fetch.js";
 import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 
 
 const DASHBOARD_CONTAINER = $('#layout-container');
-
+/*
+                {
+                    "id": 3,
+                    "name": "d2a3c523-4c08-4f34-856b-7024ac4f0844",
+                    "description": "",
+                    "layout": 2,
+                    "layout_name": "L2",
+                    "title": null,
+                    "data": {
+                      "0": {
+                        "id": null,
+                        "name": null,
+                        "description": null,
+                        "title": null,
+                        "component_type": null,
+                        "query": {
+                          "query_selection": null,
+                          "query": null,
+                          "query_selected_fields": null,
+                          "query_fields": null
+                        },
+                        "visualization": {
+                          "visualization_type": null,
+                          "visualization_tab": null
+                        },
+                        "data_config": {}
+                      },
+                      "1": {
+                        "id": null,
+                        "name": null,
+                        "description": null,
+                        "title": null,
+                        "component_type": null,
+                        "query": {
+                          "query_selection": null,
+                          "query": null,
+                          "query_selected_fields": null,
+                          "query_fields": null
+                        },
+                        "visualization": {
+                          "visualization_type": null,
+                          "visualization_tab": null
+                        },
+                        "data_config": {}
+                      }
+                    }
+                  }                
+*/
 
 export class Dashboard extends Div {
     /**
@@ -23,7 +70,8 @@ export class Dashboard extends Div {
     constructor (context, layout_id, data=null) {
         super();
         this.context = context;
-        this.attachTo(DASHBOARD_CONTAINER[0]);
+        DASHBOARD_CONTAINER.empty();
+        this.attachTo(DASHBOARD_CONTAINER.get(0));
 
         //context.layout = {title: null, components: {}};
         this.title = null;
@@ -31,6 +79,7 @@ export class Dashboard extends Div {
         this.description = null;
         this.components = {};
         this.id = null;
+        this.layout_id = layout_id;
 
         const rows = LAYOUTS[layout_id];
 
@@ -115,7 +164,6 @@ export class Dashboard extends Div {
             (result) => {                
                 const original = this.getComponentAt(spot);
                 const data = JSON.parse(JSON.stringify(result.data));
-                console.log(spot, component_id, data);
                 let comp = null;
                 const h100 = this.components[spot].h100;
                 if (data.component_type === COMPONENT_TYPE.INFO) {
@@ -146,11 +194,12 @@ export class Dashboard extends Div {
         }
 
         fetchPOST(
-            URL_SAVE_LAYOUT, 
+            URL_SAVE_DASHBOARD, 
             {
                 name: this.name,
                 description: this.description,
                 title: this.title,
+                layout: this.layout_id,
                 data: data,
             }, 
             result => {

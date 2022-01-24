@@ -9,8 +9,8 @@ from rest_framework import status
 
 from dashboards.serializers import QuerySerializer
 from dashboards.serializers import ComponentSerializer, ComponentSerializer2
-from dashboards.serializers import LayoutSerializer, LayoutSerializer2
-from dashboards.models import Query, Component, Layout
+from dashboards.serializers import DashboardSerializer, DashboardSerializer2, DashboardSerializer3
+from dashboards.models import Query, Component, Dashboard, Layout
 
 
 # required for the raw queries
@@ -192,7 +192,6 @@ def save_component(request):
    """
    if request.method == 'POST':
       try:
-         print("1111111111")
          id = request.data.get('id')
          name = request.data.get('name')
          description = request.data.get('description')
@@ -203,7 +202,6 @@ def save_component(request):
             user = request.user
          # exists => update
          if (id):
-            print("22222222222")
             component = Component.objects.get(pk=id)
             component.name = name
             component.description = description
@@ -211,7 +209,6 @@ def save_component(request):
             component.data = data
             component.updated_by = user
          else:
-            print("33333333333")
             component = Component(
                name = name,
                description = description,
@@ -220,10 +217,7 @@ def save_component(request):
                author = user, 
                updated_by = user
             )
-         print("44444444444")
          component.save()
-         print("5555555555")
-
          serializer = ComponentSerializer(component)
          return Response(serializer.data, status=status.HTTP_200_OK)
       except Component.DoesNotExist:
@@ -275,15 +269,15 @@ def get_component(request, pk):
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
-##########
-# LAYOUT #
-##########
+#############
+# DASHBOARD #
+#############
 
 #@login_required
 @api_view(["POST"])
-def check_name_layout(request):
+def check_name_dashboard(request):
    """
-      Checks if a layout with a specific name already exists.
+      Checks if a dashboard with a specific name already exists.
       If yes then returns a CONFLICT message else OK.
 
       Body params:
@@ -298,15 +292,15 @@ def check_name_layout(request):
    if request.method == 'POST':
       try:    
          if (request.data.get('id')):
-            layouts = Layout.objects.filter(~Q(id=request.data.get('id')) & Q(name = request.data.get('name')))
+            dashboards = Dashboard.objects.filter(~Q(id=request.data.get('id')) & Q(name = request.data.get('name')))
          else:
-            layouts = Layout.objects.filter(name = request.data.get('name'))
-         if layouts.count() > 0:
+            dashboards = Dashboard.objects.filter(name = request.data.get('name'))
+         if dashboards.count() > 0:
             data = {'status': 666, 'result': 'CONFLICT'}
          else: 
             data = {'status': 200, 'result': 'OK'}
          return Response(data, status=status.HTTP_200_OK)
-      except Layout.DoesNotExist:
+      except Dashboard.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)
       except Exception as e:
          print (e)
@@ -316,13 +310,13 @@ def check_name_layout(request):
 
 
 @api_view(["POST"])
-def save_layout(request):
+def save_dashboard(request):
    """
-      Saves a layout 
+      Saves a dashboard 
 
       Body params:
-         id (number): Layout ID
-         data (object): Layout data
+         id (number): Dashboard ID
+         data (object): Dashboard data
         
    """
    if request.method == 'POST':
@@ -333,32 +327,35 @@ def save_layout(request):
          title = request.data.get('title')
          data = request.data.get('data')
          user = None
+         layout = Layout.objects.get(name = request.data.get('layout'))
          if request.user.is_authenticated:
             user = request.user
          # exists => update
          if (id):
-            layout = Layout.objects.get(pk=id)
-            layout.name = name
-            layout.description = description
-            layout.title = title
-            layout.data = data
-            layout.updated_by = user
+            dashboard = Dashboard.objects.get(pk=id)
+            dashboard.name = name
+            dashboard.description = description
+            dashboard.title = title
+            dashboard.data = data
+            dashboard.updated_by = user
+            dashboard.layout = layout
          else:
-            layout = Layout(
+            dashboard = Dashboard(
                name = name,
                description = description,
                title = title,
                data = data,
                author = user, 
-               updated_by = user
+               updated_by = user,
+               layout = layout
             )
 
-         layout.save()
+         dashboard.save()
 
-         serializer = LayoutSerializer(layout)
+         serializer = DashboardSerializer(dashboard)
          return Response(serializer.data, status=status.HTTP_200_OK)
-      except Layout.DoesNotExist:
-         return Response(status=status.HTTP_404_NOT_FOUND)
+      except (Dashboard.DoesNotExist, Layout.DoesNotExist):
+         return Response(status=status.HTTP_404_NOT_FOUND)       
       except Exception as e:
          print (e)
          return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
@@ -367,14 +364,14 @@ def save_layout(request):
 
 #@login_required
 @api_view(["GET"])
-def list_layouts(request):
-   """Lists all layouts."""
+def list_dashboards(request):
+   """Lists all dashboards."""
    if request.method == 'GET':
       try:
-         layouts = Layout.objects.all()
-         serializer = LayoutSerializer2(layouts, many=True)         
+         dashboards = Dashboard.objects.all()
+         serializer = DashboardSerializer2(dashboards, many=True)         
          return Response(serializer.data, status=status.HTTP_200_OK)
-      except Layout.DoesNotExist:
+      except Dashboard.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)
       except Exception as e:
          print (e)
@@ -385,19 +382,19 @@ def list_layouts(request):
 
 
 @api_view(["GET"])
-def get_layout(request, pk):
+def get_dashboard(request, pk):
    """
-      Gets a specific layout.
+      Gets a specific dashboard.
 
       Params:
-         pk (number): Layout ID
+         pk (number): Dashboard ID
    """
    if request.method == 'GET':
       try:
-         layout = Layout.objects.get(id=pk)
-         serializer = LayoutSerializer(layout)
+         dashboard = Dashboard.objects.get(id=pk)
+         serializer = DashboardSerializer3(dashboard)
          return Response(serializer.data, status=status.HTTP_200_OK)
-      except Layout.DoesNotExist:
+      except Dashboard.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)
       except Exception as e:
          print (e)

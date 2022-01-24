@@ -1,9 +1,7 @@
 
-import { getAllNumbers } from '../utils/jsutils.js';
-
-import { fetchGET, fetchPOST } from "../Fetch.js";
+import { fetchPOST } from "../Fetch.js";
 import { 
-    URL_CHECK_NAME_LAYOUT
+    URL_CHECK_NAME_DASHBOARD
 } from "../urls.js";
 
 const DASH_PROPERTIES_MODAL = $("#dashboard-properties-modal");
@@ -73,7 +71,7 @@ DashboardPropertiesModal.prototype = {
      */
      checkName: function() {
         fetchPOST(
-            URL_CHECK_NAME_LAYOUT, 
+            URL_CHECK_NAME_DASHBOARD, 
             {
                 id: this.dash.id,
                 name: DASH_PROPERTIES_NAME.val(),

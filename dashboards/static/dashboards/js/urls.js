@@ -22,7 +22,7 @@ export const URL_SAVE_COMPONENT = "/dashboards/api/save_component/";
 export const URL_LIST_COMPONENTS = "/dashboards/api/list_components/";
 export const URL_GET_COMPONENT = "/dashboards/api/get_component/";
 
-export const URL_CHECK_NAME_LAYOUT = "/dashboards/api/check_name_layout/";
-export const URL_SAVE_LAYOUT = "/dashboards/api/save_layout/";
-export const URL_LIST_LAYOUTS = "/dashboards/api/list_layouts/";
-export const URL_GET_LAYOUT = "/dashboards/api/get_layout/";
+export const URL_CHECK_NAME_DASHBOARD = "/dashboards/api/check_name_dashboard/";
+export const URL_SAVE_DASHBOARD = "/dashboards/api/save_dashboard/";
+export const URL_LIST_DASHBOARDS = "/dashboards/api/list_dashboards/";
+export const URL_GET_DASHBOARD = "/dashboards/api/get_dashboard/";

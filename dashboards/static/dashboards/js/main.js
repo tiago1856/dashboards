@@ -14,7 +14,10 @@ import { EditComponentModal } from './modals/EditComponentModal.js';
 import { SelectComponentModal } from './modals/SelectComponentModal.js';
 import { SelectDashboardModal } from './modals/SelectDashboardModal.js';
 import { DashboardPropertiesModal } from './modals/DashboardPropertiesModal.js';
-
+import { fetchGET } from "./Fetch.js";
+import { 
+    URL_GET_DASHBOARD
+} from "./urls.js";
 
 
 
@@ -129,6 +132,7 @@ context.signals.onWarning.add((text) => {
 });
 
 context.signals.onChanged.add(() => {
+    console.log("somethiognv cjhanged");
     changeSaveStatus(true);
 });
 
@@ -189,7 +193,24 @@ EDIT_APPLY_BTN.on('click',function() {
 
 // OPENS DASHBOARD
 OPEN_DASHBOARD_BTN.on('click',function() {
-    select_dashboard_modal.show();
+    select_dashboard_modal.show((dash_id) => {
+        console.log("load dash > ", dash_id);
+
+        $("body").css("cursor","progress");
+        fetchGET(URL_GET_DASHBOARD + dash_id, 
+            (result) => {                
+                $("body").css("cursor","auto");
+                dashboard = new Dashboard(context, result.layout_name, data);
+            },
+            (error) => {
+                $("body").css("cursor","auto");
+                context.signals.onError.dispatch(error,"[main::OPEN_DASHBOARD_BTN]");                
+            }
+        );
+
+        //dashboard = new Dashboard(context, dashboard_id, null);        
+
+    });
 })
 
 // NEW DASHBOARD
@@ -279,7 +300,7 @@ $(function(){
 
 
 
-dashboard = new Dashboard(context, 'LA2');
+dashboard = new Dashboard(context, 'L2');
 
 
 
@@ -307,7 +328,8 @@ function exitEditMode() {
 
 
 function newDashboard(dashboard_id) {
-    $(dashboard.dom).remove();
+    //$(dashboard.dom).remove();
+    //$(dashboard.dom).empty();
     dashboard = new Dashboard(context, dashboard_id, null);
     $(SELECTABLE_COMPONENTS).show();
 }
