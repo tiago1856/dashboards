@@ -4,13 +4,13 @@ import { Component } from '../components/Component.js';
 import { LAYOUTS } from '../constants.js';
 import { DashboardTitle } from './DashboardTitle.js';
 import { InfoComponent } from '../components/InfoComponent.js';
-import { URL_GET_COMPONENT } from "../urls.js";
+import { URL_GET_COMPONENT, URL_SAVE_LAYOUT } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
-import { fetchGET } from "../Fetch.js";
+import { fetchGET, fetchPOST } from "../Fetch.js";
 import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 
-const DASHBOARD_CONTAINER = $('#layout-container');
 
+const DASHBOARD_CONTAINER = $('#layout-container');
 
 
 export class Dashboard extends Div {
@@ -27,11 +27,14 @@ export class Dashboard extends Div {
 
         //context.layout = {title: null, components: {}};
         this.title = null;
+        this.name = null;
+        this.description = null;
         this.components = {};
+        this.id = null;
 
         const rows = LAYOUTS[layout_id];
 
-        new DashboardTitle(
+        this.dash_title = new DashboardTitle(
             context, 
             data?data.title:null,
             (new_title) => {
@@ -81,15 +84,20 @@ export class Dashboard extends Div {
         return this.title;
     }
 
+    setTitle(new_title) {
+        this.dash_title.setTitle(new_title);
+    }
+
 
     changeComponentContainer(spot, info = false) {
         const original = this.getComponentAt(spot);
         const data = JSON.parse(JSON.stringify(original.data));
         let comp = null;
+        const h100 = this.components[spot].h100;
         if (info)
-            comp = new InfoComponent(this.context, spot, null, true, 'light', data);
+            comp = new InfoComponent(this.context, spot, null, h100, 'light', data);
         else
-            comp = new Component(this.context, spot, null, true, 'light', data);
+            comp = new Component(this.context, spot, null, h100, 'light', data);
         $(original.dom).replaceWith($(comp.dom));
         comp.setEditMode(true);
         this.components[spot] = comp;
@@ -102,16 +110,19 @@ export class Dashboard extends Div {
      * @param {number} component_id Component ID in the database.
      */
     loadComponent(spot, component_id) {
-        $("body").css("cursor","progress");
+        $("body").css("cursor","progress");        
         fetchGET(URL_GET_COMPONENT + component_id, 
-            (result) => {
+            (result) => {                
                 const original = this.getComponentAt(spot);
                 const data = JSON.parse(JSON.stringify(result.data));
+                console.log(spot, component_id, data);
                 let comp = null;
-                if (data.component_type === COMPONENT_TYPE.INFO)
-                    comp = new InfoComponent(this.context, spot, null, true, 'light', data);
-                else
-                    comp = new Component(this.context, spot, null, true, 'light', data);
+                const h100 = this.components[spot].h100;
+                if (data.component_type === COMPONENT_TYPE.INFO) {
+                    comp = new InfoComponent(this.context, spot, null, h100, 'light', data);
+                } else {
+                    comp = new Component(this.context, spot, null, h100, 'light', data);
+                }
                 $(original.dom).replaceWith($(comp.dom));
                 comp.setEditMode(true);
                 this.components[spot] = comp;
@@ -127,7 +138,36 @@ export class Dashboard extends Div {
             }
         );
     }
- 
+
+    save(onReady = null) {
+        const data = {}
+        for (const spot in this.components){
+            data[spot] = this.components[spot].data;
+        }
+
+        fetchPOST(
+            URL_SAVE_LAYOUT, 
+            {
+                name: this.name,
+                description: this.description,
+                title: this.title,
+                data: data,
+            }, 
+            result => {
+                console.log(">>>>>> ", result);
+                this.id = result.id;
+                if (onReady) onReady(result);
+            },
+            (error) => {
+                    this.context.signals.onError.dispatch(error,"[EditComponentModal::saveComponent]");                
+            }
+        )
+    }
+
+    restore(data) {
+
+    }
+
 
 }
 

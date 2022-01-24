@@ -14,25 +14,25 @@
 
                 <div class="form-group">
                     <label for="dpm-dashboard-name">Nome:</label>
-                    <input type="text" class="form-control" placeholder="Nome do Dashboard" id="dpm-dashboard-name" required>
+                    <input type="text" class="form-control valid-input" placeholder="Nome do Dashboard" name="dpm-dashboard-name" id="dpm-dashboard-name" required>
                 </div>
                 <div class="alert alert-danger collapse" id="dpm-name-alert" role="alert">
                     Nome já existente! O nome deve ser unico.
                 </div>	  
                 <div class="form-group">
                     <label for="dpm-dashboard-description">Descrição:</label>
-                    <textarea  class="form-control" placeholder="Descrição do Dashboard" id="dpm-dashboard-description"></textarea>
+                    <textarea  class="form-control" placeholder="Descrição do Dashboard" name="dpm-dashboard-description" id="dpm-dashboard-description"></textarea>
                 </div>
                 <div class="form-group">
                     <label for="dpm-dashboard-title">Titulo:</label>
-                    <input type="text" class="form-control" placeholder="Titulo do Dashboard" id="dpm-dashboard-title">
+                    <input type="text" class="form-control" placeholder="Titulo do Dashboard" name="dpm-dashboard-title" id="dpm-dashboard-title">
                 </div>                
 
             </div><!-- /modal-body -->
 
             <div class="modal-footer">            
                 <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
-                <button type="button" class="btn btn-primary" data-dismiss="modal"><i class="fa fa-save"></i> Gravar</button>
+                <button type="button" class="btn btn-primary" id="dpm-save-btn" ><i class="fa fa-save"></i> Gravar e Fechar</button>
             </div> <!-- /modal-footer -->
 
         </div> <!-- /modal-content -->

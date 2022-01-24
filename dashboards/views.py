@@ -192,6 +192,7 @@ def save_component(request):
    """
    if request.method == 'POST':
       try:
+         print("1111111111")
          id = request.data.get('id')
          name = request.data.get('name')
          description = request.data.get('description')
@@ -202,6 +203,7 @@ def save_component(request):
             user = request.user
          # exists => update
          if (id):
+            print("22222222222")
             component = Component.objects.get(pk=id)
             component.name = name
             component.description = description
@@ -209,6 +211,7 @@ def save_component(request):
             component.data = data
             component.updated_by = user
          else:
+            print("33333333333")
             component = Component(
                name = name,
                description = description,
@@ -217,8 +220,9 @@ def save_component(request):
                author = user, 
                updated_by = user
             )
-
+         print("44444444444")
          component.save()
+         print("5555555555")
 
          serializer = ComponentSerializer(component)
          return Response(serializer.data, status=status.HTTP_200_OK)

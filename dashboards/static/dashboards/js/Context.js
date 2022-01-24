@@ -23,8 +23,8 @@ export function Context() {
     }
 
     this.edit_mode = false;     // editor or presentation
-    this.dash_id = null;        // dashboard id
-    this.name = null;           // dashboard name
+    this.dash_id = null;        // dashboard id --- REMOVE
+    this.name = null;           // dashboard name --- REMOVE
     this.changed = false;       // indicates if there was any change (save system)
     this.date_start = null;     // global starting date
     this.date_end = null;       // global end date

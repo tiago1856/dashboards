@@ -26,4 +26,3 @@ export const URL_CHECK_NAME_LAYOUT = "/dashboards/api/check_name_layout/";
 export const URL_SAVE_LAYOUT = "/dashboards/api/save_layout/";
 export const URL_LIST_LAYOUTS = "/dashboards/api/list_layouts/";
 export const URL_GET_LAYOUT = "/dashboards/api/get_layout/";
-

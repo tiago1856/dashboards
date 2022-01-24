@@ -26,6 +26,7 @@ export class Component extends Div {
         this.h100 = h100;
         
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
+        console.warn(this.data);
 
         this.spot = spot;     // place in the layout
         this.content = null;  // content of the panel
@@ -60,6 +61,7 @@ export class Component extends Div {
 
         // restoring a saved component
         if (data) {
+          /*
           this.body = new Div().attachTo(this);
           this.body.addClass('card-body');
           this.body.setId(uuidv4());   // set a random id for this component's body
@@ -70,6 +72,8 @@ export class Component extends Div {
           if (component) {
             this.content = new component.class(context, data, this.body, this.options_btn.dom, h100);
           }
+          */
+          this.update();
         }     
 
         $(zoom_btn.dom).on('click',function() {

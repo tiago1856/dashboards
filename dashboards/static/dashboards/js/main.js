@@ -13,6 +13,7 @@ import {
 import { EditComponentModal } from './modals/EditComponentModal.js';
 import { SelectComponentModal } from './modals/SelectComponentModal.js';
 import { SelectDashboardModal } from './modals/SelectDashboardModal.js';
+import { DashboardPropertiesModal } from './modals/DashboardPropertiesModal.js';
 
 
 
@@ -25,7 +26,6 @@ import { SelectDashboardModal } from './modals/SelectDashboardModal.js';
 const MODALS_CONTAINER = $('#modals-container');
 const LAYOUT_SELECTION_MODAL = $('#layout-selection-modal');
 const DATE_INTERVAL = $('#date-interval');
-const DASHBOARD_PROPERTIES_MODAL = $("#dashboard-properties-modal");
 
 const ZOOM_MODAL = $('#zoom-modal');
 const SAVE_BTN = $('#save-btn');
@@ -85,7 +85,10 @@ const select_component_modal = new SelectComponentModal(context);
 
  const select_dashboard_modal = new SelectDashboardModal(context);
 
-
+ /**
+ * SELECT DASHBOARD MODAL
+ */
+const dashboard_properties_modal = new DashboardPropertiesModal(context);
 
 /**
 * ERROR MODAL.
@@ -204,7 +207,9 @@ PRINT_BTN.on('click',function() {
 
 // SAVE DASHBOARD
 SAVE_BTN.on('click',function() {
-    DASHBOARD_PROPERTIES_MODAL.modal('show');
+    dashboard_properties_modal.show(dashboard, () => {
+        console.log("DASHBOARD SAVED");
+    });
 });
 
 // NEW DASHBOARD

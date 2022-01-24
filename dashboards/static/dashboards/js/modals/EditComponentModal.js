@@ -584,10 +584,11 @@ EditComponentModal.prototype = {
         console.warn("SAVE > ", this.state);
 
         // CLOSE MODAL
-        if (close) EDIT_COMPONENT_MODAL.modal('hide');
-
-        // UPDATE COMPONENT
-        if (this.onReady) this.onReady();
+        if (close) {
+            EDIT_COMPONENT_MODAL.modal('hide');
+            // UPDATE COMPONENT
+            if (this.onReady) this.onReady();
+        }        
 
         return this.state;
     },
@@ -618,8 +619,8 @@ EditComponentModal.prototype = {
             // open first tab
             $('.process-model a[href="#edit-component-description-tab"]').tab('show');
             $('.img-vis').removeClass('img-vis-selected');
-            // restore?
             // a component must always have a name
+            // if not => restore
             if (component.data.name != null) {
                 console.log(">>>RESTORE<<<");
                 // global
@@ -848,10 +849,10 @@ EditComponentModal.prototype = {
             result => {
                 if (result.status == 200) {
                     GLOBAL_NAME_ALERT.hide();
-                    SAVE_COMPONENT_BTN.attr('disabled','false');
+                    SAVE_COMPONENT_BTN.attr('disabled',false);
                 } else {
                     GLOBAL_NAME_ALERT.show();
-                    SAVE_COMPONENT_BTN.attr('disabled','true'); 
+                    SAVE_COMPONENT_BTN.attr('disabled', true); 
                 }
             },
             (error) => {
@@ -861,6 +862,7 @@ EditComponentModal.prototype = {
     },
 
     saveComponent: function() {
+        console.log("saving");
         fetchPOST(
             URL_SAVE_COMPONENT, 
             {

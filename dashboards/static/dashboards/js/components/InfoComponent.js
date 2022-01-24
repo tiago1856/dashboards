@@ -48,6 +48,7 @@ export class InfoComponent extends Div {
 
         // restoring a saved component
         if (data) {
+          /*
           this.body = new Div().attachTo(this);
           this.body.addClass('m-0 p-0');
           this.body.setId(uuidv4());   // set a random id for this component's body
@@ -55,6 +56,8 @@ export class InfoComponent extends Div {
           if (component) {
             this.content = new component.class(context, data, this.body, this.options_btn.dom, h100);
           }
+          */
+         this.update();
         }     
        
 
