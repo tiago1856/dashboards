@@ -33,8 +33,7 @@ export class Component extends Div {
         this.new_subcomponent = false;  // whether or not to create/re-recreate the subcomponent
                                         // example: when new visualizaton type, new data, ...
 
-        //if (vh100) this.setStyle('min-height','100%');
-        if (h100) this.addClass('full-height');
+        //if (h100) this.addClass('full-height');
 
         this.context = context;   
 
@@ -57,22 +56,11 @@ export class Component extends Div {
         const zoom_btn = toolButton('fas fa-expand-arrows-alt', 'non-editable-component', 'Ampliar component').attachTo(card_tools);
         const collapse_btn = toolButton('fas fa-minus', 'non-editable-component', 'Collapsar component').attachTo(card_tools);
         const close_btn = toolButton('fas fa-times', 'non-editable-component', 'Remover component').attachTo(card_tools);
-
+        
+        collapse_btn.setAttribute('data-card-widget','collapse');
 
         // restoring a saved component
         if (data) {
-          /*
-          this.body = new Div().attachTo(this);
-          this.body.addClass('card-body');
-          this.body.setId(uuidv4());   // set a random id for this component's body
-          this.body.setStyle("max-width","100%");
-          this.body.setStyle("overflow","auto");
-          this.setTitle(data.title);
-          const component = getComponentClass(data.visualization_type, data.visualization);
-          if (component) {
-            this.content = new component.class(context, data, this.body, this.options_btn.dom, h100);
-          }
-          */
           this.update();
         }     
 
@@ -87,24 +75,6 @@ export class Component extends Div {
         $(open_btn.dom).on('click',function() {
           context.signals.onLoadComponent.dispatch(self.spot);
         });
-
-        
-        // necessary, otherwise only the contents collapse/show and not the box itself.
-        const self = this;
-        if (h100) {
-          $(collapse_btn.dom).on('click', function() {
-            if (self.hasClass('full-height')) {             
-              $(self.dom).animate({height: '34px'}, 'slow', () => {
-                self.removeClass('full-height');                
-              });
-              
-            } else {
-              $(self.dom).animate({height: '100%'}, 'slow', () => {
-                self.addClass('full-height');
-              });              
-            }
-          });
-        }
 
       context.signals.onGlobalData.add((start, end) => {
           console.log("[" + id + "] new date > ", start, end);
