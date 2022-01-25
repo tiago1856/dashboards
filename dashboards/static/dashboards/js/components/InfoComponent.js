@@ -14,16 +14,15 @@ export class InfoComponent extends Div {
    * @param {Context} context Context.
    * @param {number} spot Spot in the layout.
    * @param {string} _title Card title.
-   * @param {boolean} h100 Full height. True if multirow, false otherwise.
    * @param {string} color_scheme light/dark.
    * @param {string} data Data to retore the component.
    * 
    */
-    constructor(context, spot, _title=null, h100 = false, color_scheme = 'light', data=null) {
+    constructor(context, spot, _title=null, color_scheme = 'light', data=null) {
         super(context);
         this.addClass('Component info-component-container');
-        //this.setStyle('max-height','100%');
-        this.h100 = h100;
+        this.setStyle('position','relative');
+        //this.setStyle('width','100%');
         
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
 
@@ -48,15 +47,6 @@ export class InfoComponent extends Div {
 
         // restoring a saved component
         if (data) {
-          /*
-          this.body = new Div().attachTo(this);
-          this.body.addClass('m-0 p-0');
-          this.body.setId(uuidv4());   // set a random id for this component's body
-          const component = getComponentClass(data.visualization_type, data.visualization);
-          if (component) {
-            this.content = new component.class(context, data, this.body, this.options_btn.dom, h100);
-          }
-          */
          this.update();
         }     
        
@@ -106,9 +96,11 @@ export class InfoComponent extends Div {
           if (this.body) $(this.body.dom).remove();
           this.body = new Div().attachTo(this);
           //this.body.setStyle('min-height','100%');
+          this.body.setStyle('width','100%');
+          this.body.setStyle("overflow","auto");
           this.body.setId(uuidv4());
           this.content = null;
-          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, this.h100);
+          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom);
         }
       }
 }

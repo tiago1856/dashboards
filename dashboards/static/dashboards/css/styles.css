@@ -66,11 +66,6 @@ input:focus.valid-input  {
 /*  INFO EDITABLE COMPONENTS    */
 /* **************************** */
 
-/*
-.info-component-container:hover {
-    border: 2px solid black;
-}
-*/
 .info-component-container:hover .info-component-container-buttons   {
    display: inline-block;
 }
@@ -79,7 +74,7 @@ input:focus.valid-input  {
     position: absolute;
     right: 10px;
     z-index: 99;
-     display: none; 
+    display: none; 
 }
 
 .info-component-button {
@@ -100,7 +95,41 @@ input:focus.valid-input  {
 }
 
 
+/* ****** */
+/*  GRID  */
+/* ****** */
+ 
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-gap: 10px;
+}
 
+.span-col-1{grid-column: span 1 / auto;}
+.span-col-2{grid-column: span 2 / auto;}
+.span-col-3{grid-column: span 3 / auto;}
+.span-col-4{grid-column: span 4 / auto;}
+.span-col-5{grid-column: span 5 / auto;}
+.span-col-6{grid-column: span 6 / auto;}
+.span-col-7{grid-column: span 7 / auto;}
+.span-col-8{grid-column: span 8 / auto;}
+.span-col-9{grid-column: span 9 / auto;}
+.span-col-10{grid-column: span 10 / auto;}
+.span-col-11{grid-column: span 11 / auto;}
+.span-col-12{grid-column: span 12 / auto;}
+
+.span-row-1{grid-row: span 1 / auto;}
+.span-row-2{grid-row: span 2 / auto;}
+.span-row-3{grid-row: span 3 / auto;}
+.span-row-4{grid-row: span 4 / auto;}
+.span-row-5{grid-row: span 5 / auto;}
+.span-row-6{grid-row: span 6 / auto;}
+.span-row-7{grid-row: span 7 / auto;}
+.span-row-8{grid-row: span 8 / auto;}
+.span-row-9{grid-row: span 9 / auto;}
+.span-row-10{grid-row: span 10 / auto;}
+.span-row-11{grid-row: span 11 / auto;}
+.span-row-12{grid-row: span 12 / auto;}
 
 
 /* *********************** */

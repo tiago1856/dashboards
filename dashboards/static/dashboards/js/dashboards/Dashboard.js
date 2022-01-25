@@ -44,41 +44,22 @@ export class Dashboard extends Div {
             }
         ).attachTo(this);
         
+        const display = new Div().attachTo(this);
+        display.addClass('dashboard-grid');
 
         let spot = 0
 
-        this.getLayout(data?data.layout_name:layout_id, (rows) => {
-            rows.forEach(row => {
-                // check if there is a multi-row component and if so, it must have max-height
-                let h100 = false;
-                for (let i=0; i<row.length; i++){
-                    if (row[i][1] > 1) {
-                        h100 = true;
-                        break;
-                    }
-                };
-                            
-                const new_row = new Div({classes:['row']}).attachTo(this);
-                row.forEach(col => {
-    
-                    const _col = new Div({classes:['col-md-' + col[0], 'mb-2']});
-                    _col.attachTo(new_row);
-                    if (col[1] === 1 && h100) {
-                        this.components[spot] = new Component(this.context, spot, null, true, 'primary', data?data.data[spot]:null).attachTo(_col);
-                        this.components[spot].setEditMode(edit_mode);
-                        spot++;
-                    } else {
-                        for (let i=0; i < col[1]; i++) {                        
-                            this.components[spot] = new Component(this.context, spot, null, false, 'light', data?data.data[spot]:null).attachTo(_col);
-                            this.components[spot].setEditMode(edit_mode);
-                            spot++;
-                        }
-                    }
-    
-                });    
-            });
+        this.getLayout(data?data.layout:layout_id, (grid) => {
+            //const l = [[4,1],[4,1],[4,1],[6,1],[6,2],[6,1]];
+            grid.forEach(dims => {
+                const div = new Div().attachTo(display);
+                div.addClass("span-col-" + dims[0] + (dims[1]>1?(" span-row-" + dims[1]):""));
+                div.setStyle('width','100%');
+                this.components[spot] = new Component(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                this.components[spot].setEditMode(edit_mode);
+                spot++;    
+            })
         })
-
                
     }
 
@@ -99,11 +80,10 @@ export class Dashboard extends Div {
         const original = this.getComponentAt(spot);
         const data = JSON.parse(JSON.stringify(original.data));
         let comp = null;
-        const h100 = this.components[spot].h100;
         if (info)
-            comp = new InfoComponent(this.context, spot, null, h100, 'light', data);
+            comp = new InfoComponent(this.context, spot, null, 'light', data);
         else
-            comp = new Component(this.context, spot, null, h100, 'light', data);
+            comp = new Component(this.context, spot, null, 'light', data);
         $(original.dom).replaceWith($(comp.dom));
         comp.setEditMode(true);
         this.components[spot] = comp;
@@ -123,11 +103,10 @@ export class Dashboard extends Div {
                 const data = JSON.parse(JSON.stringify(result.data));
                 data.id = result.id;
                 let comp = null;
-                const h100 = this.components[spot].h100;
                 if (data.component_type === COMPONENT_TYPE.INFO.name) {
-                    comp = new InfoComponent(this.context, spot, null, h100, 'light', data);
+                    comp = new InfoComponent(this.context, spot, null, 'light', data);
                 } else {
-                    comp = new Component(this.context, spot, null, h100, 'light', data);
+                    comp = new Component(this.context, spot, null, 'light', data);
                 }
                 $(original.dom).replaceWith($(comp.dom));
                 comp.setEditMode(true);
@@ -186,7 +165,8 @@ export class Dashboard extends Div {
         fetchGET(URL_GET_LAYOUT + layout_id, 
             (result) => {
                 $("body").css("cursor","auto");
-                if (onReady) onReady(result.data);
+                //if (onReady) onReady(result.data);
+                if (onReady) onReady(result.temp);
             },
             (error) => {
                 $("body").css("cursor","auto");

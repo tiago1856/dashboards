@@ -4,15 +4,11 @@ import { BasicTable } from '../../builders/BasicTable.js';
 import { Div } from '../../builders/BuildingBlocks.js';
 
 export class ComplexTable extends BaseComponentContent {
-    constructor(context, data, parent, opt_btn, h100) {
+    constructor(context, data, parent, opt_btn) {
         super(context, data, parent);
         
         this.execQuery(data.query.query, null, (results) => {
-            if (!h100) {
-                parent.setStyle("height","300px");
-            } else {
-                parent.setStyle("height","600px");
-            }
+            parent.setStyle("height","300px");
             const component_data = this.prepareData(results, data);
             const container = new Div().attachTo(parent);        
 

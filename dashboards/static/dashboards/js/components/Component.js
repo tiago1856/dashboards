@@ -17,16 +17,17 @@ export class Component extends Div {
    * @param {Context} context Context.
    * @param {number} spot Spot in the layout.
    * @param {string} _title Card title.
-   * @param {boolean} h100 Full height. True if multirow, false otherwise.
    * @param {string} color_scheme light/dark.
    * @param {string} data Data to retore the component.
    * 
    */
-    constructor(context, spot, _title=null, h100 = false, color_scheme = 'light', data=null) {
+    constructor(context, spot, _title=null, color_scheme = 'light', data=null) {
         super(context);
         this.addClass('Component card mb-1');
         this.addClass('card-' + color_scheme);
-        this.h100 = h100;
+        this.setStyle('width','100%');
+        //this.setStyle('height','100%');
+
         const self = this;
         this.changed = false;   // something changed
         
@@ -37,8 +38,6 @@ export class Component extends Div {
         this.content = null;  // content of the panel
         this.new_subcomponent = false;  // whether or not to create/re-recreate the subcomponent
                                         // example: when new visualizaton type, new data, ...
-
-        //if (h100) this.addClass('full-height');
 
         this.context = context;   
 
@@ -161,10 +160,11 @@ export class Component extends Div {
           this.body = new Div().attachTo(this);
           this.body.addClass('card-body');
           this.body.setId(uuidv4());
-          this.body.setStyle("max-width","100%");
+          //this.body.setStyle("max-width","100%");
+          this.body.setStyle('width','100%');
           this.body.setStyle("overflow","auto"); 
           this.content = null;
-          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, this.h100);
+          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom);
         }
       }
 

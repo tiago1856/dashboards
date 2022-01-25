@@ -8,11 +8,7 @@ export class SimpleTable extends BaseComponentContent {
         super(context, data, parent);
         
         this.execQuery(data.query.query, null, (results) => {
-            if (!h100) {
-                parent.setStyle("height","300px");
-            } else {
-                parent.setStyle("height","600px");
-            }
+            parent.setStyle("height","300px");
             const component_data = this.prepareData(results, data);
             const container = new Div().attachTo(parent);
             new BasicTable(component_data, 20, data.data_config.fields).attachTo(container);

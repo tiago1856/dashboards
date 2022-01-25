@@ -207,7 +207,8 @@ OPEN_DASHBOARD_BTN.on('click',function() {
         fetchGET(URL_GET_DASHBOARD + dash_id, 
             (result) => {                
                 $("body").css("cursor","auto");
-                dashboard = new Dashboard(context, result.layout_name, result);
+                console.log(result);
+                dashboard = new Dashboard(context, result.layout, result);
             },
             (error) => {
                 $("body").css("cursor","auto");

@@ -13,6 +13,8 @@ Use the **/flexdash/_env** example to create a **.env** file with the correct se
 
 Create the database *flexdash* and set the username, password and port in the *.env* file.
 
+You can also use the file [fleshdash.sql](https://github.com/tiago1856/dashboards/blob/master/fleshdash.sql) to create and populate the tables or just the tables you need.
+
 
 ## Installation
 

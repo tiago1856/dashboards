@@ -328,7 +328,7 @@ def save_dashboard(request):
          title = request.data.get('title')
          data = request.data.get('data')
          user = None
-         layout = Layout.objects.get(name = request.data.get('layout'))
+         layout = Layout.objects.get(pk = request.data.get('layout'))
          if request.user.is_authenticated:
             user = request.user
          # exists => update

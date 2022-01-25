@@ -8,7 +8,8 @@ class Layout(models.Model):
     date = models.DateTimeField(null=False, auto_now=True)
     author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="layout_author")
     data = models.JSONField(blank=True, null=True)
-
+    temp = models.JSONField(blank=True, null=True)
+    
     class Meta:
         db_table = 'layout'
         verbose_name_plural = "Layouts"
