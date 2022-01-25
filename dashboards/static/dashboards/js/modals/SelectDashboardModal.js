@@ -10,7 +10,6 @@ const ALERT_MSG = $('#ldm-no-dash-alert');
 export function SelectDashboardModal(context) {
     this.context = context;
     this.onSelected = null;
-
 }
 
 

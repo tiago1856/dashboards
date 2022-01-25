@@ -24,5 +24,8 @@ urlpatterns = [
     path('api/list_dashboards/', views.list_dashboards, name="list_dashboards"),
     path('api/get_dashboard/<int:pk>/', views.get_dashboard, name="get_dashboard"),
 
+    # layout
+    path('api/get_layout/<int:pk>/', views.get_layout, name="get_layout"),
+    path('api/list_layouts/', views.list_layouts, name="list_layouts"),
 
 ]

@@ -2,7 +2,7 @@
 
 <!-- LAYOUT SELECTION MODAL -->
 <div class="modal" id="layout-selection-modal" tabindex="-1"  role="dialog" aria-labelledby="data-source-modal-label" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-scrollable">
+    <div class="modal-dialog modal-dialog-scrollable modal-lg">
         <div class="modal-content">
 
             <div class="modal-header">
@@ -11,88 +11,12 @@
             </div><!-- /modal-header -->
 
             <div class="modal-body ">
-                <div class="row clearfix">
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L1.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L1">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L2.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L2">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L3.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L3">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L4.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L4">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L5.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L5">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L6.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L6">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L7.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L7">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L8.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L8">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L9.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L9">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L10.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L10">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L11.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L11">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L12.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L12">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L13.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L13">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L14.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L14">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L15.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L15">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L16.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L16">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L17.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L17">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L18.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L18">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L19.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L19">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L20.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L20">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L21.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L21">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L22.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L22">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L23.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L23">
-                    </div>
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/L24.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="L24">
-                    </div>
-                    <!--
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/LD1.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="LD1">
-                    </div>  
-                    <div class="col">
-                        <img src="{% static 'dashboards/images/layouts/LD2.png' %}" class="img-fluid rounded m-2 layout-choice" data-id="LD2">
-                    </div>          
-                    -->                    
-                </div><!-- /row -->
+                <div class="alert alert-info collapse mx-5 text-center" id="lsm-no-layout-alert" role="alert">
+                    Não existem layouts definidos!
+                </div> 
+                <div class="row" id="lsm-choices">
+                </div>               
+                <!-- /row -->
                 <div class="row">
                     <div class="col-12">
                         <img src="{% static 'dashboards/images/layouts/user_defined.png' %}" class="img-fluid rounded m-2" style="width: 100%;" data-id="LD2">
@@ -100,7 +24,10 @@
                 </div>
             </div><!-- /modal-body -->
 
-            <div class="modal-footer">            
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info mr-auto" id="lsm-refresh">
+                    <i class="fas fa-sync"></i> Actualizar
+                </button>                
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
             </div> <!-- /modal-footer -->
 

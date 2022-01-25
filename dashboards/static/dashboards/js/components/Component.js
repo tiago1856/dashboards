@@ -3,6 +3,9 @@ import { Div, AwesomeIconAndButton, Text } from '../builders/BuildingBlocks.js';
 import { ComponentData } from './ComponentData.js';
 import { NO_TITLE_DEFINED } from '../constants.js';
 import { getComponentClass } from './ComponentType.js';
+import { fetchPOST } from "../Fetch.js";
+import { URL_SAVE_COMPONENT } from "../urls.js";
+
 
 /**
  * Container for all type of components.
@@ -25,9 +28,10 @@ export class Component extends Div {
         this.addClass('card-' + color_scheme);
         this.h100 = h100;
         const self = this;
+        this.changed = false;   // something changed
         
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
-        console.warn(this.data);
+        //console.warn(this.data);
 
         this.spot = spot;     // place in the layout
         this.content = null;  // content of the panel
@@ -77,10 +81,24 @@ export class Component extends Div {
           context.signals.onLoadComponent.dispatch(self.spot);
         });
 
+        $(save_btn.dom).on('click',function() {
+          self.save();
+        });
+
       context.signals.onGlobalData.add((start, end) => {
           console.log("[" + id + "] new date > ", start, end);
       });
       
+    }
+
+    changed() {
+      this.changed = true;
+      this.data.id = null;
+    }
+
+    saved(id) {
+      this.changed = false;
+      this.data.id = id;
     }
 
     setEditMode(mode) {
@@ -131,10 +149,10 @@ export class Component extends Div {
 
     /**
      * Update component.
-     * Called when something fundamental change, like the component's type.
+     * Called when something fundamental change, like creation itself or just the component's type.
      */
     update() {
-      console.log("UPDATE COMPONENT > ", this.spot, this.data);
+      console.log("COMPONENT > ", this.spot, this.data);
       this.setTitle(this.data.title);
       //if (this.new_subcomponent) {
         const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
@@ -149,6 +167,31 @@ export class Component extends Div {
           this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, this.h100);
         }
       }
+
+      /**
+       * Saves the component data into the database.
+       */
+      save() {
+        console.log("saving");
+        fetchPOST(
+            URL_SAVE_COMPONENT, 
+            {
+                id: this.data.id,
+                name: this.data.name,
+                description: this.data.description,
+                title: this.data.title,
+                data: this.data,
+            }, 
+            result => {
+                this.data.id = result.id;
+            },
+            (error) => {
+              this.context.signals.onError.dispatch(error,"[Component::saveComponent]");                
+            }
+        )
+    }
+
+
 }
 
 const toolButton = (icon, classes, title) => {

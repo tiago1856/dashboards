@@ -14,6 +14,7 @@ import { EditComponentModal } from './modals/EditComponentModal.js';
 import { SelectComponentModal } from './modals/SelectComponentModal.js';
 import { SelectDashboardModal } from './modals/SelectDashboardModal.js';
 import { DashboardPropertiesModal } from './modals/DashboardPropertiesModal.js';
+import { LayoutSelectionModal } from './modals/LayoutSelectionModal.js';
 import { fetchGET } from "./Fetch.js";
 import { 
     URL_GET_DASHBOARD
@@ -27,7 +28,6 @@ import {
 // -----------------
 
 const MODALS_CONTAINER = $('#modals-container');
-const LAYOUT_SELECTION_MODAL = $('#layout-selection-modal');
 const DATE_INTERVAL = $('#date-interval');
 
 const ZOOM_MODAL = $('#zoom-modal');
@@ -49,7 +49,7 @@ const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
 const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
 const DATARANGE_BTN_ID = '#daterange-btn';
-const LAYOUT_CHOICE = '.layout-choice';
+
 
 // ---------------------------
 // --- CONTEXT AND GLOBALS ---
@@ -92,6 +92,13 @@ const select_component_modal = new SelectComponentModal(context);
  * SELECT DASHBOARD MODAL
  */
 const dashboard_properties_modal = new DashboardPropertiesModal(context);
+
+
+ /**
+ * SELECT LAYOUT MODAL
+ */
+const layout_selection_modal = new LayoutSelectionModal(context);
+
 
 /**
 * ERROR MODAL.
@@ -200,7 +207,7 @@ OPEN_DASHBOARD_BTN.on('click',function() {
         fetchGET(URL_GET_DASHBOARD + dash_id, 
             (result) => {                
                 $("body").css("cursor","auto");
-                dashboard = new Dashboard(context, result.layout_name, data);
+                dashboard = new Dashboard(context, result.layout_name, result);
             },
             (error) => {
                 $("body").css("cursor","auto");
@@ -213,9 +220,21 @@ OPEN_DASHBOARD_BTN.on('click',function() {
     });
 })
 
-// NEW DASHBOARD
+// NEW LAYOUT
 DISPLAY_LAYOUT_MODAL.on('click',function() {
-    LAYOUT_SELECTION_MODAL.modal('show')
+    if (context.changed) {
+        context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
+            layout_selection_modal.show((selection) => {
+                newDashboard(selection, true);
+                EDIT_BTN.trigger('click');
+            })
+        });
+    } else {
+        layout_selection_modal.show((selection) => {
+            newDashboard(selection, true);
+            EDIT_BTN.trigger('click');
+        })        
+    }
 })
 
 // NEW GLOBAL LOCATION
@@ -257,25 +276,6 @@ DELETE_BTN.on('click',function() {
 SWAP_BTN.on('click',function() {
 });
 
-// -------------
-// ACTIONS
-// -------------
-
-// NEW LAYOUT CHOICE
-$(LAYOUT_CHOICE).on('click', function(e) {
-    LAYOUT_SELECTION_MODAL.modal('hide');
-    if (context.changed) {
-        context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
-            newDashboard($(this).attr('data-id'));
-            EDIT_BTN.trigger('click');
-        });
-    } else {
-        newDashboard($(this).attr('data-id'));
-        EDIT_BTN.trigger('click');
-    }
-});
-
-
 
 // -------------
 // INIT
@@ -300,8 +300,7 @@ $(function(){
 
 
 
-dashboard = new Dashboard(context, 'L2');
-
+dashboard = new Dashboard(context, 2);
 
 
 
@@ -327,9 +326,9 @@ function exitEditMode() {
 
 
 
-function newDashboard(dashboard_id) {
+function newDashboard(dashboard_id, edit_mode = false) {
     //$(dashboard.dom).remove();
     //$(dashboard.dom).empty();
-    dashboard = new Dashboard(context, dashboard_id, null);
+    dashboard = new Dashboard(context, dashboard_id, null, edit_mode);
     $(SELECTABLE_COMPONENTS).show();
 }

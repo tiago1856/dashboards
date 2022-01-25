@@ -479,11 +479,11 @@ class AwesomeIconAndButton extends Button {
 }
 
 class Img extends BasicBlock {
-	constructor(imageUrl, width, height, settings) {
+	constructor(imageUrl=null, width=null, height=null, settings) {
 		super(document.createElement('img'), settings);
-		this.setAttribute('src', imageUrl);
-		this.setAttribute('width', width + 'px');
-		this.setAttribute('height', height + 'px');
+		if (imageUrl) this.setAttribute('src', imageUrl);
+		if (width) this.setAttribute('width', width + 'px');
+		if (height) this.setAttribute('height', height + 'px');
 	}
 }
 

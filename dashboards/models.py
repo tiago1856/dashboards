@@ -7,6 +7,7 @@ class Layout(models.Model):
     description = models.CharField(blank=True, null=True, max_length = 128)
     date = models.DateTimeField(null=False, auto_now=True)
     author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="layout_author")
+    data = models.JSONField(blank=True, null=True)
 
     class Meta:
         db_table = 'layout'

@@ -165,7 +165,7 @@ export function EditComponentModal(context) {
     // save the current state and then save the component in the db
     SAVE_COMPONENT_BTN.on('click', function() {
         self.save(false);
-        self.saveComponent();
+        self.component.save();
     });
 
 
@@ -484,32 +484,6 @@ EditComponentModal.prototype = {
                     this.state.data_config.icon = "icon ion-md-alert";
                     console.log("222222 > ", fields);
                 }
-
-                /*
-                ISL_VALUE.empty();
-                const fields = SELECTED_FIELDS.val();
-                fields.forEach(field => {
-                    const option = createFieldItem(field, false);
-                    ISL_VALUE.append(option);
-                }); 
-                if (restore) {
-                    ISL_ICON_PREVIEW_AREA.removeClass();
-                    ISL_ICON_PREVIEW_AREA.addClass(this.state.data_config.icon);
-                    ISL_TEXT_1.val(this.state.data_config.text_1);
-                    ISL_TEXT_2.val(this.state.data_config.text_2);
-                    ISL_VALUE.val(this.state.data_config.value);
-                } else {
-                    this.state.data_config = {};
-                    //ISL_ICON_PREVIEW_AREA.removeClass();                    
-                    ISL_TEXT_1.val("");
-                    ISL_TEXT_2.val("");                   
-                    ISL_VALUE.val($("#cdc-info-simple-left-value option:first").val());
-                    this.state.data_config.value = ISL_VALUE.val();
-                    this.state.data_config.text_1 = "";
-                    this.state.data_config.text_2 = "";
-                    this.state.data_config.icon = null;
-                }
-                */
                 break;
             }                 
         }        
@@ -517,7 +491,7 @@ EditComponentModal.prototype = {
 
 
     /**
-     * Saves the current state of the modal in the state variable, which
+     * Saves the current state of the modal in the state variable (not int the database), which
      * should be holding a reference to the component's ComponentData, set in
      * show().
      * @param {boolean} close If true, closes the modal after save.
@@ -600,6 +574,7 @@ EditComponentModal.prototype = {
      */
     show: function(component, onReady=null) {
         this.onReady = onReady;
+        this.component = component;
         DATA_SOURCE_TABLE_ALERT.show();
         //NEW_QUERY_DIALOG.hide();
         TABLE_AREA.empty();
@@ -860,7 +835,7 @@ EditComponentModal.prototype = {
             }
         )
     },
-
+    /*
     saveComponent: function() {
         console.log("saving");
         fetchPOST(
@@ -880,7 +855,8 @@ EditComponentModal.prototype = {
                     this.context.signals.onError.dispatch(error,"[EditComponentModal::saveComponent]");                
             }
         )
-    },    
+    },   
+    */ 
 
 
       

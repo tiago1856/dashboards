@@ -26,3 +26,7 @@ export const URL_CHECK_NAME_DASHBOARD = "/dashboards/api/check_name_dashboard/";
 export const URL_SAVE_DASHBOARD = "/dashboards/api/save_dashboard/";
 export const URL_LIST_DASHBOARDS = "/dashboards/api/list_dashboards/";
 export const URL_GET_DASHBOARD = "/dashboards/api/get_dashboard/";
+
+export const URL_GET_LAYOUT = "/dashboards/api/get_layout/";
+export const URL_LIST_LAYOUTS = "/dashboards/api/list_layouts/";
+

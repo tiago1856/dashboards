@@ -108,7 +108,11 @@ input:focus.valid-input  {
 /* *********************** */
 
 .layout-choice{
-    max-width: 48px;
+    /*max-width: 48px;*/
+    background-color: yellow;
+    border: solid 1px;
+    width: 68px;
+    height: 64px;    
 }
 
 .layout-choice:hover {

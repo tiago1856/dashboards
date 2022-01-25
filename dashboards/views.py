@@ -10,6 +10,7 @@ from rest_framework import status
 from dashboards.serializers import QuerySerializer
 from dashboards.serializers import ComponentSerializer, ComponentSerializer2
 from dashboards.serializers import DashboardSerializer, DashboardSerializer2, DashboardSerializer3
+from dashboards.serializers import LayoutSerializer
 from dashboards.models import Query, Component, Dashboard, Layout
 
 
@@ -401,3 +402,44 @@ def get_dashboard(request, pk):
          return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
    else:
       return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view(["GET"])
+def get_layout(request, pk):
+   """
+      Gets a specific layout.
+
+      Params:
+         pk (number): Dashboard id
+   """
+   if request.method == 'GET':
+      try:
+         dashboard = Layout.objects.get(id=pk)
+         serializer = LayoutSerializer(dashboard)
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Layout.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def list_layouts(request):
+   """Lists all layouts."""
+   if request.method == 'GET':
+      try:
+         dashboards = Layout.objects.all()
+         serializer = LayoutSerializer(dashboards, many=True)         
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Layout.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+

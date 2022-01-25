@@ -77,7 +77,6 @@ DashboardPropertiesModal.prototype = {
                 name: DASH_PROPERTIES_NAME.val(),
             }, 
             result => {
-                console.log(result);
                 if (result.status == 200) {
                     DASH_PROPERTIES_ALERT.hide();
                     DASH_PROPERTIES_SAVE_BTN.prop('disabled',false);
