@@ -1,6 +1,7 @@
-import { URL_LIST_LAYOUTS } from "../urls.js";
+
+import { URL_LIST_LAYOUTS, URL_LIST_IN_USE_LAYOUTS } from "../urls.js";
 import { fetchGET } from "../Fetch.js";
-import { Div, Canvas, Img } from "../builders/BuildingBlocks.js";
+import { Div, Canvas, Img, AwesomeIconAndButton } from "../builders/BuildingBlocks.js";
 
 
 const LSM_MODAL = $("#layout-selection-modal");
@@ -41,32 +42,60 @@ LayoutSelectionModal.prototype = {
         LSM_MODAL.modal('show');
     },
 
-    populate: function() {
-        const self = this;
+    getInUseDashboards: function(onReady = null) {
         $("body").css("cursor","progress");        
-        fetchGET(URL_LIST_LAYOUTS, 
+        fetchGET(URL_LIST_IN_USE_LAYOUTS, 
             (result) => {
                 $("body").css("cursor","auto");
-                LSM_CHOICES_AREA.empty();
-                if (result.length == 0) {
-                    LSM_ALERT.show();
-                } else {
-                    LSM_ALERT.hide();
-                }
-                result.forEach(layout => {
-                    const spot = _createSpot().attachTo(LSM_CHOICES_AREA.get(0));
-                    const img = this.createIcon(layout.data).attachTo(spot);
-                    $(img.dom).on('click', function(e) {
-                        LSM_MODAL.modal('hide');
-                        if (self.onSelected) self.onSelected(layout.id);
-                    });
-                })
+                if (onReady) onReady(result);               
             },
             (error) => {
                 $("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[LayoutSelectionModal::populate]");                
+                this.context.signals.onError.dispatch(error,"[LayoutSelectionModal::getInUseDashboards]");                
             }
         );
+    },
+
+    populate: function() {
+        const self = this;
+        $("body").css("cursor","progress");
+
+        this.getInUseDashboards(in_use => {
+            fetchGET(URL_LIST_LAYOUTS, 
+                (result) => {
+                    $("body").css("cursor","auto");
+                    LSM_CHOICES_AREA.empty();
+                    if (result.length == 0) {
+                        LSM_ALERT.show();
+                    } else {
+                        LSM_ALERT.hide();
+                    }
+                    result.forEach(layout => {
+                        const spot = _createSpot().attachTo(LSM_CHOICES_AREA.get(0));
+                        const img = this.createIcon(layout.data, in_use.includes(layout.id)).attachTo(spot);
+                        if (!in_use.includes(layout.id)) {                            
+                            const button = new AwesomeIconAndButton('','fas fa-times fa-sm').attachTo(spot);
+                            button.addClass('layout-remove-button');
+                            $(button.dom).on('click', function() {
+                                console.log("DELETE DASHBOARD");
+                                $(spot.dom).remove();
+                            });
+                        }
+
+                        $(img.dom).on('click', function(e) {
+                            LSM_MODAL.modal('hide');
+                            if (self.onSelected) self.onSelected(layout.id);
+                        });
+                    })
+                },
+                (error) => {
+                    $("body").css("cursor","auto");
+                    this.context.signals.onError.dispatch(error,"[LayoutSelectionModal::populate]");                
+                }
+            );
+
+        });
+
     },
 
     /**
@@ -74,53 +103,70 @@ LayoutSelectionModal.prototype = {
      * @param {object} data Layout data.
      * @returns Image of the layout.
      */
-    createIcon(data) {
-        this.ctx.fillStyle = "#ffffff";
+    createIcon(data, contains) {
+        this.ctx.fillStyle = contains?"#ff0000":"#ffffff";
+        //this.ctx.fillStyle = "#ffffff";
         this.ctx.clearRect(0, 0, LSM_MAX_X, LSM_MAX_Y);	
     
         // number of rows
-        let n_rows = 0;
-        data.forEach(row => {
-            let temp = row[0][1];
-            for (let i=1; i<row.length; i++){
-                if (row[i][1] > temp) temp = row[i][1];
+        let total = 0;
+        data.forEach(block => {
+            total += block[0] * block[1];
+        });
+        const n_rows = Math.ceil(total / 12);
+
+        const heigth_per_row = parseInt((LSM_MAX_Y - LSM_MARGIN) / n_rows);    
+
+        const empty_row = [true, true, true, true, true, true, true, true, true, true, true, true]
+        const spots = [[...empty_row]]; 
+
+        let offset = 0;
+        let row = 0;
+        data.forEach(block => {
+           
+            if (!spots[row][offset]) {
+                for (let i=offset; i<13; i++) {
+                    offset = i;					
+                    if (spots[row][offset]) break;
+                }
             }
-            n_rows += temp;
-        });         
+            if (offset >= 12) {
+                offset = 0;
+                row += 1;
+            }		
             
-        let heigth_per_row = parseInt((LSM_MAX_Y - LSM_MARGIN) / n_rows);    
-    
-        data.forEach((row, i) => {
-            // check if there is a multi-row component
-            let h100 = false;
-            let hrows = 1;
-            for (let i=0; i<row.length; i++){
-                if (row[i][1] > 1) {
-                    h100 = true;
-                    hrows = row[i][1];
-                    break;
+            if (block[1] > 1) {
+                for (let i=0; i<block[1]; i++) {
+                    if (spots.length <= (row + i)) {
+                        spots.push([...empty_row])
+                    }
+                    for (let k=0; k<block[0]; k++) {
+                        spots[row + i][offset + k] = false;
+                    }
                 }
-            };
-                
-                
-            let prev_x = 0;
-            row.forEach((col, j) => {
-                const x = prev_x;				
-                const delta_x = col[0] * LSM_SIZE_PER_COL;
-                for (let c = 0; c < col[1]; c++) {					
-                    const y = i * heigth_per_row + c * heigth_per_row;
-                    const delta_y = heigth_per_row * ((h100 && col[1] == 1)?hrows:1);
-                    this.ctx.fillRect(x + LSM_MARGIN,y + LSM_MARGIN,delta_x - LSM_MARGIN, delta_y - LSM_MARGIN);
-                    this.ctx.strokeRect(x + LSM_MARGIN,y + LSM_MARGIN,delta_x - LSM_MARGIN, delta_y - LSM_MARGIN);
-                }
-                prev_x = x + delta_x;
-            });
+            }
+           
+            const x = offset * LSM_SIZE_PER_COL;
+            const delta_x = block[0] * LSM_SIZE_PER_COL;			
+            const y = row * heigth_per_row;
+            const delta_y = block[1] * heigth_per_row;
+            offset += block[0];
+            if (offset >= 12) {
+                row += 1;
+                offset = 0;
+            }
+            this.ctx.fillRect(x + LSM_MARGIN,y + LSM_MARGIN,delta_x - LSM_MARGIN, delta_y - LSM_MARGIN);
+            this.ctx.strokeRect(x + LSM_MARGIN,y + LSM_MARGIN,delta_x - LSM_MARGIN, delta_y - LSM_MARGIN);
+
+            
+            if (spots.length <= row)  spots.push([...empty_row])
+            
         });
 
         const image = new Img();
         image.setAttribute('src', this.canvas.dom.toDataURL());
         image.addClass('img-fluid rounded m-2 layout-choice');
-        image.setAttribute('data-id', 1);
+        image.setAttribute('data-id', 1);        
         return image;
     
     }
@@ -130,5 +176,6 @@ LayoutSelectionModal.prototype = {
 const _createSpot = () => {
     const div = new Div();
     div.addClass('layout d-inline-block m-2')
+    div.setStyle('position','relative');
     return div;
 }

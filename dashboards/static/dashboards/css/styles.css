@@ -162,6 +162,25 @@ input:focus.valid-input  {
     transition: 200ms linear; 
 }
 
+.layout-remove-button {
+    border-radius: 50% !important;
+    z-index: 99999;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    color: white !important;
+    right: 5px;
+    top: 5px;
+    position: absolute;
+    width: 24px;
+    height: 24px;
+}
+
+.layout-remove-button:hover {
+    transition: 0.25s ease-in-out;
+    transform: scale(1.2);
+    background-color: rgb(255, 0, 0, 1.0) !important;
+}
+
+
 /* *********************** */
 /*  TABLES    */
 /* *********************** */

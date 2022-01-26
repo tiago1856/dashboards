@@ -443,3 +443,18 @@ def list_layouts(request):
    else:
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
+
+@api_view(["GET"])
+def list_in_use_layouts(request):
+   """Lists all layouts that are currently in use by any dashboard."""
+   if request.method == 'GET':
+      try:
+         layouts = Dashboard.objects.order_by().values('layout').distinct().values_list('layout', flat=True)
+         return Response(list(layouts), status=status.HTTP_200_OK)
+      except Dashboard.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)

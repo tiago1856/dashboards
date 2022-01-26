@@ -29,4 +29,5 @@ export const URL_GET_DASHBOARD = "/dashboards/api/get_dashboard/";
 
 export const URL_GET_LAYOUT = "/dashboards/api/get_layout/";
 export const URL_LIST_LAYOUTS = "/dashboards/api/list_layouts/";
+export const URL_LIST_IN_USE_LAYOUTS = "/dashboards/api/list_in_use_layouts/";
 

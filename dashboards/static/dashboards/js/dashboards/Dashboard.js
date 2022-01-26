@@ -165,8 +165,7 @@ export class Dashboard extends Div {
         fetchGET(URL_GET_LAYOUT + layout_id, 
             (result) => {
                 $("body").css("cursor","auto");
-                //if (onReady) onReady(result.data);
-                if (onReady) onReady(result.temp);
+                if (onReady) onReady(result.data);
             },
             (error) => {
                 $("body").css("cursor","auto");
