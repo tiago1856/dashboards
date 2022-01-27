@@ -411,12 +411,12 @@ def get_layout(request, pk):
       Gets a specific layout.
 
       Params:
-         pk (number): Dashboard id
+         pk (number): Layout id
    """
    if request.method == 'GET':
       try:
-         dashboard = Layout.objects.get(id=pk)
-         serializer = LayoutSerializer(dashboard)
+         layout = Layout.objects.get(id=pk)
+         serializer = LayoutSerializer(layout)
          return Response(serializer.data, status=status.HTTP_200_OK)
       except Layout.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)
@@ -456,5 +456,45 @@ def list_in_use_layouts(request):
       except Exception as e:
          print (e)
          return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+#@login_required
+@api_view(["POST"])
+def delete_layout(request):
+   """Deletes a layout."""
+   if request.method == 'POST' or 'layout_id' not in request.data:
+      try:
+         Layout.objects.filter(pk=request.data.get('layout_id')).delete()
+         return Response(data={'message':'ok'}, status=status.HTTP_200_OK)
+      except Layout.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+#@login_required
+@api_view(["POST"])
+def save_layout(request):
+   """Saves a Layout."""
+   if request.method == 'POST':
+      try:
+         name = request.data.get('name')
+         description = request.data.get('description')
+         data = request.data.get('layout')
+         if request.user.is_authenticated:
+            layout = Layout(name=name, author=request.user, description = description, data = data)
+         else:
+            layout = Layout(name=name, description = description, data = data)
+         layout.save()   
+         return Response({'id': layout.id}, status=status.HTTP_200_OK)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
    else:
       return Response(status=status.HTTP_400_BAD_REQUEST)

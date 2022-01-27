@@ -172,7 +172,6 @@ export class Component extends Div {
        * Saves the component data into the database.
        */
       save() {
-        console.log("saving");
         fetchPOST(
             URL_SAVE_COMPONENT, 
             {

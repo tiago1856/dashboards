@@ -28,5 +28,7 @@ urlpatterns = [
     path('api/get_layout/<int:pk>/', views.get_layout, name="get_layout"),
     path('api/list_layouts/', views.list_layouts, name="list_layouts"),
     path('api/list_in_use_layouts/', views.list_in_use_layouts, name="list_in_use_layouts"),
+    path('api/delete_layout/', views.delete_layout, name="delete_layout"),
+    path('api/save_layout/', views.save_layout, name="save_layout"),
 
 ]

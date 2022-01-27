@@ -18,6 +18,9 @@ export function Context() {
         onEditComponent: new Signal(),          // edit a specific component
         onZoomComponent: new Signal(),
         onLoadComponent: new Signal(),
+        onLayoutEditor: new Signal(),
+        onLayoutsChanged: new Signal(),
+        
         //onVisualizationSelected: new Signal(),  // visualization type selected
 
     }

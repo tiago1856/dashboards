@@ -146,6 +146,7 @@ export class Dashboard extends Div {
             result => {
                 $("body").css("cursor","auto");
                 this.id = result.id;
+                this.context.signals.onLayoutsChanged.dispatch(this.layout_id);
                 if (onReady) onReady(result);
             },
             (error) => {

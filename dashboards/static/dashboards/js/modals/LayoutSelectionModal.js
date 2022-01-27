@@ -1,13 +1,20 @@
 
-import { URL_LIST_LAYOUTS, URL_LIST_IN_USE_LAYOUTS } from "../urls.js";
-import { fetchGET } from "../Fetch.js";
+import { 
+    URL_LIST_LAYOUTS, 
+    URL_LIST_IN_USE_LAYOUTS,
+    URL_DELETE_LAYOUT
+} from "../urls.js";
+import { fetchGET, fetchPOST } from "../Fetch.js";
 import { Div, Canvas, Img, AwesomeIconAndButton } from "../builders/BuildingBlocks.js";
-
+import { 
+    MSG_DELETE_LAYOUT, 
+} from '../messages.js';
 
 const LSM_MODAL = $("#layout-selection-modal");
 const LSM_REFRESH_BTN = $('#lsm-refresh');
 const LSM_CHOICES_AREA = $('#lsm-choices');
 const LSM_ALERT = $('#lsm-no-layout-alert');
+const LSM_ADD_LAYOUT_BTN = $('#lsm-add-layout');
 
 const LSM_MAX_X = 64;
 const LSM_MAX_Y = 64;
@@ -18,6 +25,7 @@ const LSM_SIZE_PER_COL = parseInt(LSM_MAX_X / LSM_COLS);
 export function LayoutSelectionModal(context) {
     this.context = context;
     this.onSelected = null;
+    this.changed = false;
     const self = this;
 
     // use a single canvas to create all layout images
@@ -31,6 +39,23 @@ export function LayoutSelectionModal(context) {
         self.populate();
     });
 
+    LSM_ADD_LAYOUT_BTN.on('click', function(e) {
+        LSM_MODAL.modal('hide');
+        context.signals.onLayoutEditor.dispatch();
+    });
+
+    context.signals.onLayoutsChanged.add((layout_id = null) => {
+        if (layout_id) {
+            // mark as used
+            $('[data-id=' + layout_id + ']').addClass('layout-used');
+            // remove delete button
+            $('[data-id=' + layout_id + ']').parent().find('button').first().remove();
+            
+        } else {
+            this.changed = true;
+        }        
+    });
+
     this.populate();
 
 }
@@ -39,7 +64,11 @@ export function LayoutSelectionModal(context) {
 LayoutSelectionModal.prototype = {
     show: function(onSelected = null) {
         this.onSelected = onSelected;
-        LSM_MODAL.modal('show');
+        if (this.changed) {
+            this.populate();
+            this.changed = false;
+        }
+        LSM_MODAL.modal('show');        
     },
 
     getInUseDashboards: function(onReady = null) {
@@ -56,7 +85,8 @@ LayoutSelectionModal.prototype = {
         );
     },
 
-    populate: function() {
+    populate: function(onReady=null) {
+        console.error("POPULATE");
         const self = this;
         $("body").css("cursor","progress");
 
@@ -72,14 +102,18 @@ LayoutSelectionModal.prototype = {
                     }
                     result.forEach(layout => {
                         const spot = _createSpot().attachTo(LSM_CHOICES_AREA.get(0));
-                        const img = this.createIcon(layout.data, in_use.includes(layout.id)).attachTo(spot);
+                        const img = this.createIcon(layout.data, layout.id, in_use.includes(layout.id)).attachTo(spot);
                         if (!in_use.includes(layout.id)) {                            
                             const button = new AwesomeIconAndButton('','fas fa-times fa-sm').attachTo(spot);
                             button.addClass('layout-remove-button');
                             $(button.dom).on('click', function() {
-                                console.log("DELETE DASHBOARD");
-                                $(spot.dom).remove();
+                                self.context.signals.onAYS.dispatch(MSG_DELETE_LAYOUT, () => {
+                                    self.deleteLayout(layout.id, () => {
+                                        $(spot.dom).remove();
+                                    })
+                                });
                             });
+                            if (onReady) onReady();
                         }
 
                         $(img.dom).on('click', function(e) {
@@ -101,10 +135,13 @@ LayoutSelectionModal.prototype = {
     /**
      * Given a layout data, creates and returns its image.
      * @param {object} data Layout data.
+     * @param {number} id Layout ID.
+     * @param {boolean} contains True if this layout is being used.
      * @returns Image of the layout.
      */
-    createIcon(data, contains) {
-        this.ctx.fillStyle = contains?"#ff0000":"#ffffff";
+    createIcon(data, id, contains) {
+        //this.ctx.fillStyle = contains?"#ff0000":"#ffffff";
+        this.ctx.fillStyle = "#ffffff";
         //this.ctx.fillStyle = "#ffffff";
         this.ctx.clearRect(0, 0, LSM_MAX_X, LSM_MAX_Y);	
     
@@ -166,10 +203,29 @@ LayoutSelectionModal.prototype = {
         const image = new Img();
         image.setAttribute('src', this.canvas.dom.toDataURL());
         image.addClass('img-fluid rounded m-2 layout-choice');
-        image.setAttribute('data-id', 1);        
+        image.setAttribute('data-id', id);
+        if (contains) image.addClass('layout-used');
         return image;
     
-    }
+    },
+
+    deleteLayout(layout_id, onReady = null) {
+        $("body").css("cursor","progress");
+        fetchPOST(
+            URL_DELETE_LAYOUT, 
+            {
+                layout_id: layout_id
+            }, 
+            result => {
+                $("body").css("cursor","auto");
+                 if (onReady) onReady(result);
+            },
+            (error) => {
+                $("body").css("cursor","auto");
+                this.context.signals.onError.dispatch(error,"[LayoutSelectionModal::deleteLayout]");                
+            }
+        )
+    },
     
 }
 

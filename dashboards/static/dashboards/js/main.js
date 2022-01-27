@@ -15,6 +15,7 @@ import { SelectComponentModal } from './modals/SelectComponentModal.js';
 import { SelectDashboardModal } from './modals/SelectDashboardModal.js';
 import { DashboardPropertiesModal } from './modals/DashboardPropertiesModal.js';
 import { LayoutSelectionModal } from './modals/LayoutSelectionModal.js';
+import { LayoutEditorModal } from './modals/LayoutEditorModal.js';
 import { fetchGET } from "./Fetch.js";
 import { 
     URL_GET_DASHBOARD
@@ -120,6 +121,10 @@ const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
  const warning_modal = new WarningModal().attachTo(MODALS_CONTAINER[0]);
 
 
+/**
+ * LAYOUT EDITOR MODAL
+ */
+ const layout_editor_modal = new LayoutEditorModal(context);
 
 // -----------------
 // --- LISTENERS ---
@@ -175,6 +180,12 @@ context.signals.onLoadComponent.add((spot) => {
     }));
 });
 
+
+context.signals.onLayoutEditor.add((spot) => {
+    layout_editor_modal.show((new_layout_id) => {
+        dashboard = new Dashboard(context, new_layout_id, null, true);
+    });
+});
 
 // ----------------
 // TOP ROW ACTIONS
