@@ -405,6 +405,28 @@ def get_dashboard(request, pk):
 
 
 
+#@login_required
+@api_view(["POST"])
+def delete_dashboard(request):
+   """Deletes a dashboard."""
+   if request.method == 'POST' or 'dashboard_id' not in request.data:
+      try:
+         Dashboard.objects.filter(pk=request.data.get('dashboard_id')).delete()
+         return Response(data={'message':'ok'}, status=status.HTTP_200_OK)
+      except Dashboard.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+##########
+# LAYOUT #
+##########
+
 @api_view(["GET"])
 def get_layout(request, pk):
    """

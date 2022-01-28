@@ -10,7 +10,7 @@ export const ComponentData = {
     name: null,                         // [string]
     description: null,                  // [string]
     title: null,                        // title [string]
-    component_type: null,               // COMPONENT_TYPE (ComponentType.js) [string]
+    component_type: null,               // COMPONENT_TYPE.name (ComponentType.js) [string]
     // query
     query: {
         query_selection: null,

@@ -35,15 +35,22 @@ export function LayoutSelectionModal(context) {
     this.ctx = this.canvas.dom.getContext("2d");
     this.ctx.strokeStyle = "#000";
  
+    // MANUAL REFRESH => REBUILD THE ICONS AND STATUS
     LSM_REFRESH_BTN.on('click', function(e) {
         self.populate();
     });
 
+    // CREATE A NEW LAYOUT ... WILL SIGNAL TO 
+    // OPEN THE LAYOUT EDITOR MODAL
     LSM_ADD_LAYOUT_BTN.on('click', function(e) {
         LSM_MODAL.modal('hide');
         context.signals.onLayoutEditor.dispatch();
     });
 
+    // THE LAYOUTS CHANGED, EITHER BY:
+    //  - ADDING A NEW ONE
+    //  - ADDING / REMOVING A DASHBOARD => NEEDS TO CHECK IF 
+    //      A LAYOUT IS IN USE OR NOT
     context.signals.onLayoutsChanged.add((layout_id = null) => {
         if (layout_id) {
             // mark as used
@@ -62,6 +69,10 @@ export function LayoutSelectionModal(context) {
 
 
 LayoutSelectionModal.prototype = {
+    /**
+     * Displays the modal
+     * @param {function} onSelected Called when a layout is selected.
+     */
     show: function(onSelected = null) {
         this.onSelected = onSelected;
         if (this.changed) {
@@ -71,6 +82,10 @@ LayoutSelectionModal.prototype = {
         LSM_MODAL.modal('show');        
     },
 
+    /**
+     * Get an array of IDs being used in dashboard.
+     * @param {function} onReady Called when ready.
+     */
     getInUseDashboards: function(onReady = null) {
         $("body").css("cursor","progress");        
         fetchGET(URL_LIST_IN_USE_LAYOUTS, 
@@ -85,8 +100,14 @@ LayoutSelectionModal.prototype = {
         );
     },
 
+    /**
+     * Gets the data os all layouts in the database and create an icon
+     * for each one of them
+     * If a layout is currently being used by a dashboard, it will not
+     * have a button that allows the user to delete it.
+     * @param {function} onReady Called when ready.
+     */
     populate: function(onReady=null) {
-        console.error("POPULATE");
         const self = this;
         $("body").css("cursor","progress");
 
@@ -209,6 +230,11 @@ LayoutSelectionModal.prototype = {
     
     },
 
+    /**
+     * Deletes a specific layout.
+     * @param {number} layout_id Layout ID.
+     * @param {function} onReady Called when ready.
+     */
     deleteLayout(layout_id, onReady = null) {
         $("body").css("cursor","progress");
         fetchPOST(
@@ -229,6 +255,10 @@ LayoutSelectionModal.prototype = {
     
 }
 
+/**
+ * Helper builder function.
+ * @returns A Div.
+ */
 const _createSpot = () => {
     const div = new Div();
     div.addClass('layout d-inline-block m-2')

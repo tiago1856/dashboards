@@ -6,7 +6,8 @@ import { InfoComponent } from '../components/InfoComponent.js';
 import { 
     URL_GET_COMPONENT, 
     URL_SAVE_DASHBOARD, 
-    URL_GET_LAYOUT 
+    URL_GET_LAYOUT,
+    URL_DELETE_DASHBOARD
 } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
 import { fetchGET, fetchPOST } from "../Fetch.js";
@@ -33,8 +34,10 @@ export class Dashboard extends Div {
         this.name = null;
         this.description = null;
         this.components = {};
-        this.id = null;
+        this.id = data?data.id:null;
         this.layout_id = layout_id;
+        this.changed = false;   // something changed and it's not saved
+
 
         this.dash_title = new DashboardTitle(
             context, 
@@ -50,7 +53,6 @@ export class Dashboard extends Div {
         let spot = 0
 
         this.getLayout(data?data.layout:layout_id, (grid) => {
-            //const l = [[4,1],[4,1],[4,1],[6,1],[6,2],[6,1]];
             grid.forEach(dims => {
                 const div = new Div().attachTo(display);
                 div.addClass("span-col-" + dims[0] + (dims[1]>1?(" span-row-" + dims[1]):""));
@@ -63,19 +65,40 @@ export class Dashboard extends Div {
                
     }
 
+    /**
+     * Get the component at a specific location in the grid.
+     * @param {number} spot Position of the component in the layout grid.
+     * @returns Component.
+     */
     getComponentAt(spot) {
         return this.components[spot];
     }
 
+    /**
+     * Get the dashboard title.
+     * @returns The dashboard title.
+     */
     getTitle() {
         return this.title;
     }
 
+    /**
+     * Sets the dashboard title.
+     * If empty or null, then the default title will be set.
+     * @param {string} new_title Dashboard title.
+     */
     setTitle(new_title) {
         this.dash_title.setTitle(new_title);
     }
 
 
+    /**
+     * Changes the component depending on its type.
+     * INFO is different from all others, since it's not inside a card.
+     * @param {number} spot Position of the component in the layout grid.
+     * @param {boolean} info COMPONENT_TYPE.name (ComponentType.js)
+     * @returns Component.
+     */
     changeComponentContainer(spot, info = false) {
         const original = this.getComponentAt(spot);
         const data = JSON.parse(JSON.stringify(original.data));
@@ -125,7 +148,14 @@ export class Dashboard extends Div {
     }
 
     /**
-     * Save layout in the database.
+     * Something in the dashboard changed.
+     */
+    changed() {
+        this.changed = true;
+      }
+  
+    /**
+     * Saves the dashboard in the database.
      * @param {function} onReady Called when done.
      */
     save(onReady = null) {
@@ -146,12 +176,41 @@ export class Dashboard extends Div {
             result => {
                 $("body").css("cursor","auto");
                 this.id = result.id;
+                this.changed = false;
                 this.context.signals.onLayoutsChanged.dispatch(this.layout_id);
                 if (onReady) onReady(result);
             },
             (error) => {
                 $("body").css("cursor","auto");
                 this.context.signals.onError.dispatch(error,"[Dashboard::save]");                
+            }
+        )
+    }
+
+    /**
+     * Deletes the dashboard.
+     * @param {function} onReady Called when done.
+     */
+    delete(onReady = null) {
+        $("body").css("cursor","progress");
+        console.log(this.id);
+        console.log(this.id);
+        console.log(this.id);
+        console.log(this.id);
+        fetchPOST(
+            URL_DELETE_DASHBOARD, 
+            {
+                dashboard_id: this.id,
+            }, 
+            result => {
+                $("body").css("cursor","auto");
+                this.id = result.id;
+                this.context.signals.onLayoutsChanged.dispatch();
+                if (onReady) onReady();
+            },
+            (error) => {
+                $("body").css("cursor","auto");
+                this.context.signals.onError.dispatch(error,"[Dashboard::delete]");                
             }
         )
     }

@@ -102,7 +102,7 @@ export function EditComponentModal(context) {
     // BUTTONS
     // ----------------
 
-    // SAVE QUERY
+    // SAVEs QUERY
     SAVE_BTN.on('click',function() {
         console.log("TODO: SAVE QUERY");
         self.updateQuery(() => {
@@ -110,7 +110,7 @@ export function EditComponentModal(context) {
         });
     })
 
-    // DELETE QUERY
+    // DELETEs QUERY
     DELETE_BTN.on('click',function() {
         context.signals.onAYS.dispatch(MSG_DELETE_QUERY, 
         () => {
@@ -118,7 +118,7 @@ export function EditComponentModal(context) {
         });
     })
     
-    // EXPORT TABLE TO EXCEL
+    // EXPORTs TABLE TO EXCEL
     EXCEL_BTN.on('click',function() {
         ExportTable2Excel(this.table_id,'xxx')
     })
@@ -129,18 +129,18 @@ export function EditComponentModal(context) {
         self.newQuery(QUERY_SELECTION.val() !== '');
     })
 
-    // EDIT QUERY
+    // EDITs QUERY
     EDIT_BTN.on('click',function() {
         QUERY_AREA.removeAttr('disabled');
         EDIT_BTN.attr('disabled',true);
     })
 
-    // EXEC QUERY
+    // EXECs QUERY
     EXEC_QUERY.on('click',function() {
         self.execQuery();
     })
 
-    // save new query name/descr
+    // SAVES NEW QUERY NAME / DESCRIPTION
     NEW_QUERY_SAVE_BTN.on('click', function() {
         NEW_QUERY_DIALOG.hide();
         self.saveQuery((new_query_value) => {
@@ -150,19 +150,19 @@ export function EditComponentModal(context) {
         });
     });
 
-    // cancel new query name/descr
+    // CANCELS NEW QUERY NAME/DESCRIPTION
     NEW_QUERY_CANCEL_BTN.on('click', function() {
         NEW_QUERY_DIALOG.hide();
     });
 
-    // apply changes
+    // APPLIES CHANGES => SAVES THE STATE OF THE 
+    // COMPONENT (NOT IN THE DATABASE)
     APPLY_BTN.on('click', function() {
         self.save();
     });
 
 
-    // save component
-    // save the current state and then save the component in the db
+    // SAVES THE COMPONENT IN THE DATABASE
     SAVE_COMPONENT_BTN.on('click', function() {
         self.save(false);
         self.component.save();
@@ -176,6 +176,7 @@ export function EditComponentModal(context) {
     SELECTED_FIELDS.on('change', function(e) {
         self.setVisualizationConfigPanel(self.state.data_config.fields !== undefined);
     })
+
 
     GLOBAL_NAME.on('change focus keyup paste', function(e) {
         if (e.target.value === '') {

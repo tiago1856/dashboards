@@ -29,7 +29,7 @@ export class Component extends Div {
         //this.setStyle('height','100%');
 
         const self = this;
-        this.changed = false;   // something changed
+        this.changed = false;   // something changed and it's not saved
         
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
         //console.warn(this.data);
@@ -92,13 +92,9 @@ export class Component extends Div {
 
     changed() {
       this.changed = true;
-      this.data.id = null;
+      //this.data.id = null;
     }
 
-    saved(id) {
-      this.changed = false;
-      this.data.id = id;
-    }
 
     setEditMode(mode) {
       if (mode) {
@@ -171,7 +167,8 @@ export class Component extends Div {
       /**
        * Saves the component data into the database.
        */
-      save() {
+      save(individually = true) {
+        if (individually) $("body").css("cursor","progress");
         fetchPOST(
             URL_SAVE_COMPONENT, 
             {
@@ -183,8 +180,11 @@ export class Component extends Div {
             }, 
             result => {
                 this.data.id = result.id;
+                this.changed = false;
+                if (individually) $("body").css("cursor","auto");
             },
             (error) => {
+              if (individually) $("body").css("cursor","auto");
               this.context.signals.onError.dispatch(error,"[Component::saveComponent]");                
             }
         )

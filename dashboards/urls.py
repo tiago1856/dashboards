@@ -23,6 +23,7 @@ urlpatterns = [
     path('api/save_dashboard/', views.save_dashboard, name="save_dashboard"),
     path('api/list_dashboards/', views.list_dashboards, name="list_dashboards"),
     path('api/get_dashboard/<int:pk>/', views.get_dashboard, name="get_dashboard"),
+    path('api/delete_dashboard/', views.delete_dashboard, name="delete_dashboard"),
 
     # layout
     path('api/get_layout/<int:pk>/', views.get_layout, name="get_layout"),
