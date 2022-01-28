@@ -19,7 +19,7 @@ const LGDM_MULTIPLE = $('#lgdm-multiple');
 export function LayoutEditorModal(context) {
 	this.context = context;
     const self = this;  
-    
+	    
  	
 	LGDM_ITEMS.on('change', function() {
 		const items = LGDM_ITEMS.val();
@@ -40,7 +40,6 @@ export function LayoutEditorModal(context) {
 		const option = LGDM_TEMPLATES.val();
 		if (!option) return;
 		LGDM_DESIGN_AREA.empty();
-		//self.reset();
 		switch (option) {
 			case "3-1-1":
 				self.createBlock(4,1);
@@ -128,12 +127,19 @@ export function LayoutEditorModal(context) {
 
 
 LayoutEditorModal.prototype = {
+	/**
+	 * Displays the modal.
+	 * @param {function} onDone Called when layout is done.
+	 */
     show: function(onDone = null) {
         this.onDone = onDone;
 		this.reset();			
         LGDM_MODAL.modal('show');
 	},
 	
+	/**
+	 * Resets the editor.
+	 */
 	reset: function() {
 		LGDM_DESIGN_AREA.empty();
 		LGDM_TEMPLATES.val('');		
@@ -145,6 +151,11 @@ LayoutEditorModal.prototype = {
 	},
 
 	
+	/**
+	 * Creates a block (spot) in the layout grid.
+	 * @param {number} cols Col span.
+	 * @param {number} rows Row span.
+	 */
 	createBlock(cols = 1, rows = 1) {
         // create block
 		const div = $('<div>');
@@ -188,6 +199,10 @@ LayoutEditorModal.prototype = {
 		});		
 	},
 
+	/**
+	 * Get an array describing the layout.
+	 * @returns The layout data.
+	 */
     getLayout() {
 		const layout = [];
 		$('.editor-block').each(function(i, obj) {
@@ -202,6 +217,11 @@ LayoutEditorModal.prototype = {
 		return layout;
     },
 
+	/**
+	 * Saves the layout.
+	 * @param {object} data Layout data
+	 * @param {function} onReady Called when ready.
+	 */
     save(data, onReady = null) {
         fetchPOST(
             URL_SAVE_LAYOUT, 

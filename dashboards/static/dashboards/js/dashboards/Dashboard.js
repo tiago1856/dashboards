@@ -57,7 +57,11 @@ export class Dashboard extends Div {
                 const div = new Div().attachTo(display);
                 div.addClass("span-col-" + dims[0] + (dims[1]>1?(" span-row-" + dims[1]):""));
                 div.setStyle('width','100%');
-                this.components[spot] = new Component(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                if (data && data.data[spot].component_type === 'INFO') {
+                    this.components[spot] = new InfoComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                } else {
+                    this.components[spot] = new Component(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                }                    
                 this.components[spot].setEditMode(edit_mode);
                 spot++;    
             })
