@@ -81,24 +81,22 @@ export function LayoutEditorModal(context) {
 	});
 	
 	LGDM_COLS_SPAN.on('change', function() {
-		const rows = LGDM_ROWS_SPAN.val();
 		const cols = LGDM_COLS_SPAN.val();
 		$('.editor-block.editor-block-selected').each(function(i, obj) {
+			const [_cols, _rows] = self.getAttributes(obj);
 			obj.classList.remove(...obj.classList);
-			obj.classList.add('span-col-' + cols,'span-row-' + rows,'editor-block','editor-block-selected');
+			obj.classList.add('span-col-' + cols,'span-row-' + _rows,'editor-block','editor-block-selected');
 			obj.setAttribute('data-col', cols);
-			obj.setAttribute('data-row', rows);			
 		})
 	});
 	
 	LGDM_ROWS_SPAN.on('change', function() {
 		const rows = LGDM_ROWS_SPAN.val();
-		const cols = LGDM_COLS_SPAN.val();
 		$('.editor-block.editor-block-selected').each(function(i, obj) {
+			const [_cols, _rows] = self.getAttributes(obj);
 			obj.classList.remove(...obj.classList);
-			obj.classList.add('span-col-' + cols,'span-row-' + rows,'editor-block','editor-block-selected');
-			obj.setAttribute('data-col', cols);
-			obj.setAttribute('data-row', rows);			
+			obj.classList.add('span-col-' + _cols,'span-row-' + rows,'editor-block','editor-block-selected');
+			obj.setAttribute('data-row', rows);	
 		})		
 	});
 	
@@ -168,6 +166,7 @@ LayoutEditorModal.prototype = {
         button.addClass('block-remove-button');
         $(button.dom).on('click', function() {
             div.remove();
+			LGDM_ITEMS.val($('.editor-block').length);
         });
 
         // select block
@@ -190,13 +189,17 @@ LayoutEditorModal.prototype = {
 				$(this).addClass('editor-block-selected');			
 			}
             if ($('.editor-block.editor-block-selected').length <= 1) {
-                LGDM_COLS_SPAN.val($(this).attr('data-col'));
-                LGDM_ROWS_SPAN.val($(this).attr('data-row'));	
-            } else {
-                LGDM_ROWS_SPAN.val('');
-                LGDM_COLS_SPAN.val('');
+                LGDM_COLS_SPAN.val($('.editor-block.editor-block-selected').attr('data-col'));
+                LGDM_ROWS_SPAN.val($('.editor-block.editor-block-selected').attr('data-row'));
+			} else {
+                LGDM_ROWS_SPAN.val("");
+                LGDM_COLS_SPAN.val("");
             }
 		});		
+	},
+
+	getAttributes(block)  {
+		return [parseInt($(block).attr('data-col')), parseInt($(block).attr('data-row'))];
 	},
 
 	/**
@@ -205,14 +208,9 @@ LayoutEditorModal.prototype = {
 	 */
     getLayout() {
 		const layout = [];
+		const self = this;
 		$('.editor-block').each(function(i, obj) {
-			const pair = [0,0];
-			obj.classList.forEach(block => {
-			  const n = block.replace(/[^0-9]/g,'');
-			  if (block.includes('span-col')) pair[0] = parseInt(n);
-			  if (block.includes('span-row')) pair[1] = parseInt(n);
-			})
-			layout.push(pair);
+			layout.push(self.getAttributes(obj));
 		});
 		return layout;
     },
