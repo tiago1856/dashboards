@@ -234,13 +234,13 @@ DASHBOARD_OPEN_BTN.on('click',function() {
 DISPLAY_LAYOUT_MODAL.on('click',function() {
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
-            layout_selection_modal.show((selection) => {
+            layout_selection_modal.show(dashboard.layout_id, (selection) => {
                 newDashboard(selection, true);
                 DASHBOARD_EDIT_BTN.trigger('click');
             })
         });
     } else {
-        layout_selection_modal.show((selection) => {
+        layout_selection_modal.show(dashboard.layout_id,(selection) => {
             newDashboard(selection, true);
             DASHBOARD_EDIT_BTN.trigger('click');
         })        

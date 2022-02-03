@@ -117,6 +117,7 @@ export function LayoutEditorModal(context) {
         const layout = self.getLayout();
         self.save(layout, (id) => {
             LGDM_MODAL.modal('hide');
+			context.signals.onLayoutsChanged.dispatch();
             if (self.onDone) self.onDone(id);
         })        
     });

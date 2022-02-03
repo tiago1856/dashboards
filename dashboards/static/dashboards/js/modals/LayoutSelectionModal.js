@@ -8,6 +8,7 @@ import { fetchGET, fetchPOST } from "../Fetch.js";
 import { Div, Canvas, Img, AwesomeIconAndButton } from "../builders/BuildingBlocks.js";
 import { 
     MSG_DELETE_LAYOUT, 
+    MSG_LAYOUT_IN_USE
 } from '../messages.js';
 
 const LSM_MODAL = $("#layout-selection-modal");
@@ -24,6 +25,7 @@ const LSM_SIZE_PER_COL = parseInt(LSM_MAX_X / LSM_COLS);
 
 export function LayoutSelectionModal(context) {
     this.context = context;
+    this.current_layout_id = null;
     this.onSelected = null;
     this.changed = false;
     const self = this;
@@ -73,13 +75,18 @@ LayoutSelectionModal.prototype = {
      * Displays the modal
      * @param {function} onSelected Called when a layout is selected.
      */
-    show: function(onSelected = null) {
+    show: function(current_layout_id, onSelected = null) {
         this.onSelected = onSelected;
+        this.current_layout_id = current_layout_id;
         if (this.changed) {
             this.populate();
             this.changed = false;
         }
-        LSM_MODAL.modal('show');        
+        LSM_MODAL.modal('show');
+        console.log(current_layout_id);               
+        console.log(current_layout_id);               
+        console.log(current_layout_id);               
+        console.log(current_layout_id);               
     },
 
     /**
@@ -128,11 +135,15 @@ LayoutSelectionModal.prototype = {
                             const button = new AwesomeIconAndButton('','fas fa-times fa-sm').attachTo(spot);
                             button.addClass('layout-remove-button');
                             $(button.dom).on('click', function() {
-                                self.context.signals.onAYS.dispatch(MSG_DELETE_LAYOUT, () => {
-                                    self.deleteLayout(layout.id, () => {
-                                        $(spot.dom).remove();
-                                    })
-                                });
+                                if (self.current_layout_id == layout.id) {
+                                    self.context.signals.onWarning.dispatch(MSG_LAYOUT_IN_USE);
+                                } else {
+                                    self.context.signals.onAYS.dispatch(MSG_DELETE_LAYOUT, () => {
+                                        self.deleteLayout(layout.id, () => {
+                                            $(spot.dom).remove();
+                                        })
+                                    });
+                                }
                             });
                             if (onReady) onReady();
                         }
