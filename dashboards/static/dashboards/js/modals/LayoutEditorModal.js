@@ -180,14 +180,19 @@ LayoutEditorModal.prototype = {
 					});
 				} else {
 					$(this).removeClass('editor-block-selected');
+					if ($('.editor-block.editor-block-selected').length <= 1) {
+						LGDM_ROWS_SPAN.val(1);
+						LGDM_COLS_SPAN.val(1);
+					}
 				}
+				return;
 			} else {
 				if (!LGDM_MULTIPLE.prop('checked')) {
 					$('.editor-block.editor-block-selected').each(function(i, obj) {
 						obj.classList.remove('editor-block-selected');
 					});
 				}				
-				$(this).addClass('editor-block-selected');			
+				$(this).addClass('editor-block-selected');
 			}
             if ($('.editor-block.editor-block-selected').length <= 1) {
                 LGDM_COLS_SPAN.val($('.editor-block.editor-block-selected').attr('data-col'));
