@@ -11,7 +11,8 @@ from dashboards.serializers import QuerySerializer
 from dashboards.serializers import ComponentSerializer, ComponentSerializer2
 from dashboards.serializers import DashboardSerializer, DashboardSerializer2, DashboardSerializer3
 from dashboards.serializers import LayoutSerializer
-from dashboards.models import Query, Component, Dashboard, Layout
+from dashboards.serializers import ConfigSerializer
+from dashboards.models import Query, Component, Dashboard, Layout, Config
 
 
 # required for the raw queries
@@ -515,6 +516,60 @@ def save_layout(request):
             layout = Layout(name=name, description = description, data = data)
          layout.save()   
          return Response({'id': layout.id}, status=status.HTTP_200_OK)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+##########
+# CONFIG #
+##########
+
+
+
+#@login_required
+@api_view(["POST"])
+def save_config(request):
+   """Saves a config."""
+   if request.method == 'POST':
+      try:
+         name = request.data.get('name')
+         dashboard = Dashboard.objects.get(pk = request.data.get('dashboard'))
+         if request.user.is_authenticated:
+            config = Config(name=name, author=request.user, dashboard = dashboard)
+         else:
+            config = Config(name=name, dashboard = dashboard)
+         config.save()   
+         return Response(data={'message':'ok'}, status=status.HTTP_200_OK)
+      except Dashboard.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)         
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+#@login_required
+@api_view(["GET"])
+def get_config(request):
+   """
+      Gets the last configuration.
+      
+      Returns the configuration or 'config': None if not config
+      is defined.
+   """
+   if request.method == 'GET':
+      try:
+         #config = Config.objects.filter()[:1].get()#get(id=1)   # for now get the first, if any
+         config = Config.objects.all().order_by('-id')
+         serializer = ConfigSerializer(config[0])  # get last
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Config.DoesNotExist:
+         return Response(data={'config': None}, status=status.HTTP_200_OK)
+         #return Response(status=status.HTTP_404_NOT_FOUND)
       except Exception as e:
          print (e)
          return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         

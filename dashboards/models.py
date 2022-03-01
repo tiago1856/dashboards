@@ -10,7 +10,7 @@ class Layout(models.Model):
     data = models.JSONField(blank=True, null=True)
     
     class Meta:
-        db_table = 'layout'
+        db_table = 'dash_layout'
         verbose_name_plural = "Layouts"
         constraints = [ models.UniqueConstraint(fields=['name'], name="layout_name") ]
 
@@ -28,7 +28,7 @@ class Query(models.Model):
 
 
     class Meta:
-        db_table = 'query'
+        db_table = 'dash_query'
         verbose_name_plural = "Queries"
         constraints = [ models.UniqueConstraint(fields=['name'], name="query_name") ]
 
@@ -47,7 +47,7 @@ class Component(models.Model):
     data = models.JSONField(blank=True, null=True)
 
     class Meta:
-        db_table = 'component'
+        db_table = 'dash_component'
         verbose_name_plural = "Components"
         constraints = [ models.UniqueConstraint(fields=['name'], name="component_name") ]
 
@@ -67,9 +67,24 @@ class Dashboard(models.Model):
     data = models.JSONField(blank=True, null=True)
 
     class Meta:
-        db_table = 'dashboard'
+        db_table = 'dash_dashboard'
         verbose_name_plural = "Dashboards"
         constraints = [ models.UniqueConstraint(fields=['name'], name="dashboard_name") ]
 
     def __str__(self):
         return self.name
+
+
+class Config(models.Model):
+    name = models.CharField(null=False, max_length = 80)
+    dashboard = models.ForeignKey(Dashboard, models.SET_NULL, db_column='dashboard', blank=True, null=True, default=None, related_name="config_dashboard")
+    date = models.DateTimeField(null=False, auto_now=True)
+    author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="config_author")
+    
+    class Meta:
+        db_table = 'dash_config'
+        verbose_name_plural = "Config"
+
+    def __str__(self):
+        return self.name
+

@@ -53,9 +53,9 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `auth_permission_content_type_id_codename_01ab375a_uniq` (`content_type_id`,`codename`),
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.auth_permission: ~28 rows (approximately)
+-- Dumping data for table flexdash.auth_permission: ~32 rows (approximately)
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
 INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
 	(1, 'Can add log entry', 1, 'add_logentry'),
@@ -97,11 +97,15 @@ INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALU
 	(37, 'Can add dashboard', 10, 'add_dashboard'),
 	(38, 'Can change dashboard', 10, 'change_dashboard'),
 	(39, 'Can delete dashboard', 10, 'delete_dashboard'),
-	(40, 'Can view dashboard', 10, 'view_dashboard');
+	(40, 'Can view dashboard', 10, 'view_dashboard'),
+	(41, 'Can add config', 11, 'add_config'),
+	(42, 'Can change config', 11, 'change_config'),
+	(43, 'Can delete config', 11, 'delete_config'),
+	(44, 'Can view config', 11, 'view_config');
 /*!40000 ALTER TABLE `auth_permission` ENABLE KEYS */;
 
--- Dumping structure for table flexdash.component
-CREATE TABLE IF NOT EXISTS `component` (
+-- Dumping structure for table flexdash.dash_component
+CREATE TABLE IF NOT EXISTS `dash_component` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(80) NOT NULL,
   `description` varchar(128) DEFAULT NULL,
@@ -119,12 +123,33 @@ CREATE TABLE IF NOT EXISTS `component` (
   CONSTRAINT `component_updated_by_77dab664_fk_user_id` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.component: ~0 rows (approximately)
-/*!40000 ALTER TABLE `component` DISABLE KEYS */;
-/*!40000 ALTER TABLE `component` ENABLE KEYS */;
+-- Dumping data for table flexdash.dash_component: ~0 rows (approximately)
+/*!40000 ALTER TABLE `dash_component` DISABLE KEYS */;
+/*!40000 ALTER TABLE `dash_component` ENABLE KEYS */;
 
--- Dumping structure for table flexdash.dashboard
-CREATE TABLE IF NOT EXISTS `dashboard` (
+-- Dumping structure for table flexdash.dash_config
+CREATE TABLE IF NOT EXISTS `dash_config` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  `date` datetime(6) NOT NULL,
+  `author` int(11) DEFAULT NULL,
+  `dashboard` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `dash_config_author_aaebb991_fk_user_id` (`author`),
+  KEY `dash_config_dashboard_7f9c3c39_fk_dash_dashboard_id` (`dashboard`),
+  CONSTRAINT `dash_config_author_aaebb991_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`),
+  CONSTRAINT `dash_config_dashboard_7f9c3c39_fk_dash_dashboard_id` FOREIGN KEY (`dashboard`) REFERENCES `dash_dashboard` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table flexdash.dash_config: ~0 rows (approximately)
+/*!40000 ALTER TABLE `dash_config` DISABLE KEYS */;
+INSERT INTO `dash_config` (`id`, `name`, `date`, `author`, `dashboard`) VALUES
+	(2, 'dsasd', '2022-03-01 16:39:41.000000', NULL, 21),
+	(3, '579aecf9-b8a8-41c3-9bcd-eed8ad74178c', '2022-03-01 17:00:21.953938', NULL, 21);
+/*!40000 ALTER TABLE `dash_config` ENABLE KEYS */;
+
+-- Dumping structure for table flexdash.dash_dashboard
+CREATE TABLE IF NOT EXISTS `dash_dashboard` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(80) NOT NULL,
   `description` varchar(128) DEFAULT NULL,
@@ -141,17 +166,88 @@ CREATE TABLE IF NOT EXISTS `dashboard` (
   KEY `dashboard_updated_by_546f3c4a_fk_user_id` (`updated_by`),
   KEY `dashboard_layout_1dce980e_fk_layout_id` (`layout`),
   CONSTRAINT `dashboard_author_8ef66c6d_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`),
-  CONSTRAINT `dashboard_layout_1dce980e_fk_layout_id` FOREIGN KEY (`layout`) REFERENCES `layout` (`id`),
+  CONSTRAINT `dashboard_layout_1dce980e_fk_layout_id` FOREIGN KEY (`layout`) REFERENCES `dash_layout` (`id`),
   CONSTRAINT `dashboard_updated_by_546f3c4a_fk_user_id` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.dashboard: ~3 rows (approximately)
-/*!40000 ALTER TABLE `dashboard` DISABLE KEYS */;
-INSERT INTO `dashboard` (`id`, `name`, `description`, `title`, `date_created`, `date_updated`, `data`, `author`, `updated_by`, `layout`) VALUES
+-- Dumping data for table flexdash.dash_dashboard: ~3 rows (approximately)
+/*!40000 ALTER TABLE `dash_dashboard` DISABLE KEYS */;
+INSERT INTO `dash_dashboard` (`id`, `name`, `description`, `title`, `date_created`, `date_updated`, `data`, `author`, `updated_by`, `layout`) VALUES
 	(21, '2afbde6d-fd66-4d15-9cf2-d1b3db762657', '', NULL, '2022-01-28 06:58:19.555546', '2022-01-28 06:58:19.555546', '{"0": {"id": null, "name": "1810290b-8136-4c5c-83c4-8099e016e3c7", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}, "1": {"id": null, "name": "3843185f-1047-4587-9927-2650ec5e13f4", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}}', 1, 1, 2),
 	(24, '9c493001-ab31-4a0b-ab2e-f2510f7aa7e4', '', NULL, '2022-01-28 14:09:46.118512', '2022-01-28 14:09:46.118512', '{"0": {"id": null, "name": "3b4929d7-75b4-4cfd-b9a5-70c273148cc0", "description": "", "title": "", "component_type": "INFO", "query": {"query_selection": "13", "query": "SELECT \\n\\tCOUNT(*) AS Count, (SELECT COUNT(*) FROM world.country) AS Total\\nFROM\\n\\tworld.country\\nWHERE \\n\\tworld.country.SurfaceArea > 1000000", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "ISL", "visualization_tab": "data-visualization-info"}, "data_config": {"value": "Count", "text_1": "Count", "text_2": "", "icon": "icon ion-md-alert", "fields": []}}, "1": {"id": null, "name": null, "description": null, "title": null, "component_type": null, "query": {"query_selection": null, "query": null, "query_selected_fields": null, "query_fields": null}, "visualization": {"visualization_type": null, "visualization_tab": null}, "data_config": {}}}', 1, 1, 2),
 	(25, '333333', '', NULL, '2022-01-28 15:01:39.540385', '2022-01-28 15:01:39.540385', '{"0": {"id": null, "name": "3b012a46-be9e-4a1f-8554-14fbce7e71e0", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}, "1": {"id": null, "name": "1655eedb-7815-465c-bba6-100b2eb3b4ff", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}}', 1, 1, 5);
-/*!40000 ALTER TABLE `dashboard` ENABLE KEYS */;
+/*!40000 ALTER TABLE `dash_dashboard` ENABLE KEYS */;
+
+-- Dumping structure for table flexdash.dash_layout
+CREATE TABLE IF NOT EXISTS `dash_layout` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  `description` varchar(128) DEFAULT NULL,
+  `date` datetime(6) NOT NULL,
+  `author` int(11) DEFAULT NULL,
+  `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `layout_name` (`name`),
+  KEY `layout_author_b466a2db_fk_user_id` (`author`),
+  CONSTRAINT `layout_author_b466a2db_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table flexdash.dash_layout: ~26 rows (approximately)
+/*!40000 ALTER TABLE `dash_layout` DISABLE KEYS */;
+INSERT INTO `dash_layout` (`id`, `name`, `description`, `date`, `author`, `data`) VALUES
+	(1, 'L1', NULL, '2022-01-25 20:49:30.954973', NULL, '[[12, 1]]'),
+	(2, 'L2', NULL, '2022-01-25 20:49:50.062396', NULL, '[[6, 1], [6, 1]]'),
+	(3, 'L3', NULL, '2022-01-25 20:50:00.171559', NULL, '[[4, 1], [4, 1], [4, 1]]'),
+	(4, 'L4', NULL, '2022-01-25 20:50:11.215543', NULL, '[[3, 1], [3, 1], [3, 1], [3, 1]]'),
+	(5, 'L5', NULL, '2022-01-25 20:50:26.780900', NULL, '[[12, 1], [12, 1]]'),
+	(6, 'L6', NULL, '2022-01-25 20:50:46.962823', NULL, '[[6, 1], [6, 1], [6, 1], [6, 1]]'),
+	(7, 'L7', NULL, '2022-01-25 20:51:07.965077', NULL, '[[4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1]]'),
+	(8, 'L8', NULL, '2022-01-25 20:52:04.429029', NULL, '[[3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1]]'),
+	(9, 'L9', NULL, '2022-01-25 20:52:25.834887', NULL, '[[12, 1], [6, 1], [6, 1]]'),
+	(10, 'L10', NULL, '2022-01-25 20:52:49.417081', NULL, '[[6, 1], [6, 1], [12, 1]]'),
+	(11, 'L11', NULL, '2022-01-25 20:53:12.935108', NULL, '[[4, 1], [4, 1], [4, 1], [12, 1]]'),
+	(12, 'L12', NULL, '2022-01-25 20:53:28.585124', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 1]]'),
+	(13, 'L13', NULL, '2022-01-25 20:53:46.899496', NULL, '[[12, 1], [12, 1], [12, 1]]'),
+	(14, 'L14', NULL, '2022-01-25 20:54:04.858227', NULL, '[[6, 1], [6, 1], [6, 1], [6, 1], [6, 1], [6, 1]]'),
+	(15, 'L15', NULL, '2022-01-25 20:54:21.781655', NULL, '[[4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1]]'),
+	(16, 'L16', NULL, '2022-01-25 20:54:38.920623', NULL, '[[3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1]]'),
+	(17, 'L17', NULL, '2022-01-25 20:54:54.297992', NULL, '[[12, 1], [6, 1], [6, 1], [6, 1], [6, 1]]'),
+	(18, 'L18', NULL, '2022-01-25 20:55:07.561416', NULL, '[[6, 1], [6, 1], [6, 1], [6, 1], [12, 1]]'),
+	(19, 'L19', NULL, '2022-01-25 20:55:20.787483', NULL, '[[6, 1], [6, 1], [12, 1], [12, 1]]'),
+	(20, 'L20', NULL, '2022-01-25 20:55:36.176156', NULL, '[[4, 1], [4, 1], [4, 1], [12, 1], [12, 1]]'),
+	(21, 'L21', NULL, '2022-01-25 20:55:50.535485', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 1], [6, 1], [6, 1]]'),
+	(22, 'L22', NULL, '2022-01-25 20:56:05.058632', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 1], [12, 1]]'),
+	(23, 'L23', NULL, '2022-01-25 20:56:44.661720', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 2], [6, 1]]'),
+	(24, 'L24', NULL, '2022-01-25 20:57:09.181208', NULL, '[[4, 1], [4, 1], [4, 1], [4, 1], [8, 2], [4, 1]]'),
+	(42, '710f1ba8-4ad9-4007-bcba-a4bbfaee9091', '', '2022-02-03 13:45:37.140145', NULL, '[[1, 1], [1, 1], [1, 1], [1, 1], [8, 1]]'),
+	(44, 'fce0f09a-bb6a-4e44-8432-dbd6fa931e29', '', '2022-02-03 14:08:27.633164', NULL, '[[1, 1], [1, 1], [1, 1], [3, 1], [3, 1], [3, 1]]'),
+	(45, 'c80e0013-aa9f-41ed-9b08-239c1b96be91', '', '2022-02-03 14:12:21.682229', NULL, '[[1, 1], [1, 1], [1, 1]]'),
+	(46, 'cef712d6-1472-476b-a8eb-116931ab910d', '', '2022-02-28 14:04:41.643378', NULL, '[[1, 1], [1, 1], [1, 1], [1, 1], [7, 1], [1, 1], [12, 1], [6, null], [6, null]]'),
+	(47, 'd3171f86-6478-4075-97f0-5b51aca86037', '', '2022-02-28 14:57:32.816615', NULL, '[[1, 1], [4, 1], [3, 1], [4, 3], [8, 1], [8, 1]]');
+/*!40000 ALTER TABLE `dash_layout` ENABLE KEYS */;
+
+-- Dumping structure for table flexdash.dash_query
+CREATE TABLE IF NOT EXISTS `dash_query` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(80) NOT NULL,
+  `description` varchar(128) DEFAULT NULL,
+  `date` datetime(6) NOT NULL,
+  `query` varchar(1024) NOT NULL,
+  `author` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `query_name` (`name`),
+  KEY `query_author_22678fe3_fk_user_id` (`author`),
+  CONSTRAINT `query_author_22678fe3_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+
+-- Dumping data for table flexdash.dash_query: ~4 rows (approximately)
+/*!40000 ALTER TABLE `dash_query` DISABLE KEYS */;
+INSERT INTO `dash_query` (`id`, `name`, `description`, `date`, `query`, `author`) VALUES
+	(1, 'continents', 'list all continents', '2021-10-18 05:09:20.373951', 'SELECT DISTINCT (continent) FROM world.country;', 1),
+	(2, 'big area countries', '> 1000000 square miles', '2021-10-18 05:56:40.408013', 'SELECT * FROM world.country WHERE SurfaceArea > 1000000', 1),
+	(12, 'graph 1 num', '', '2021-12-31 06:17:32.643507', 'SELECT continent,	COUNT(*) as total FROM world.country GROUP BY continent;', NULL),
+	(13, 'info simple', '', '2021-12-30 14:38:39.646270', 'SELECT \r\n	COUNT(*) AS Count, (SELECT COUNT(*) FROM world.country) AS Total\r\nFROM\r\n	world.country\r\nWHERE \r\n	world.country.SurfaceArea > 1000000', NULL);
+/*!40000 ALTER TABLE `dash_query` ENABLE KEYS */;
 
 -- Dumping structure for table flexdash.django_admin_log
 CREATE TABLE IF NOT EXISTS `django_admin_log` (
@@ -304,9 +400,9 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   `model` varchar(100) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.django_content_type: ~6 rows (approximately)
+-- Dumping data for table flexdash.django_content_type: ~7 rows (approximately)
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
 INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(6, 'accounts', 'user'),
@@ -315,6 +411,7 @@ INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(2, 'auth', 'permission'),
 	(4, 'contenttypes', 'contenttype'),
 	(8, 'dashboards', 'component'),
+	(11, 'dashboards', 'config'),
 	(10, 'dashboards', 'dashboard'),
 	(9, 'dashboards', 'layout'),
 	(7, 'dashboards', 'query'),
@@ -328,9 +425,9 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.django_migrations: ~19 rows (approximately)
+-- Dumping data for table flexdash.django_migrations: ~22 rows (approximately)
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(1, 'contenttypes', '0001_initial', '2021-10-14 16:22:04.033097'),
@@ -362,7 +459,10 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(27, 'dashboards', '0008_dashboard_layout', '2022-01-24 13:43:23.105966'),
 	(28, 'dashboards', '0009_layout_data', '2022-01-25 07:20:37.540693'),
 	(29, 'dashboards', '0010_layout_temp', '2022-01-25 20:46:22.670134'),
-	(30, 'dashboards', '0011_remove_layout_temp', '2022-01-26 11:53:53.705438');
+	(30, 'dashboards', '0011_remove_layout_temp', '2022-01-26 11:53:53.705438'),
+	(31, 'dashboards', '0012_auto_20220301_1558', '2022-03-01 15:58:52.067663'),
+	(32, 'dashboards', '0013_auto_20220301_1625', '2022-03-01 16:25:41.286050'),
+	(33, 'dashboards', '0014_auto_20220301_1629', '2022-03-01 16:29:13.295937');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- Dumping structure for table flexdash.django_session
@@ -395,77 +495,6 @@ INSERT INTO `django_session` (`session_key`, `session_data`, `expire_date`) VALU
 	('w53far8borkyy5srkxiue24j85nls7sh', '.eJxVjDsOwjAQRO_iGlnybw2U9JzB2rXXOIBsKU6qiLsTSymgmWLem9lEwHUpYe08hymJq1Di9NsRxhfXAdIT66PJ2OoyTySHIg_a5b0lft8O9--gYC_72gNHp5TGCzufLRgDJhJZ0soQsaccCeC8h-WIShnrhgOJGVDrLD5f54I4Jg:1mj0Pe:t-rKfvMR_r05zN-OMJWWQzzn0fuek_anfvkqAmIKKrE', '2021-11-19 14:41:50.447157'),
 	('yczavbv67kdb1f18jtuhei1mwtr91okq', '.eJxVjDsOwjAQRO_iGlnybw2U9JzB2rXXOIBsKU6qiLsTSymgmWLem9lEwHUpYe08hymJq1Di9NsRxhfXAdIT66PJ2OoyTySHIg_a5b0lft8O9--gYC_72gNHp5TGCzufLRgDJhJZ0soQsaccCeC8h-WIShnrhgOJGVDrLD5f54I4Jg:1mcM7o:11kVKAeFddtytcigutEIp0BIa9-xq8sSDZLAFo3h7OA', '2021-11-01 06:27:56.565587');
 /*!40000 ALTER TABLE `django_session` ENABLE KEYS */;
-
--- Dumping structure for table flexdash.layout
-CREATE TABLE IF NOT EXISTS `layout` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) NOT NULL,
-  `description` varchar(128) DEFAULT NULL,
-  `date` datetime(6) NOT NULL,
-  `author` int(11) DEFAULT NULL,
-  `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `layout_name` (`name`),
-  KEY `layout_author_b466a2db_fk_user_id` (`author`),
-  CONSTRAINT `layout_author_b466a2db_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
-
--- Dumping data for table flexdash.layout: ~27 rows (approximately)
-/*!40000 ALTER TABLE `layout` DISABLE KEYS */;
-INSERT INTO `layout` (`id`, `name`, `description`, `date`, `author`, `data`) VALUES
-	(1, 'L1', NULL, '2022-01-25 20:49:30.954973', NULL, '[[12, 1]]'),
-	(2, 'L2', NULL, '2022-01-25 20:49:50.062396', NULL, '[[6, 1], [6, 1]]'),
-	(3, 'L3', NULL, '2022-01-25 20:50:00.171559', NULL, '[[4, 1], [4, 1], [4, 1]]'),
-	(4, 'L4', NULL, '2022-01-25 20:50:11.215543', NULL, '[[3, 1], [3, 1], [3, 1], [3, 1]]'),
-	(5, 'L5', NULL, '2022-01-25 20:50:26.780900', NULL, '[[12, 1], [12, 1]]'),
-	(6, 'L6', NULL, '2022-01-25 20:50:46.962823', NULL, '[[6, 1], [6, 1], [6, 1], [6, 1]]'),
-	(7, 'L7', NULL, '2022-01-25 20:51:07.965077', NULL, '[[4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1]]'),
-	(8, 'L8', NULL, '2022-01-25 20:52:04.429029', NULL, '[[3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1]]'),
-	(9, 'L9', NULL, '2022-01-25 20:52:25.834887', NULL, '[[12, 1], [6, 1], [6, 1]]'),
-	(10, 'L10', NULL, '2022-01-25 20:52:49.417081', NULL, '[[6, 1], [6, 1], [12, 1]]'),
-	(11, 'L11', NULL, '2022-01-25 20:53:12.935108', NULL, '[[4, 1], [4, 1], [4, 1], [12, 1]]'),
-	(12, 'L12', NULL, '2022-01-25 20:53:28.585124', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 1]]'),
-	(13, 'L13', NULL, '2022-01-25 20:53:46.899496', NULL, '[[12, 1], [12, 1], [12, 1]]'),
-	(14, 'L14', NULL, '2022-01-25 20:54:04.858227', NULL, '[[6, 1], [6, 1], [6, 1], [6, 1], [6, 1], [6, 1]]'),
-	(15, 'L15', NULL, '2022-01-25 20:54:21.781655', NULL, '[[4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1], [4, 1]]'),
-	(16, 'L16', NULL, '2022-01-25 20:54:38.920623', NULL, '[[3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1], [3, 1]]'),
-	(17, 'L17', NULL, '2022-01-25 20:54:54.297992', NULL, '[[12, 1], [6, 1], [6, 1], [6, 1], [6, 1]]'),
-	(18, 'L18', NULL, '2022-01-25 20:55:07.561416', NULL, '[[6, 1], [6, 1], [6, 1], [6, 1], [12, 1]]'),
-	(19, 'L19', NULL, '2022-01-25 20:55:20.787483', NULL, '[[6, 1], [6, 1], [12, 1], [12, 1]]'),
-	(20, 'L20', NULL, '2022-01-25 20:55:36.176156', NULL, '[[4, 1], [4, 1], [4, 1], [12, 1], [12, 1]]'),
-	(21, 'L21', NULL, '2022-01-25 20:55:50.535485', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 1], [6, 1], [6, 1]]'),
-	(22, 'L22', NULL, '2022-01-25 20:56:05.058632', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 1], [12, 1]]'),
-	(23, 'L23', NULL, '2022-01-25 20:56:44.661720', NULL, '[[4, 1], [4, 1], [4, 1], [6, 1], [6, 2], [6, 1]]'),
-	(24, 'L24', NULL, '2022-01-25 20:57:09.181208', NULL, '[[4, 1], [4, 1], [4, 1], [4, 1], [8, 2], [4, 1]]'),
-	(42, '710f1ba8-4ad9-4007-bcba-a4bbfaee9091', '', '2022-02-03 13:45:37.140145', NULL, '[[1, 1], [1, 1], [1, 1], [1, 1], [8, 1]]'),
-	(44, 'fce0f09a-bb6a-4e44-8432-dbd6fa931e29', '', '2022-02-03 14:08:27.633164', NULL, '[[1, 1], [1, 1], [1, 1], [3, 1], [3, 1], [3, 1]]'),
-	(45, 'c80e0013-aa9f-41ed-9b08-239c1b96be91', '', '2022-02-03 14:12:21.682229', NULL, '[[1, 1], [1, 1], [1, 1]]'),
-	(46, 'cef712d6-1472-476b-a8eb-116931ab910d', '', '2022-02-28 14:04:41.643378', NULL, '[[1, 1], [1, 1], [1, 1], [1, 1], [7, 1], [1, 1], [12, 1], [6, null], [6, null]]'),
-	(47, 'd3171f86-6478-4075-97f0-5b51aca86037', '', '2022-02-28 14:57:32.816615', NULL, '[[1, 1], [4, 1], [3, 1], [4, 3], [8, 1], [8, 1]]');
-/*!40000 ALTER TABLE `layout` ENABLE KEYS */;
-
--- Dumping structure for table flexdash.query
-CREATE TABLE IF NOT EXISTS `query` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(80) NOT NULL,
-  `description` varchar(128) DEFAULT NULL,
-  `date` datetime(6) NOT NULL,
-  `query` varchar(1024) NOT NULL,
-  `author` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `query_name` (`name`),
-  KEY `query_author_22678fe3_fk_user_id` (`author`),
-  CONSTRAINT `query_author_22678fe3_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
-
--- Dumping data for table flexdash.query: ~4 rows (approximately)
-/*!40000 ALTER TABLE `query` DISABLE KEYS */;
-INSERT INTO `query` (`id`, `name`, `description`, `date`, `query`, `author`) VALUES
-	(1, 'continents', 'list all continents', '2021-10-18 05:09:20.373951', 'SELECT DISTINCT (continent) FROM world.country;', 1),
-	(2, 'big area countries', '> 1000000 square miles', '2021-10-18 05:56:40.408013', 'SELECT * FROM world.country WHERE SurfaceArea > 1000000', 1),
-	(12, 'graph 1 num', '', '2021-12-31 06:17:32.643507', 'SELECT continent,	COUNT(*) as total FROM world.country GROUP BY continent;', NULL),
-	(13, 'info simple', '', '2021-12-30 14:38:39.646270', 'SELECT \r\n	COUNT(*) AS Count, (SELECT COUNT(*) FROM world.country) AS Total\r\nFROM\r\n	world.country\r\nWHERE \r\n	world.country.SurfaceArea > 1000000', NULL);
-/*!40000 ALTER TABLE `query` ENABLE KEYS */;
 
 -- Dumping structure for table flexdash.user
 CREATE TABLE IF NOT EXISTS `user` (

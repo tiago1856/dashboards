@@ -32,4 +32,9 @@ urlpatterns = [
     path('api/delete_layout/', views.delete_layout, name="delete_layout"),
     path('api/save_layout/', views.save_layout, name="save_layout"),
 
+
+    # config
+    path('api/get_config/', views.get_config, name="get_config"),
+    path('api/save_config/', views.save_config, name="save_config"),
+
 ]

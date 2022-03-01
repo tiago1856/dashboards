@@ -33,3 +33,6 @@ export const URL_LIST_LAYOUTS = "/dashboards/api/list_layouts/";
 export const URL_LIST_IN_USE_LAYOUTS = "/dashboards/api/list_in_use_layouts/";
 export const URL_DELETE_LAYOUT = "/dashboards/api/delete_layout/";
 export const URL_SAVE_LAYOUT = "/dashboards/api/save_layout/";
+
+export const URL_SAVE_CONFIG = "/dashboards/api/save_config/";
+export const URL_GET_CONFIG = "/dashboards/api/get_config/";

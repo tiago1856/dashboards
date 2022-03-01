@@ -17,12 +17,12 @@ import { SelectDashboardModal } from './modals/SelectDashboardModal.js';
 import { DashboardPropertiesModal } from './modals/DashboardPropertiesModal.js';
 import { LayoutSelectionModal } from './modals/LayoutSelectionModal.js';
 import { LayoutEditorModal } from './modals/LayoutEditorModal.js';
-import { fetchGET } from "./Fetch.js";
+import { fetchGET, fetchPOST } from "./Fetch.js";
 import { 
-    URL_GET_DASHBOARD
+    URL_GET_DASHBOARD,
+    URL_SAVE_CONFIG,
+    URL_GET_CONFIG
 } from "./urls.js";
-
-
 
 
 // -----------------
@@ -44,13 +44,15 @@ const DASHBOARD_NEW_BTN = $('#new-btn');
 const DASHBOARD_CONNECTIONS_BTN = $('#network-btn');
 const DASHBOARD_DELETE_BTN = $('#delete-btn');
 const SWAP_BTN = $('#swap-btn');
-
+const PIN_DASH_BTN = $('#pin-dash-btn');
 
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
 const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
 const DATARANGE_BTN_ID = '#daterange-btn';
+
+const DEFAULT_LAYOUT = 2;
 
 
 // ---------------------------
@@ -212,21 +214,11 @@ DASHBOARD_OPEN_BTN.on('click',function() {
     select_dashboard_modal.show((dash_id) => {
         console.log("load dash > ", dash_id);
 
-        $("body").css("cursor","progress");
-        fetchGET(URL_GET_DASHBOARD + dash_id, 
-            (result) => {                
-                $("body").css("cursor","auto");
-                console.log(result);
-                dashboard = new Dashboard(context, result.layout, result);
-            },
-            (error) => {
-                $("body").css("cursor","auto");
-                context.signals.onError.dispatch(error,"[main::DASHBOARD_OPEN_BTN]");                
-            }
-        );
-
-        //dashboard = new Dashboard(context, dashboard_id, null);        
-
+        getDashboard(dash_id, (result) => {
+            console.log(result);
+            dashboard = new Dashboard(context, result.layout, result);
+        });
+        //dashboard = new Dashboard(context, dashboard_id, null);
     });
 })
 
@@ -264,6 +256,7 @@ DASHBOARD_SAVE_BTN.on('click',function() {
 
 // NEW DASHBOARD
 DASHBOARD_NEW_BTN.on('click',function() {
+    localStorage.setItem("dash_new", true); 
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_NO_SAVE, () => {
             window.location.replace(PAGE_URL);   
@@ -293,6 +286,14 @@ SWAP_BTN.on('click',function() {
 });
 
 
+// PIN CURRENT DASHBOARD
+PIN_DASH_BTN.on('click',function() {
+    saveConfig(() => {
+
+    })
+});
+
+
 // -------------
 // INIT
 // -------------
@@ -314,16 +315,36 @@ $(function(){
 });
 
 
+// INIT - LO
+if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new")) {
+    localStorage.removeItem("dash_new"); 
+    loadConfig((config) => {
+        if (config.config !== null) {
+            getDashboard(config.dashboard, (result) => {
+                dashboard = new Dashboard(context, result.layout, result);
+            });        
+        } else {
+            dashboard = new Dashboard(context, DEFAULT_LAYOUT);
+        }
+    })
+} else {
+    dashboard = new Dashboard(context, DEFAULT_LAYOUT);
+    localStorage.removeItem("dash_new"); 
+}
 
 
-dashboard = new Dashboard(context, 2);
+
 
 
 
 // -------------
-// SAVE BUTTON
+// FUNCTIONS
 // -------------
 
+/**
+ * 
+ * @param {boolean} new_status 
+ */
 function changeSaveStatus(new_status) {
     context.changed = new_status;
     if (new_status) {
@@ -333,6 +354,9 @@ function changeSaveStatus(new_status) {
     }
 }
 
+/**
+ * Exits the edit mode.
+ */
 function exitEditMode() {
     $(SELECTABLE_COMPONENTS).hide();
     $(NON_SELECTABLE_COMPONENTS).show();
@@ -340,8 +364,79 @@ function exitEditMode() {
 }
 
 
-
+/**
+ * Starts a new dashboard.
+ * @param {number} dashboard_id Dashboard ID.
+ * @param {boolean} edit_mode Edit mode?
+ */
 function newDashboard(dashboard_id, edit_mode = false) {
     dashboard = new Dashboard(context, dashboard_id, null, edit_mode);
     $(SELECTABLE_COMPONENTS).show();
+}
+
+
+/**
+ * Loads the last config of this user.
+ * TODO: for now it gets the first config (if it exists)
+ * @param {function} onReady Called when ready
+ */
+function loadConfig(onReady = null) {
+    $("body").css("cursor","progress");
+    fetchGET(URL_GET_CONFIG, 
+        (result) => {                
+            $("body").css("cursor","auto");
+            console.log(result);
+            if (onReady) onReady(result);
+        },
+        (error) => {
+            $("body").css("cursor","auto");
+            context.signals.onError.dispatch(error,"[main::loadConfig]");                
+        }
+    );
+}
+
+
+/**
+ * 
+ * @param {function} onReady Called when ready;
+ */
+function saveConfig(onReady = null) {
+    $("body").css("cursor","progress");
+    fetchPOST(URL_SAVE_CONFIG,
+        {
+            dashboard: dashboard.id,
+            name: uuidv4(),
+        },  
+        (result) => {                
+            $("body").css("cursor","auto");
+            console.log(result);
+            if (onReady) onReady(result);
+        },
+        (error) => {
+            $("body").css("cursor","auto");
+            context.signals.onError.dispatch(error,"[main::loadConfig]");                
+        }
+    );
+}
+
+
+/**
+ * 
+ * @param {number} dash_id Dashboard ID.
+ * @param {function} onReady Called when ready.
+ */
+function getDashboard(dash_id, onReady = null) {
+    $("body").css("cursor","progress");
+    fetchGET(URL_GET_DASHBOARD + dash_id, 
+        (result) => {                
+            $("body").css("cursor","auto");
+            //console.log(result);
+            if (onReady) onReady(result);
+            //dashboard = new Dashboard(context, result.layout, result);
+        },
+        (error) => {
+            $("body").css("cursor","auto");
+            context.signals.onError.dispatch(error,"[main::getDashboard]");                
+        }
+    );
 }
