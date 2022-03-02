@@ -287,10 +287,13 @@ SWAP_BTN.on('click',function() {
 
 
 // PIN CURRENT DASHBOARD
+// when dashboard view opens, 
+// the pin dashboard will be loaded and displayed
 PIN_DASH_BTN.on('click',function() {
-    saveConfig(() => {
-
-    })
+    // only save if dashboard exists in db
+    if (dashboard.id) {
+        saveConfig(() => {})
+    }    
 });
 
 
