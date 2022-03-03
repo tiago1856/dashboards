@@ -52,7 +52,7 @@ const SELECTABLE_COMPONENTS = '.editable-component';
 const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
 const DATARANGE_BTN_ID = '#daterange-btn';
 
-const DEFAULT_LAYOUT = 2;
+const DEFAULT_LAYOUT = 2;   // if doesn't exists => fetch first | error
 
 
 // ---------------------------

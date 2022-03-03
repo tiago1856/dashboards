@@ -432,14 +432,21 @@ def delete_dashboard(request):
 def get_layout(request, pk):
    """
       Gets a specific layout.
+      If doesn't exists => fetch the first
+      If last doesn't exists => error
 
       Params:
          pk (number): Layout id
    """
    if request.method == 'GET':
       try:
-         layout = Layout.objects.get(id=pk)
-         serializer = LayoutSerializer(layout)
+         try:
+            layout = Layout.objects.get(id=pk)
+            serializer = LayoutSerializer(layout)
+         except Layout.DoesNotExist:
+            # get first
+            layout = Layout.objects.filter()[:1].get()
+            serializer = LayoutSerializer(layout)
          return Response(serializer.data, status=status.HTTP_200_OK)
       except Layout.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)

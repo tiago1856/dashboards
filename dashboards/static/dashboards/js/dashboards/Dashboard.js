@@ -197,10 +197,6 @@ export class Dashboard extends Div {
      */
     delete(onReady = null) {
         $("body").css("cursor","progress");
-        console.log(this.id);
-        console.log(this.id);
-        console.log(this.id);
-        console.log(this.id);
         fetchPOST(
             URL_DELETE_DASHBOARD, 
             {
@@ -233,10 +229,12 @@ export class Dashboard extends Div {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                if (getAllNumbers(error.toString())[0] == 404)
-                    this.context.signals.onError.dispatch("Layout [" + layout_id + "] não existe!","[Dashboard::getLayout]");
-                else
+                if (getAllNumbers(error.toString())[0] == 404) {
+                    //this.context.signals.onError.dispatch("Layout [" + layout_id + "] não existe!","[Dashboard::getLayout]");
+                    this.context.signals.onError.dispatch("Não existem Layouts válidos!","[Dashboard::getLayout]");
+                } else {
                     this.context.signals.onError.dispatch(error,"[Dashboard::getLayout]");
+                }
                 
             }
         );

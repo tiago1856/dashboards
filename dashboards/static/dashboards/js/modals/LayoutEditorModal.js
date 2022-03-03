@@ -180,9 +180,12 @@ LayoutEditorModal.prototype = {
 					});
 				} else {
 					$(this).removeClass('editor-block-selected');
-					if ($('.editor-block.editor-block-selected').length <= 1) {
+					if ($('.editor-block.editor-block-selected').length < 1) {
 						LGDM_ROWS_SPAN.val(1);
 						LGDM_COLS_SPAN.val(1);
+					} else if ($('.editor-block.editor-block-selected').length == 1) {
+						LGDM_COLS_SPAN.val($('.editor-block.editor-block-selected').attr('data-col'));
+						LGDM_ROWS_SPAN.val($('.editor-block.editor-block-selected').attr('data-row'));
 					}
 				}
 				return;
