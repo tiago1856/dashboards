@@ -7,6 +7,7 @@ import { ComplexTable } from "./tables/ComplexTable.js"
 import { InfoSimpleRight } from './info/InfoSimpleRight.js'
 import { InfoSimpleLeft } from './info/InfoSimpleLeft.js'
 import { InfoComplexPercentage } from './info/InfoComplexPercentage.js'
+import { SimpleCalendar } from './template/SimpleCalendar.js'
 
 
 
@@ -36,8 +37,11 @@ export const COMPONENT_TYPE = {
     GEO: {
         name: 'GEO',
     },
-    TEMPLATES: {
+    TEMPLATE: {
         name: 'TEMPLATES',
+        classes: [
+            {id: VISUALIZATION_TYPE.TEC, class:SimpleCalendar},
+        ]        
     },
 }
 

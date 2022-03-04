@@ -300,6 +300,9 @@ EditComponentModal.prototype = {
                 ISL_TEXT_2.val("");   
                 ISL_VALUE.empty();  
                 break;
+            case VISUALIZATION_TYPE.TEC:
+                console.log("CALENDAR [clearVisualizationConfigPanel]");
+                break;
         }
 
     },
@@ -485,6 +488,11 @@ EditComponentModal.prototype = {
                     this.state.data_config.icon = "icon ion-md-alert";
                     console.log("222222 > ", fields);
                 }
+                break;
+            }
+            case VISUALIZATION_TYPE.ISL:
+            {
+                console.log("CALENDAR [setVisualizationConfigPanel]");
                 break;
             }                 
         }        
