@@ -6,7 +6,8 @@
 
 export const ComponentData = {
     // global
-    id: null,                           // [number] [read only]
+    id: null,                           // [number] [read only] -- component id in the database --- first save this value is null
+    uuid: null,                         // unique identifier
     name: null,                         // [string]
     description: null,                  // [string]
     title: null,                        // title [string]

@@ -11,7 +11,9 @@ export class SimpleTable extends BaseComponentContent {
             parent.setStyle("height","300px");
             const component_data = this.prepareData(results, data);
             const container = new Div().attachTo(parent);
-            new BasicTable(component_data, 20, data.data_config.fields).attachTo(container);
+            new BasicTable(component_data, 20, data.data_config.fields, (row) => {
+                console.log("selected row > ", row, data.uuid);
+            }).attachTo(container);
         });
 
         $(opt_btn).on('click',function() {

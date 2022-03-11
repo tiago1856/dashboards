@@ -22,14 +22,13 @@ export class Dashboard extends Div {
      * @param {Context} context Context.
      * @param {number} layout_id Layout ID.
      * @param {object} data Data to restore the layout and all its components.
-     * @param {boolean} edit_mode Component in edit mode?
      */
-    constructor (context, layout_id, data=null, edit_mode = false) {
+    constructor (context, layout_id, data=null) {
         super();
         this.context = context;
         DASHBOARD_CONTAINER.empty();
         this.attachTo(DASHBOARD_CONTAINER.get(0));
-
+        const self = this;
         this.title = null;
         this.name = null;
         this.description = null;
@@ -62,7 +61,7 @@ export class Dashboard extends Div {
                 } else {
                     this.components[spot] = new Component(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
                 }                    
-                this.components[spot].setEditMode(edit_mode);
+                this.components[spot].setEditMode(context.edit_mode);
                 spot++;    
             })
         })
@@ -76,6 +75,18 @@ export class Dashboard extends Div {
      */
     getComponentAt(spot) {
         return this.components[spot];
+    }
+
+    /**
+     * Get the component with a specific uuid.
+     * @param {string} uuid UUID string.
+     * @returns Component.
+     */
+    getComponent(uuid) {
+        for (const key in this.components) {
+            if (this.components[key].data.uuid === uuid) return this.components[key];
+        }
+        return null;
     }
 
     /**
@@ -176,6 +187,7 @@ export class Dashboard extends Div {
                 title: this.title,
                 layout: this.layout_id,
                 data: data,
+                id: this.id,
             }, 
             result => {
                 $("body").css("cursor","auto");

@@ -195,6 +195,7 @@ def save_component(request):
    if request.method == 'POST':
       try:
          id = request.data.get('id')
+         uuid = request.data.get('uuid')
          name = request.data.get('name')
          description = request.data.get('description')
          title = request.data.get('title')
@@ -212,6 +213,7 @@ def save_component(request):
             component.updated_by = user
          else:
             component = Component(
+               uuid = uuid,
                name = name,
                description = description,
                title = title,
@@ -333,8 +335,10 @@ def save_dashboard(request):
          if request.user.is_authenticated:
             user = request.user
          # exists => update
+         print("ID > ", id)
          if (id):
             dashboard = Dashboard.objects.get(pk=id)
+            print("UPDATE")
             dashboard.name = name
             dashboard.description = description
             dashboard.title = title
@@ -342,6 +346,7 @@ def save_dashboard(request):
             dashboard.updated_by = user
             dashboard.layout = layout
          else:
+            print("NEW")
             dashboard = Dashboard(
                name = name,
                description = description,

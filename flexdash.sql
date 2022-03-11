@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `auth_permission` (
   CONSTRAINT `auth_permission_content_type_id_2f476e4b_fk_django_co` FOREIGN KEY (`content_type_id`) REFERENCES `django_content_type` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.auth_permission: ~32 rows (approximately)
+-- Dumping data for table flexdash.auth_permission: ~28 rows (approximately)
 /*!40000 ALTER TABLE `auth_permission` DISABLE KEYS */;
 INSERT INTO `auth_permission` (`id`, `name`, `content_type_id`, `codename`) VALUES
 	(1, 'Can add log entry', 1, 'add_logentry'),
@@ -115,16 +115,21 @@ CREATE TABLE IF NOT EXISTS `dash_component` (
   `data` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`data`)),
   `author` int(11) DEFAULT NULL,
   `updated_by` int(11) DEFAULT NULL,
+  `uuid` varchar(48) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `component_name` (`name`),
   KEY `component_author_496dc400_fk_user_id` (`author`),
   KEY `component_updated_by_77dab664_fk_user_id` (`updated_by`),
   CONSTRAINT `component_author_496dc400_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`),
   CONSTRAINT `component_updated_by_77dab664_fk_user_id` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.dash_component: ~0 rows (approximately)
+-- Dumping data for table flexdash.dash_component: ~3 rows (approximately)
 /*!40000 ALTER TABLE `dash_component` DISABLE KEYS */;
+INSERT INTO `dash_component` (`id`, `name`, `description`, `title`, `date_created`, `date_updated`, `data`, `author`, `updated_by`, `uuid`) VALUES
+	(20, '1810290b-8136-4c5c-83c4-8099e016e3c7', '', '', '2022-03-07 13:50:27.519556', '2022-03-07 13:50:27.519556', '{"id": null, "name": "1810290b-8136-4c5c-83c4-8099e016e3c7", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}', NULL, NULL, '1810290b-8136-4c5c-83c4-8099e016e3c7'),
+	(21, 'xxxxx', '', '', '2022-03-09 19:01:22.187295', '2022-03-09 19:01:22.187295', '{"id": null, "name": "xxxxx", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": ["continent", "total"], "query_fields": ["continent", "total"]}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}', NULL, NULL, NULL),
+	(22, 'xxxxxxxxxxxxddsds', '', '', '2022-03-09 19:03:48.783394', '2022-03-09 19:04:46.258105', '{"id": 22, "uuid": "0a0b502b-402a-4a71-8958-26863ac586e6", "name": "xxxxxxxxxxxxddsds", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "1", "query": "SELECT DISTINCT (continent) FROM world.country;", "query_selected_fields": ["continent"], "query_fields": ["continent"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["continent"]}}', NULL, NULL, '0a0b502b-402a-4a71-8958-26863ac586e6');
 /*!40000 ALTER TABLE `dash_component` ENABLE KEYS */;
 
 -- Dumping structure for table flexdash.dash_config
@@ -141,7 +146,7 @@ CREATE TABLE IF NOT EXISTS `dash_config` (
   CONSTRAINT `dash_config_dashboard_7f9c3c39_fk_dash_dashboard_id` FOREIGN KEY (`dashboard`) REFERENCES `dash_dashboard` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.dash_config: ~0 rows (approximately)
+-- Dumping data for table flexdash.dash_config: ~1 rows (approximately)
 /*!40000 ALTER TABLE `dash_config` DISABLE KEYS */;
 INSERT INTO `dash_config` (`id`, `name`, `date`, `author`, `dashboard`) VALUES
 	(2, 'dsasd', '2022-03-01 16:39:41.000000', NULL, 21),
@@ -168,14 +173,18 @@ CREATE TABLE IF NOT EXISTS `dash_dashboard` (
   CONSTRAINT `dashboard_author_8ef66c6d_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`),
   CONSTRAINT `dashboard_layout_1dce980e_fk_layout_id` FOREIGN KEY (`layout`) REFERENCES `dash_layout` (`id`),
   CONSTRAINT `dashboard_updated_by_546f3c4a_fk_user_id` FOREIGN KEY (`updated_by`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.dash_dashboard: ~3 rows (approximately)
+-- Dumping data for table flexdash.dash_dashboard: ~7 rows (approximately)
 /*!40000 ALTER TABLE `dash_dashboard` DISABLE KEYS */;
 INSERT INTO `dash_dashboard` (`id`, `name`, `description`, `title`, `date_created`, `date_updated`, `data`, `author`, `updated_by`, `layout`) VALUES
-	(21, '2afbde6d-fd66-4d15-9cf2-d1b3db762657', '', NULL, '2022-01-28 06:58:19.555546', '2022-01-28 06:58:19.555546', '{"0": {"id": null, "name": "1810290b-8136-4c5c-83c4-8099e016e3c7", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}, "1": {"id": null, "name": "3843185f-1047-4587-9927-2650ec5e13f4", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}}', 1, 1, 2),
+	(21, 'b6245ee3-df5e-4852-b999-0465239d8781', '', NULL, '2022-01-28 06:58:19.555546', '2022-03-10 14:33:09.157286', '{"0": {"id": null, "name": "1810290b-8136-4c5c-83c4-8099e016e3c7", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TC", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "uuid": "a8d54062-6eab-43af-ac58-9bc9a1623617"}, "1": {"id": null, "name": "3843185f-1047-4587-9927-2650ec5e13f4", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}, "uuid": "506b2773-d520-4a5d-afd3-1f4d1f963fe3"}}', 1, NULL, 2),
 	(24, '9c493001-ab31-4a0b-ab2e-f2510f7aa7e4', '', NULL, '2022-01-28 14:09:46.118512', '2022-01-28 14:09:46.118512', '{"0": {"id": null, "name": "3b4929d7-75b4-4cfd-b9a5-70c273148cc0", "description": "", "title": "", "component_type": "INFO", "query": {"query_selection": "13", "query": "SELECT \\n\\tCOUNT(*) AS Count, (SELECT COUNT(*) FROM world.country) AS Total\\nFROM\\n\\tworld.country\\nWHERE \\n\\tworld.country.SurfaceArea > 1000000", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "ISL", "visualization_tab": "data-visualization-info"}, "data_config": {"value": "Count", "text_1": "Count", "text_2": "", "icon": "icon ion-md-alert", "fields": []}}, "1": {"id": null, "name": null, "description": null, "title": null, "component_type": null, "query": {"query_selection": null, "query": null, "query_selected_fields": null, "query_fields": null}, "visualization": {"visualization_type": null, "visualization_tab": null}, "data_config": {}}}', 1, 1, 2),
-	(25, '333333', '', NULL, '2022-01-28 15:01:39.540385', '2022-01-28 15:01:39.540385', '{"0": {"id": null, "name": "3b012a46-be9e-4a1f-8554-14fbce7e71e0", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}, "1": {"id": null, "name": "1655eedb-7815-465c-bba6-100b2eb3b4ff", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}}', 1, 1, 5);
+	(25, '333333', '', NULL, '2022-01-28 15:01:39.540385', '2022-01-28 15:01:39.540385', '{"0": {"id": null, "name": "3b012a46-be9e-4a1f-8554-14fbce7e71e0", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}, "1": {"id": null, "name": "1655eedb-7815-465c-bba6-100b2eb3b4ff", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}}', 1, 1, 5),
+	(26, '76103efa-eb73-41a4-969e-4b58f7d3a690', '', NULL, '2022-03-04 11:17:50.968434', '2022-03-04 11:17:50.968434', '{"0": {"id": null, "name": "1810290b-8136-4c5c-83c4-8099e016e3c7", "description": "", "title": "", "component_type": "TEMPLATE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TEC", "visualization_tab": "data-visualization-templates"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}, "1": {"id": null, "name": "3843185f-1047-4587-9927-2650ec5e13f4", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}}', NULL, NULL, 2),
+	(27, '58b56083-8265-482f-b675-374f24813545', '', NULL, '2022-03-04 16:00:26.780427', '2022-03-04 16:00:26.780427', '{"0": {"id": null, "name": null, "description": null, "title": null, "component_type": null, "query": {"query_selection": null, "query": null, "query_selected_fields": null, "query_fields": null}, "visualization": {"visualization_type": null, "visualization_tab": null}, "data_config": {}}, "1": {"id": null, "name": null, "description": null, "title": null, "component_type": null, "query": {"query_selection": null, "query": null, "query_selected_fields": null, "query_fields": null}, "visualization": {"visualization_type": null, "visualization_tab": null}, "data_config": {}}}', NULL, NULL, 2),
+	(28, 'ee5f66ec-7bf0-4237-b607-abdbb40db83e', '', NULL, '2022-03-04 16:01:35.011473', '2022-03-04 16:01:35.011473', '{"0": {"id": null, "name": null, "description": null, "title": null, "component_type": null, "query": {"query_selection": null, "query": null, "query_selected_fields": null, "query_fields": null}, "visualization": {"visualization_type": null, "visualization_tab": null}, "data_config": {}}, "1": {"id": null, "name": null, "description": null, "title": null, "component_type": null, "query": {"query_selection": null, "query": null, "query_selected_fields": null, "query_fields": null}, "visualization": {"visualization_type": null, "visualization_tab": null}, "data_config": {}}}', NULL, NULL, 2),
+	(29, '7ef64baa-03cf-4952-9cea-28d261fbe85d', '', NULL, '2022-03-07 13:44:50.800943', '2022-03-07 13:44:50.800943', '{"0": {"id": null, "name": "1810290b-8136-4c5c-83c4-8099e016e3c7", "description": "", "title": "", "component_type": "TABLE", "query": {"query_selection": "2", "query": "SELECT * FROM world.country WHERE SurfaceArea > 1000000", "query_selected_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"], "query_fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}, "visualization": {"visualization_type": "TS", "visualization_tab": "data-visualization-tables"}, "data_config": {"fields": ["Code", "Name", "Continent", "Region", "SurfaceArea", "IndepYear", "Population", "LifeExpectancy", "GNP", "GNPOld", "LocalName", "GovernmentForm", "HeadOfState", "Capital", "Code2"]}}, "1": {"id": null, "name": "3843185f-1047-4587-9927-2650ec5e13f4", "description": "", "title": "", "component_type": "GRAPH", "query": {"query_selection": "12", "query": "SELECT continent,\\tCOUNT(*) as total FROM world.country GROUP BY continent;", "query_selected_fields": [], "query_fields": []}, "visualization": {"visualization_type": "G1N", "visualization_tab": "data-visualization-graphs"}, "data_config": {"fields": ["continent", "total"]}}}', NULL, NULL, 2);
 /*!40000 ALTER TABLE `dash_dashboard` ENABLE KEYS */;
 
 -- Dumping structure for table flexdash.dash_layout
@@ -190,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `dash_layout` (
   UNIQUE KEY `layout_name` (`name`),
   KEY `layout_author_b466a2db_fk_user_id` (`author`),
   CONSTRAINT `layout_author_b466a2db_fk_user_id` FOREIGN KEY (`author`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
 
 -- Dumping data for table flexdash.dash_layout: ~26 rows (approximately)
 /*!40000 ALTER TABLE `dash_layout` DISABLE KEYS */;
@@ -222,8 +231,8 @@ INSERT INTO `dash_layout` (`id`, `name`, `description`, `date`, `author`, `data`
 	(42, '710f1ba8-4ad9-4007-bcba-a4bbfaee9091', '', '2022-02-03 13:45:37.140145', NULL, '[[1, 1], [1, 1], [1, 1], [1, 1], [8, 1]]'),
 	(44, 'fce0f09a-bb6a-4e44-8432-dbd6fa931e29', '', '2022-02-03 14:08:27.633164', NULL, '[[1, 1], [1, 1], [1, 1], [3, 1], [3, 1], [3, 1]]'),
 	(45, 'c80e0013-aa9f-41ed-9b08-239c1b96be91', '', '2022-02-03 14:12:21.682229', NULL, '[[1, 1], [1, 1], [1, 1]]'),
-	(46, 'cef712d6-1472-476b-a8eb-116931ab910d', '', '2022-02-28 14:04:41.643378', NULL, '[[1, 1], [1, 1], [1, 1], [1, 1], [7, 1], [1, 1], [12, 1], [6, null], [6, null]]'),
-	(47, 'd3171f86-6478-4075-97f0-5b51aca86037', '', '2022-02-28 14:57:32.816615', NULL, '[[1, 1], [4, 1], [3, 1], [4, 3], [8, 1], [8, 1]]');
+	(48, '5ba942a5-1ea0-45b7-96d9-2f26dd99087b', '', '2022-03-03 12:33:17.189691', NULL, '[[1, 1], [1, 1], [1, 1], [5, 3], [4, 3], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1]]'),
+	(49, '2dfcd32e-8007-4c2a-bed6-8e7f2b78399e', '', '2022-03-03 14:38:31.069764', NULL, '[[1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1], [1, 1]]');
 /*!40000 ALTER TABLE `dash_layout` ENABLE KEYS */;
 
 -- Dumping structure for table flexdash.dash_query
@@ -402,7 +411,7 @@ CREATE TABLE IF NOT EXISTS `django_content_type` (
   UNIQUE KEY `django_content_type_app_label_model_76bd3d3b_uniq` (`app_label`,`model`)
 ) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.django_content_type: ~7 rows (approximately)
+-- Dumping data for table flexdash.django_content_type: ~6 rows (approximately)
 /*!40000 ALTER TABLE `django_content_type` DISABLE KEYS */;
 INSERT INTO `django_content_type` (`id`, `app_label`, `model`) VALUES
 	(6, 'accounts', 'user'),
@@ -425,9 +434,9 @@ CREATE TABLE IF NOT EXISTS `django_migrations` (
   `name` varchar(255) NOT NULL,
   `applied` datetime(6) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=latin1;
 
--- Dumping data for table flexdash.django_migrations: ~22 rows (approximately)
+-- Dumping data for table flexdash.django_migrations: ~19 rows (approximately)
 /*!40000 ALTER TABLE `django_migrations` DISABLE KEYS */;
 INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(1, 'contenttypes', '0001_initial', '2021-10-14 16:22:04.033097'),
@@ -462,7 +471,8 @@ INSERT INTO `django_migrations` (`id`, `app`, `name`, `applied`) VALUES
 	(30, 'dashboards', '0011_remove_layout_temp', '2022-01-26 11:53:53.705438'),
 	(31, 'dashboards', '0012_auto_20220301_1558', '2022-03-01 15:58:52.067663'),
 	(32, 'dashboards', '0013_auto_20220301_1625', '2022-03-01 16:25:41.286050'),
-	(33, 'dashboards', '0014_auto_20220301_1629', '2022-03-01 16:29:13.295937');
+	(33, 'dashboards', '0014_auto_20220301_1629', '2022-03-01 16:29:13.295937'),
+	(34, 'dashboards', '0015_component_uuid', '2022-03-09 18:55:10.119519');
 /*!40000 ALTER TABLE `django_migrations` ENABLE KEYS */;
 
 -- Dumping structure for table flexdash.django_session

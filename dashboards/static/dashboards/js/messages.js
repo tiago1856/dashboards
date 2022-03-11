@@ -4,3 +4,4 @@ export const MSG_DELETE_QUERY = "Esta operação não é reversivel e qualquer c
 export const MSG_DELETE_LAYOUT = "De certeza que deseja apagar o layout selecionado?";
 export const MSG_DELETE_DASHBOARD = "De certeza que deseja apagar o dashboard?";
 export const MSG_LAYOUT_IN_USE = "Não é possivel apagar. O layout está a ser utilizado pelo dashboard actual.";
+//export const MSG_OVERRIDE_DASHBOARD = "De certeza que deseja o dashboard?";

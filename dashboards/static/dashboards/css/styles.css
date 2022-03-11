@@ -255,6 +255,12 @@ input:focus.valid-input  {
     color: white;
 }
 
+/* selected row */
+.selected-row {
+    background-color: rgb(141, 255, 147) !important;
+}
+
+
 
 /* *********************** */
 /*  EDIT COMPONENT  MODAL  */
@@ -292,7 +298,7 @@ input:focus.valid-input  {
     height: 4px;
     margin: 0 auto;
     position: absolute;
-    right: 80px;
+    right: 65px;
     top: 15px;
     width: 85%;
     z-index: -1;

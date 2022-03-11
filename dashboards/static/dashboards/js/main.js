@@ -9,7 +9,8 @@ import { Dashboard } from './dashboards/Dashboard.js';
 import { 
     MSG_OVERRIDE_LAYOUT, 
     MSG_NO_SAVE,
-    MSG_DELETE_DASHBOARD
+    MSG_DELETE_DASHBOARD,
+    //MSG_OVERRIDE_DASHBOARD
 } from './messages.js';
 import { EditComponentModal } from './modals/EditComponentModal.js';
 import { SelectComponentModal } from './modals/SelectComponentModal.js';
@@ -23,7 +24,7 @@ import {
     URL_SAVE_CONFIG,
     URL_GET_CONFIG
 } from "./urls.js";
-
+import { CommsManager } from './comms/CommsManager.js';
 
 // -----------------
 // --- CONSTANTS ---
@@ -41,11 +42,10 @@ const DISPLAY_LAYOUT_MODAL = $('#layout-choice-btn');
 const LOCATION_BTN = $('#location-btn');
 const DASHBOARD_PRINT_BTN = $('#print-btn');
 const DASHBOARD_NEW_BTN = $('#new-btn');
-const DASHBOARD_CONNECTIONS_BTN = $('#network-btn');
 const DASHBOARD_DELETE_BTN = $('#delete-btn');
 const SWAP_BTN = $('#swap-btn');
 const PIN_DASH_BTN = $('#pin-dash-btn');
-
+const DASH_EDIT_TAB = $('#dash-edit-tab');
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -69,6 +69,7 @@ const context = new Context();
  */
 let dashboard = null;
 
+let new_dash = false;    // new dashboard?
 
 
 // ------------------------------
@@ -129,6 +130,13 @@ const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
  */
  const layout_editor_modal = new LayoutEditorModal(context);
 
+
+/**
+ * Communications manager
+ */
+ const comms = new CommsManager(context);
+
+
 // -----------------
 // --- LISTENERS ---
 // -----------------
@@ -170,7 +178,9 @@ context.signals.onEditComponent.add((spot, original_type) => {
             new_comp.update();
         } else {           
             component.update();
-        }       
+        }
+        // UPDATE COMMS        
+        comms.updateComponent(component);
     });
 });
 
@@ -183,7 +193,8 @@ context.signals.onLoadComponent.add((spot) => {
 
 context.signals.onLayoutEditor.add((spot) => {
     layout_editor_modal.show((new_layout_id) => {
-        dashboard = new Dashboard(context, new_layout_id, null, true);
+        comms.reset();
+        dashboard = new Dashboard(context, new_layout_id, null/*, true*/);        
     });
 });
 
@@ -193,20 +204,21 @@ context.signals.onLayoutEditor.add((spot) => {
 
 // ENTERS EDIT MODE
 DASHBOARD_EDIT_BTN.on('click',function() {
-    $(SELECTABLE_COMPONENTS).show();
-    $(NON_SELECTABLE_COMPONENTS).hide();
-    context.edit_mode = true;
+    enterEditMode(true);
 })
 
 // EXITS EDIT MODE
 EDIT_APPLY_BTN.on('click',function() {
+    /*
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_NO_SAVE, () => {
-            exitEditMode()
+            exitEditMode();
         });
     } else {
         exitEditMode();
     }
+    */
+    enterEditMode(false);
 })
 
 // OPENS DASHBOARD
@@ -215,8 +227,8 @@ DASHBOARD_OPEN_BTN.on('click',function() {
         console.log("load dash > ", dash_id);
 
         getDashboard(dash_id, (result) => {
-            console.log(result);
             dashboard = new Dashboard(context, result.layout, result);
+            comms.restore(result);
         });
         //dashboard = new Dashboard(context, dashboard_id, null);
     });
@@ -227,14 +239,12 @@ DISPLAY_LAYOUT_MODAL.on('click',function() {
     if (context.changed) {
         context.signals.onAYS.dispatch(MSG_OVERRIDE_LAYOUT, () => {
             layout_selection_modal.show(dashboard.layout_id, (selection) => {
-                newDashboard(selection, true);
-                DASHBOARD_EDIT_BTN.trigger('click');
+                newDashboard(selection/*, true*/);                
             })
         });
     } else {
         layout_selection_modal.show(dashboard.layout_id,(selection) => {
-            newDashboard(selection, true);
-            DASHBOARD_EDIT_BTN.trigger('click');
+            newDashboard(selection/*, true*/);            
         })        
     }
 })
@@ -251,6 +261,7 @@ DASHBOARD_PRINT_BTN.on('click',function() {
 DASHBOARD_SAVE_BTN.on('click',function() {
     dashboard_properties_modal.show(dashboard, () => {
         console.log("DASHBOARD SAVED");
+        changeSaveStatus(false);
     });
 });
 
@@ -267,16 +278,14 @@ DASHBOARD_NEW_BTN.on('click',function() {
 });
 
 
-// SET COMPONENTS CONNECTORS
-DASHBOARD_CONNECTIONS_BTN.on('click',function() {
-});
 
 // DELETE CURRENT DASHBOARD
 DASHBOARD_DELETE_BTN.on('click',function() {
     if (!dashboard.id) return;
     context.signals.onAYS.dispatch(MSG_DELETE_DASHBOARD, () => {
         dashboard.delete(() => {
-            dashboard = new Dashboard(context, 2, null, true);
+            comms.reset();
+            dashboard = new Dashboard(context, 2, null/*, true*/);
         });
     });
 });
@@ -301,6 +310,7 @@ PIN_DASH_BTN.on('click',function() {
 // INIT
 // -------------
 
+//DASH_EDIT_TAB.hide();
 
 const date_interval = new DataRangePicker(DATARANGE_BTN_ID, (start, end) => {
     DATE_INTERVAL.html(start + ' - ' + end);
@@ -325,15 +335,25 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
         if (config.config !== null) {
             getDashboard(config.dashboard, (result) => {
                 dashboard = new Dashboard(context, result.layout, result);
+                comms.restore(result);
+                new_dash = false;
+                changeSaveStatus(false);
             });        
         } else {
+            comms.reset();
             dashboard = new Dashboard(context, DEFAULT_LAYOUT);
+            new_dash = true;
+            changeSaveStatus(true);
         }
     })
 } else {
+    comms.restore(resett);
     dashboard = new Dashboard(context, DEFAULT_LAYOUT);
+    new_dash = true;
+    changeSaveStatus(true);
     localStorage.removeItem("dash_new"); 
 }
+//changeSaveStatus(true);
 
 
 
@@ -352,29 +372,41 @@ function changeSaveStatus(new_status) {
     context.changed = new_status;
     if (new_status) {
         DASHBOARD_SAVE_BTN.removeClass('btn-outline-secondary').addClass('btn-danger');
+        DASHBOARD_SAVE_BTN.removeAttr('disabled');
     } else {
-        DASHBOARD_SAVE_BTN.removeClass('btn-danger').addClass('btn-outline-secondary');
+        DASHBOARD_SAVE_BTN.removeClass('btn-danger').addClass('btn-outline-secondary');        
+        DASHBOARD_SAVE_BTN.attr('disabled', true);
     }
 }
 
 /**
  * Exits the edit mode.
  */
-function exitEditMode() {
-    $(SELECTABLE_COMPONENTS).hide();
-    $(NON_SELECTABLE_COMPONENTS).show();
-    context.edit_mode = false;
+function enterEditMode(enter=true) {
+    if (enter) {
+        $(SELECTABLE_COMPONENTS).show();
+        $(NON_SELECTABLE_COMPONENTS).hide();
+        context.edit_mode = true;
+        DASH_EDIT_TAB.removeClass('d-none')
+    } else {
+        $(SELECTABLE_COMPONENTS).hide();
+        $(NON_SELECTABLE_COMPONENTS).show();
+        context.edit_mode = false;
+        DASH_EDIT_TAB.addClass('d-none')
+    }
 }
 
 
 /**
  * Starts a new dashboard.
- * @param {number} dashboard_id Dashboard ID.
+ * @param {number} layout_id Layout ID.
  * @param {boolean} edit_mode Edit mode?
  */
-function newDashboard(dashboard_id, edit_mode = false) {
-    dashboard = new Dashboard(context, dashboard_id, null, edit_mode);
+function newDashboard(layout_id/*, edit_mode = false*/) {
+    comms.reset();
+    dashboard = new Dashboard(context, layout_id, null/*, edit_mode*/);
     $(SELECTABLE_COMPONENTS).show();
+    DASHBOARD_EDIT_BTN.trigger('click');
 }
 
 

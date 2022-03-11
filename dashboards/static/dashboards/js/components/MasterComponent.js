@@ -25,6 +25,7 @@ export class MasterComponent extends Div {
 
         this.changed = false;   // something changed and it's not saved        
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
+        if (!data || !this.data.uuid) this.data.uuid = uuidv4();
 
         this.spot = spot;     // place in the layout
         this.content = null;  // content of the panel
@@ -82,10 +83,12 @@ export class MasterComponent extends Div {
        */
       save(individually = true) {
         if (individually) $("body").css("cursor","progress");
+        if (!this.data.uuid) this.data.uuid = uuidv4();
         fetchPOST(
             URL_SAVE_COMPONENT, 
             {
                 id: this.data.id,
+                uuid: this.data.uuid,
                 name: this.data.name,
                 description: this.data.description,
                 title: this.data.title,

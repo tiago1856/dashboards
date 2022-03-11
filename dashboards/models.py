@@ -37,6 +37,7 @@ class Query(models.Model):
 
 
 class Component(models.Model):
+    uuid = models.CharField(null=True, max_length = 48) 
     name = models.CharField(null=False, max_length = 80)
     description = models.CharField(blank=True, null=True, max_length = 128)
     title = models.CharField(blank=True, null=True, max_length = 128)

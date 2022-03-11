@@ -58,6 +58,9 @@ const DATA_VISUALIZATION_SELECTION = $('.data-visualization-selection');
 // TABLE SIMPLE
 const TS_SORTABLE_NO = $("#vis-ts-no");
 const TS_SORTABLE_YES = $("#vis-ts-yes");
+// TABLE COMPLEX
+const TC_SORTABLE_NO = $("#vis-tc-no");
+const TC_SORTABLE_YES = $("#vis-tc-yes");
 // GRAPH 1 NUM
 const G1N_X_AXIS = $('#cdc-graph-1-num-x-axis')
 const G1N_SERIES = $('#cdc-graph-1-num-series')
@@ -107,6 +110,7 @@ export function EditComponentModal(context) {
         console.log("TODO: SAVE QUERY");
         self.updateQuery(() => {
             self.changeSaveStatus(false);
+            self.context.signals.onChanged.dispatch();
         });
     })
 
@@ -115,6 +119,7 @@ export function EditComponentModal(context) {
         context.signals.onAYS.dispatch(MSG_DELETE_QUERY, 
         () => {
             self.deleteQuery();
+            self.context.signals.onChanged.dispatch();
         });
     })
     
@@ -127,12 +132,14 @@ export function EditComponentModal(context) {
     // NEW QUERY
     NEW_QUERY_BUTTON.on('click',function() {
         self.newQuery(QUERY_SELECTION.val() !== '');
+        self.context.signals.onChanged.dispatch();
     })
 
     // EDITs QUERY
     EDIT_BTN.on('click',function() {
         QUERY_AREA.removeAttr('disabled');
         EDIT_BTN.attr('disabled',true);
+        self.context.signals.onChanged.dispatch();
     })
 
     // EXECs QUERY
@@ -147,6 +154,7 @@ export function EditComponentModal(context) {
             QUERY_SELECTION.val(new_query_value);
             QUERY_SELECTION.trigger('change');
             QUERY_AREA.removeAttr('disabled');
+            self.context.signals.onChanged.dispatch();
         });
     });
 
@@ -159,6 +167,7 @@ export function EditComponentModal(context) {
     // COMPONENT (NOT IN THE DATABASE)
     APPLY_BTN.on('click', function() {
         self.save();
+        self.context.signals.onChanged.dispatch();
     });
 
 
@@ -175,6 +184,7 @@ export function EditComponentModal(context) {
 
     SELECTED_FIELDS.on('change', function(e) {
         self.setVisualizationConfigPanel(self.state.data_config.fields !== undefined);
+        self.context.signals.onChanged.dispatch();
     })
 
 
@@ -190,6 +200,7 @@ export function EditComponentModal(context) {
             // check name
         }
         self.checkName(self.state.id, e.target.value);
+        self.context.signals.onChanged.dispatch();
     });
 
     // on query selection
@@ -205,6 +216,7 @@ export function EditComponentModal(context) {
             DELETE_BTN.attr('disabled', true);
             EXCEL_BTN.attr('disabled', true);
             EXEC_QUERY.attr('disabled', true);
+            self.context.signals.onChanged.dispatch();
         } else {
             EDIT_BTN.removeAttr('disabled');
             DELETE_BTN.removeAttr('disabled');
@@ -222,7 +234,8 @@ export function EditComponentModal(context) {
     // query edited
     QUERY_AREA.on('change keyup', function(e) {
         if (original_query !== QUERY_AREA.val()) {
-            self.changeSaveStatus(true);            
+            self.changeSaveStatus(true);
+            self.context.signals.onChanged.dispatch();
         } else {
             self.changeSaveStatus(false);
         }
@@ -233,6 +246,7 @@ export function EditComponentModal(context) {
         const val = $(this).val();
         if (val !== '') {
             NEW_QUERY_SAVE_BTN.removeAttr('disabled');
+            self.context.signals.onChanged.dispatch();
         } else {
             NEW_QUERY_SAVE_BTN.attr('disabled', true);
         }
@@ -252,6 +266,7 @@ export function EditComponentModal(context) {
         self.state.component_type = $(this).data('type');
         //self.context.signals.onVisualizationSelected.dispatch(this.id);
         self.setVisualizationConfigPanel(false);
+        self.context.signals.onChanged.dispatch();
     });
 
 
@@ -265,6 +280,7 @@ export function EditComponentModal(context) {
         self.icons_modal.show(self.state.data_config.icon, (icon) => {
             ISL_ICON_PREVIEW_AREA.removeClass();
             ISL_ICON_PREVIEW_AREA.addClass(icon);
+            self.context.signals.onChanged.dispatch();
         });
     });
 
@@ -275,7 +291,9 @@ export function EditComponentModal(context) {
     $( "#vis-ts-no, #vis-ts-yes" ).sortable({
         connectWith: ".connectedSortable",
     }).disableSelection();
-
+    $( "#vis-tc-no, #vis-tc-yes" ).sortable({
+        connectWith: ".connectedSortable",
+    }).disableSelection();
 }
 
 EditComponentModal.prototype = {
@@ -286,6 +304,10 @@ EditComponentModal.prototype = {
                 TS_SORTABLE_NO.empty();
                 TS_SORTABLE_YES.empty();
                 break;
+            case VISUALIZATION_TYPE.TC:
+                TC_SORTABLE_NO.empty();
+                TC_SORTABLE_YES.empty();
+                break;                
             case VISUALIZATION_TYPE.G1N:
                 G1N_X_AXIS.empty();
                 G1N_SERIES.empty();
@@ -346,6 +368,43 @@ EditComponentModal.prototype = {
                         fields.forEach(field => {
                             const item = createSortableListItem(field);
                             TS_SORTABLE_YES.append(item);
+                        })
+                    }
+                }
+                break;
+            }
+            case VISUALIZATION_TYPE.TC:
+            {
+                TC_SORTABLE_NO.empty();
+                TC_SORTABLE_YES.empty();
+                const fields = SELECTED_FIELDS.val();
+                if (restore && SELECTED_FIELDS.children().length > 0) {
+                    this.state.data_config.fields.forEach(field => {
+                        const item = createSortableListItem(field);
+                        TC_SORTABLE_YES.append(item);
+                    })
+                    fields.forEach(field => {
+                        if (this.state.data_config.fields.includes(field)) return false;
+                        const item = createSortableListItem(field);
+                        TC_SORTABLE_NO.append(item);
+                    })
+                } else {
+                    // no config |=> no field selected = all fields selected => show all fields
+                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config &&  this.state.query.query_selected_fields) {
+                        SELECTED_FIELDS.empty();
+                        this.state.data_config.fields.forEach(field => {
+                            const item = createSortableListItem(field);
+                            TC_SORTABLE_YES.append(item);                            
+                            SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
+                        })
+                        SELECTED_FIELDS.multiselect('rebuild');
+                        SELECTED_FIELDS.multiselect('selectAll', true);
+                    } else {
+                        // all new => everything is visible
+                        this.state.data_config = {};
+                        fields.forEach(field => {
+                            const item = createSortableListItem(field);
+                            TC_SORTABLE_YES.append(item);
                         })
                     }
                 }
@@ -490,9 +549,9 @@ EditComponentModal.prototype = {
                 }
                 break;
             }
-            case VISUALIZATION_TYPE.ISL:
+            case VISUALIZATION_TYPE.TEC:
             {
-                console.log("CALENDAR [setVisualizationConfigPanel]");
+                console.log("TEMPLATE CALENDAR [setVisualizationConfigPanel]");
                 break;
             }                 
         }        
@@ -532,6 +591,14 @@ EditComponentModal.prototype = {
                 });
                 break;
             }
+            case VISUALIZATION_TYPE.TC:
+            {
+                self.state.data_config = { fields: [] };
+                $.each($( "#vis-tc-yes" ).children(), function(key, value) {
+                    self.state.data_config.fields.push(value.textContent);
+                });
+                break;
+            }            
             case VISUALIZATION_TYPE.G1N:
             {
                 self.state.data_config.fields[0] = G1N_X_AXIS.val();
