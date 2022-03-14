@@ -273,6 +273,14 @@ class Select extends BasicBlock {
 
 }
 
+class Option extends BasicBlock {
+	constructor(key, text, settings) {
+		super(document.createElement('option'), settings);
+		this.dom.value = key;
+		this.dom.innerHTML = text;
+	}
+}
+
 
 class Button extends BasicBlock {
 	constructor(value, settings) {
@@ -543,7 +551,7 @@ export {
 	Link, Text, 
 	Span, Div, 
 	Input, InputText, InputNumber, InputColor,
-	Select, 
+	Select, Option,
 	Button, 
 	Table, TableCol, TableTr, TableTd, TableTh, TableThead, TableTbody,
 	Hx, Br, Hr, I,

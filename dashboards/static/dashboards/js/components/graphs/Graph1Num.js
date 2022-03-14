@@ -49,7 +49,9 @@ export class Graph1Num extends BaseComponentContent {
             "type": "one_numerical", // Data Type
             "id": [id],       // Identifier of the field containing the name (x axis)
             "value": [value]  // Identifier of the field containing the numerical value (y axis)
-        };        
+        };
+        
+        //_data.query.query_selected_fields = [id];
 
         return {header, data};
 

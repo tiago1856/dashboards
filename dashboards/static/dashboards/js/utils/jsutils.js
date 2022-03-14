@@ -117,3 +117,19 @@ export function getAllNumbers(str) {
  * @returns Array of all elements in arr1 not in arr2.
  */
  export const exclude = (arr1, arr2, key) => arr1.filter(o1 => arr2.map(o2 => o2[key]).indexOf(o1[key]) === -1);
+
+
+/**
+ * Exists in arr1 but not in arr2.
+ * @param {array of any} arr1 
+ * @param {array of any} arr2 
+ * @returns 
+ */
+ export const disjoint = (arr1, arr2) => {
+    return arr1.filter(
+        function(i) {
+            return this.indexOf(i) < 0;
+        },
+        arr2
+    );
+}

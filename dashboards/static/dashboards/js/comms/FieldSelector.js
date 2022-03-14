@@ -22,9 +22,12 @@ export class FieldSelector extends Select {
       
         this.dom.addEventListener('change', function(e) {
             if (self.selection_callback) self.selection_callback(e.target.value);
-            self.removeClass('bg-danger');
-            self.removeClass('text-white');
+            //self.removeClass('bg-danger');
+            //self.removeClass('text-white');
+            self.checkStatus();
         });
+
+        this.checkStatus();
 
     }
 

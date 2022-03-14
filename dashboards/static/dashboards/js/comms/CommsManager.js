@@ -1,6 +1,7 @@
 
 import { CommLink } from "./CommLink.js";
 import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
+import { disjoint } from '../utils/jsutils.js';
 
 
 const COMMS_AREA = $("#comms-container");
@@ -9,26 +10,50 @@ const REMOVE_ALL_LINKS_BTN = $('#remove-all-links-btn');
 
 export function CommsManager (context) {
     this.context = context;
-    this.data = {};
+    this.links = {};
+    this.ios = {};
     const self = this;
 
+    this.addLink();
+    this.addLink();
+    this.addLink();
+
     ADD_LINK_BTN.on('click', function() {
-        new CommLink(context).attachTo(COMMS_AREA.get(0));
+        self.addLink();
     })
     REMOVE_ALL_LINKS_BTN.on('click', function() {
+        self.links = [];
         COMMS_AREA.empty();
     })
+    /*
+    context.signals.onComponentChanged.add((name) => {
+        console.log("component changed > ", name);
+    });
+    */
 
 }
 
 CommsManager.prototype = {
+
+    addLink: function() {
+        const id = uuidv4();
+        this.links[id] = new CommLink(this.context, id, () => {
+            this.removeLink(id);
+        }).attachTo(COMMS_AREA.get(0));
+        this.links[id].setFields(this.ios);
+    },
+
+    removeLink: function(id) {
+        delete this.links[id]
+    },
+
     /**
      * Updates the comms accordindly with the updated component.
      * @param {MasterComponent} component Updated component.
      */
     updateComponent: function(component) {
         console.log("UPDATE COMMS > ", component);
-        this.setIO(component.data);
+        this.setIO(component.data, true);
     },
 
 
@@ -37,6 +62,9 @@ CommsManager.prototype = {
      */
     reset: function() {
         console.log("COMMS RESET");
+        this.ios = {};
+        this.links = [];
+        COMMS_AREA.empty();
     },
 
     /**
@@ -60,57 +88,107 @@ CommsManager.prototype = {
         console.log("COMMS RESTORE LINKS");
     },
 
-    setIO(component_data) {
+    setIO(component_data, update=false) {
         console.log(">>>>", component_data);
-        const output = [];
-        const input = [];
+        let outputs = [];
+        let inputs = [];
         switch(component_data.visualization.visualization_type) {
             case VISUALIZATION_TYPE.TS:
             {
                 console.log("restore component I/O > SIMPLE TABLE");
-                output = component_data.query.query_selected_fields;
-                console.log("IN > ", []);
-                console.log("OUT > ", output);
+                outputs = component_data.query.query_selected_fields;
+                console.log("IN > ", inputs);
+                console.log("OUT > ", outputs);
                 break;
             }
             case VISUALIZATION_TYPE.TC:
             {
                 console.log("restore component I/O > COMPLEX TABLE");
-                output = component_data.query.query_selected_fields;
-                console.log("IN > ", []);
-                console.log("OUT > ", output);
+                outputs = component_data.query.query_selected_fields;
+                console.log("IN > ", inputs);
+                console.log("OUT > ", outputs);
                 break;
             }                
             case VISUALIZATION_TYPE.G1N:
             {
                 console.log("restore component I/O > GRAPH 1N");
-                console.log("IN > ", []);
-                console.log("OUT > ", []);
+                console.log("IN > ", inputs);
                 break;
             }
             case VISUALIZATION_TYPE.GDN:            
             {
                 console.log("restore component I/O > GRAPH DN");
-                console.log("IN > ", []);
-                console.log("OUT > ", []);
+                console.log("IN > ", inputs);
                 break;
             }
             case VISUALIZATION_TYPE.ISL:
             {
                 console.log("restore component I/O > INFO SIMPLE LEFT");
-                console.log("IN > ", []);
-                console.log("OUT > ", []);
+                console.log("IN > ", inputs);
                 break;
             }
             case VISUALIZATION_TYPE.TEC:
             {
                 console.log("restore component I/O > TEMPLATE CALENDAR");
-                console.log("IN > ", []);
-                console.log("OUT > ", []);
+                console.log("OUT > ", outputs);
                 break;
             }                
         }
-    }
 
+        let add_in = inputs;
+        let add_out = outputs;
+        let remove_in = [];
+        let remove_out = [];
+        if (update) {            
+            if (this.ios.hasOwnProperty(component_data.name)) {
+                const old_in = this.ios[component_data.name].inputs;
+                const old_out = this.ios[component_data.name].outputs;
 
+                remove_out = disjoint(old_out, outputs);
+                remove_in = disjoint(old_in, inputs);
+                add_out = disjoint(outputs, old_out);
+                add_in = disjoint(inputs, old_in);
+            }
+        }
+
+        this.ios[component_data.name] = {inputs: inputs, outputs: outputs};
+
+        add_out.forEach(output => {
+            this.context.signals.onXCommOutput.dispatch(component_data.name, output, true);
+        });
+        remove_out.forEach(output => {
+            this.context.signals.onXCommOutput.dispatch(component_data.name, output, false);
+        });        
+        add_in.forEach(input => {
+            this.context.signals.onXCommInput.dispatch(component_data.name, input, true);
+        }); 
+        remove_in.forEach(input => {
+            this.context.signals.onXCommInput.dispatch(component_data.name, input, false);
+        });        
+    },
 }
+
+
+
+/*
+
+         # $TARGET$ -> TARGET
+         targets = re.findall(r"\$\w{0,50}?\$", query) 
+         for i in targets:
+            rep = i.replace('$','')
+            query = query.replace(i, rep)
+
+onst query = query_description.dom.value;            
+            var target_regex = /\$(.*?)\$/g;
+            var conditional_regex = /\#(.*?)\#/g;
+            const target = [...query.matchAll(target_regex)];
+            const conditionals = [...query.matchAll(conditional_regex)];
+            target.forEach((item, index) => {
+                const data = {query_target_field: item[0], target_field: ''};
+                self.rows_target.push(new DBQueryTargetActionRow(context, self.onAddTargetRow, self.onRemoveTargetRow, data).attachTo(self.box_target));
+            })
+            conditionals.forEach((item, index) => {
+                const data = {query_origin_field: item[0], origin_field: ''};
+                self.rows_origin.push(new DBQueryOriginActionRow(context, self.onAddOriginRow, self.onRemoveOriginRow, data).attachTo(self.box_origin));
+            })
+            */

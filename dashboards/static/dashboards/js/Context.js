@@ -21,7 +21,12 @@ export function Context() {
         onLayoutEditor: new Signal(),
         onLayoutsChanged: new Signal(),
         
-        //onVisualizationSelected: new Signal(),  // visualization type selected
+
+        //onComponentChanged: new Signal(),
+
+        // comms
+        onXCommOutput: new Signal(),
+        onXCommInput: new Signal(),
 
     }
 

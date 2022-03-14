@@ -14,6 +14,7 @@ from dashboards.serializers import LayoutSerializer
 from dashboards.serializers import ConfigSerializer
 from dashboards.models import Query, Component, Dashboard, Layout, Config
 
+from django.db import OperationalError, ProgrammingError
 
 # required for the raw queries
 def dictfetchall(cursor):
@@ -163,7 +164,7 @@ def check_name_component(request):
          {'status': 200, 'result': 'OK'}
    """
    if request.method == 'POST':
-      try:    
+      try:
          if (request.data.get('id')):
             components = Component.objects.filter(~Q(id=request.data.get('id')) & Q(name = request.data.get('name')))
          else:

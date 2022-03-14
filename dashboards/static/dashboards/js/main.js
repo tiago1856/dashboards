@@ -347,7 +347,7 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
         }
     })
 } else {
-    comms.restore(resett);
+    comms.reset();
     dashboard = new Dashboard(context, DEFAULT_LAYOUT);
     new_dash = true;
     changeSaveStatus(true);

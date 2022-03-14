@@ -168,6 +168,7 @@ export function EditComponentModal(context) {
     APPLY_BTN.on('click', function() {
         self.save();
         self.context.signals.onChanged.dispatch();
+        //self.context.signals.onComponentChanged.dispatch(self.state.name);        
     });
 
 
@@ -421,7 +422,7 @@ EditComponentModal.prototype = {
                     G1N_SERIES.append(option.clone());
                 })                 
                 if (restore) {
-                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config) {
+                    if (SELECTED_FIELDS.children().length == 0 && 'fields' in this.state.data_config) {                        
                         //SELECTED_FIELDS.empty();
                         this.state.data_config.fields.forEach(field => {
                             SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
@@ -431,7 +432,7 @@ EditComponentModal.prototype = {
                         })
                         SELECTED_FIELDS.multiselect('rebuild');
                         SELECTED_FIELDS.multiselect('selectAll', true);
-                    } else {
+                    } else {                        
                         fields.forEach(field => {
                             const option = createFieldItem(field, false);
                             G1N_X_AXIS.append(option);
@@ -441,14 +442,14 @@ EditComponentModal.prototype = {
                     G1N_X_AXIS.val(this.state.data_config.fields[0]);
                     G1N_SERIES.val(this.state.data_config.fields[1]);
                 } else {
-                    if ('fields' in this.state.data_config && this.state.data_config.fields[0]) {
+                    if ('fields' in this.state.data_config && this.state.data_config.fields[0]) {                        
                         G1N_X_AXIS.val(this.state.data_config.fields[0]);
                         G1N_SERIES.val(this.state.data_config.fields[1]);
                         if (!G1N_X_AXIS.val()) {
                             G1N_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
                             G1N_SERIES.val($("#cdc-graph-1-num-series option:eq(1)").val());
                         }
-                    } else {
+                    } else {                        
                         G1N_X_AXIS.val($("#cdc-graph-1-num-x-axis option:first").val());
                         G1N_SERIES.val($("#cdc-graph-1-num-series option:eq(1)").val());
                     } 
@@ -659,6 +660,8 @@ EditComponentModal.prototype = {
         
         NUMBER_LINES.val(DEFAULT_MAX_LINE);
         SAVE_BTN.attr('disabled',true);
+
+        GLOBAL_NAME_ALERT.hide();
 
         this.fetchQueries(() => {
             /*
@@ -880,7 +883,7 @@ EditComponentModal.prototype = {
             },
             (error) => {
 				$("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[EditComponentModal::execQuery]");
+                this.context.signals.onError.dispatch("Query inválida!","[EditComponentModal::execQuery]");
             }
         )
     },
