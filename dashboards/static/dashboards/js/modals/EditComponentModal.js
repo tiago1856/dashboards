@@ -92,6 +92,8 @@ export function EditComponentModal(context) {
     this.state = null;
     this.component = null;
 
+    this.old_name = null;
+
     this.icons_modal = new IconsModal(context);
     
     SELECTED_FIELDS.multiselect({enableFiltering: true,
@@ -636,6 +638,9 @@ EditComponentModal.prototype = {
 
         // CLOSE MODAL
         if (close) {
+            if (this.old_name && this.old_name !== this.state.name) {
+                this.context.signals.onComponentNameChanged.dispatch(this.old_name, this.state.name);
+            }
             EDIT_COMPONENT_MODAL.modal('hide');
             // UPDATE COMPONENT
             if (this.onReady) this.onReady();
@@ -650,6 +655,7 @@ EditComponentModal.prototype = {
      * @param {function} onReady Called to apply the changes.
      */
     show: function(component, onReady=null) {
+        this.old_name = null;
         this.onReady = onReady;
         this.component = component;
         DATA_SOURCE_TABLE_ALERT.show();
@@ -679,6 +685,7 @@ EditComponentModal.prototype = {
                 console.log(">>>RESTORE<<<");
                 // global
                 GLOBAL_NAME.val(this.state.name);
+                this.old_name = this.state.name;
                 GLOBAL_DESCRIPTION.val(this.state.description);
                 GLOBAL_TITLE.val(this.state.title);
 
@@ -723,7 +730,7 @@ EditComponentModal.prototype = {
             
             // this.setConnections();
             EDIT_COMPONENT_MODAL.modal('show')
-        });
+        });        
         
     },
 

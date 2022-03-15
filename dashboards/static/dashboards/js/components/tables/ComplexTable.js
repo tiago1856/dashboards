@@ -31,6 +31,7 @@ export class ComplexTable extends BaseComponentContent {
             });
             dt.draw(false);
 
+            context.signals.onComponentUpdated.dispatch(data);
         });
 
         $(opt_btn).on('click',function() {

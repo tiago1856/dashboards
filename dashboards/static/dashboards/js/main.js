@@ -180,7 +180,7 @@ context.signals.onEditComponent.add((spot, original_type) => {
             component.update();
         }
         // UPDATE COMMS        
-        comms.updateComponent(component);
+        //comms.updateComponent(component);
     });
 });
 
@@ -315,8 +315,9 @@ PIN_DASH_BTN.on('click',function() {
 const date_interval = new DataRangePicker(DATARANGE_BTN_ID, (start, end) => {
     DATE_INTERVAL.html(start + ' - ' + end);
     context.date_start = start;
-    context.date_end = end;  
-    context.signals.onGlobalData.dispatch(start, end);
+    context.date_end = end;
+    console.log(start, end);
+    //context.signals.onGlobalData.dispatch(start, end);
 })
 
 $(function(){

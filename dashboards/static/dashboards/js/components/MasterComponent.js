@@ -31,10 +31,11 @@ export class MasterComponent extends Div {
         this.content = null;  // content of the panel
 
         this.context = context;
-
+        /*
         context.signals.onGlobalData.add((start, end) => {
             console.log("[" + id + "] new date > ", start, end);
         });
+        */
       
     }
 

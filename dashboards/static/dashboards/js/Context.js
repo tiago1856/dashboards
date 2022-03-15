@@ -20,6 +20,8 @@ export function Context() {
         onLoadComponent: new Signal(),
         onLayoutEditor: new Signal(),
         onLayoutsChanged: new Signal(),
+        onComponentNameChanged: new Signal(),
+        onComponentUpdated: new Signal(),
         
 
         //onComponentChanged: new Signal(),

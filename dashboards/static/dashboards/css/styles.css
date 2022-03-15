@@ -568,3 +568,20 @@ img.img-zoom {
 	-ms-flex-pack: center;
 	justify-content: center
 }
+
+
+
+/* *********************** */
+/*  GLOBAL DATE    */
+/* *********************** */
+
+li.date-format-selected {
+    background-color: blue;
+    color: white !important;
+    font-weight: bold;
+}
+
+li.date-format-selected:hover {
+    background-color: blue !important;
+    color: red !important;    
+}

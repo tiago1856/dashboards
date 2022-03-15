@@ -4,10 +4,18 @@
 
         <div class="col">
             <div class="btn-group float-left">
-                <button id="daterange-btn" class="btn btn-outline-secondary daterange mr-1" type="button" data-toggle="tooltip" title="Intervalo temporal">
+                <button id="daterange-btn" class="btn btn-outline-secondary daterange" type="button" data-toggle="tooltip" title="Intervalo temporal">
                     <i class="fa fa-calendar-alt"></i>
-                    <span id="date-interval"></span>
+                    <span id="date-interval"></span>                    
                 </button>
+                <button type="button" class="btn btn-outline-secondary dropdown-toggle mr-1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <ul class="dropdown-menu" id="global-date-format">
+                        <li class="dropdown-item global-date-format date-format-selected" data-dateformat="YYYY-MM-DD">YYYY-MM-DD</li>
+                        <li class="dropdown-item global-date-format" data-dateformat="YYYY/MM/DD">YYYY/MM/DD</li>
+                        <li class="dropdown-item global-date-format" data-dateformat="DD-MM-YYYY">DD-MM-YYYY</li>
+                        <li class="dropdown-item global-date-format" data-dateformat="DD/MM/YYYY">DD/MM/YYYY</li>
+                    </ul>
+
                 <button id="location-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Selecionar localização">
                     <i class="fa fa-map-marked-alt"></i> 
                 </button>

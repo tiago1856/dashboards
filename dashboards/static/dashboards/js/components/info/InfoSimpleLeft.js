@@ -43,6 +43,7 @@ export class InfoSimpleLeft extends BaseComponentContent {
                 const _value = comp_value + (data.data_config.text_2!==''?data.data_config.text_2:"");
                 value.setTextContent(_value);
             }
+            context.signals.onComponentUpdated.dispatch(data);
         });
 
         $(opt_btn).on('click',function() {

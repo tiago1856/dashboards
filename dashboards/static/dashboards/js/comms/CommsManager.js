@@ -1,3 +1,7 @@
+/**
+ * TODO: IF COMOPONENT CHANGES NAME => CHANGE COMMS DATA
+ */
+
 
 import { CommLink } from "./CommLink.js";
 import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
@@ -25,11 +29,19 @@ export function CommsManager (context) {
         self.links = [];
         COMMS_AREA.empty();
     })
-    /*
-    context.signals.onComponentChanged.add((name) => {
-        console.log("component changed > ", name);
+
+
+    context.signals.onComponentNameChanged.add((old_name, new_name) => {
+        if (this.ios.hasOwnProperty(old_name)) {   
+            this.ios[new_name] = JSON.parse(JSON.stringify(this.ios[old_name]));
+            delete this.ios[old_name];
+        }
     });
-    */
+
+    context.signals.onComponentUpdated.add(component_data => {
+        console.warn(">>>>> ", component_data);
+        this.updateComponent(component_data);
+    });
 
 }
 
@@ -40,6 +52,7 @@ CommsManager.prototype = {
         this.links[id] = new CommLink(this.context, id, () => {
             this.removeLink(id);
         }).attachTo(COMMS_AREA.get(0));
+        // recreate the options
         this.links[id].setFields(this.ios);
     },
 
@@ -49,11 +62,11 @@ CommsManager.prototype = {
 
     /**
      * Updates the comms accordindly with the updated component.
-     * @param {MasterComponent} component Updated component.
+     * @param {object} component Updated component's data.
      */
-    updateComponent: function(component) {
-        console.log("UPDATE COMMS > ", component);
-        this.setIO(component.data, true);
+    updateComponent: function(component_data) {
+        console.log("UPDATE COMMS > ", component_data.name);
+        this.setIO(component_data, true);
     },
 
 
@@ -153,6 +166,7 @@ CommsManager.prototype = {
 
         this.ios[component_data.name] = {inputs: inputs, outputs: outputs};
 
+        // communicate with all links
         add_out.forEach(output => {
             this.context.signals.onXCommOutput.dispatch(component_data.name, output, true);
         });

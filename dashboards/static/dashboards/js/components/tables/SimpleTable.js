@@ -14,6 +14,8 @@ export class SimpleTable extends BaseComponentContent {
             new BasicTable(component_data, 20, data.data_config.fields, (row) => {
                 console.log("selected row > ", row, data.uuid);
             }).attachTo(container);
+
+            context.signals.onComponentUpdated.dispatch(data);
         });
 
         $(opt_btn).on('click',function() {

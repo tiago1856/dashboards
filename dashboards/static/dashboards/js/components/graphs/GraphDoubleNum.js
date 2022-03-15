@@ -13,6 +13,7 @@ export class GraphDoubleNum extends BaseComponentContent {
                 id: parent.getId(),
                 data: component_data,
             });
+            context.signals.onComponentUpdated.dispatch(data);
         });
 
         $(opt_btn).on('click',function() {
