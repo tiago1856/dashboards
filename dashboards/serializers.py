@@ -38,7 +38,7 @@ class DashboardSerializer3(serializers.ModelSerializer):
     layout_name = serializers.ReadOnlyField(source='layout.name', read_only=True)
     class Meta:
         model = Dashboard
-        fields = ['id', 'name', 'description', 'layout', 'layout_name', 'title','data']
+        fields = ['id', 'name', 'description', 'layout', 'layout_name', 'title', 'data', 'date_format']
 
 
 class ConfigSerializer(serializers.ModelSerializer):

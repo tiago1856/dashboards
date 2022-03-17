@@ -64,8 +64,17 @@ export class CommLink extends SimpleCard {
         });
 
         context.signals.onXCommInput.add((name, input, add=true) => {
-            console.log("<< IN >> [" + name + "]", input);
-            destination.checkStatus();
+            //console.log("<< IN >> [" + name + "]", input);
+
+            const _existing_option = $(this.destination.dom).find(`[data-component='${name}'][value='${input}']`);
+            if (add) {
+                if (_existing_option.length > 0) return;
+                CommLink.createItem(this.destination, name, input);
+            } else {
+                _existing_option.remove();
+            }
+
+            this.destination.checkStatus();
         });
 
         context.signals.onComponentNameChanged.add((old_name, new_name) => {

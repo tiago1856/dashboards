@@ -60,6 +60,7 @@ class Dashboard(models.Model):
     name = models.CharField(null=False, max_length = 80)
     description = models.CharField(blank=True, null=True, max_length = 128)
     title = models.CharField(blank=True, null=True, max_length = 128)
+    date_format = models.CharField(blank=True, null=True, max_length = 16)  # global date
     date_created = models.DateTimeField(null=False, auto_now_add=True)
     date_updated = models.DateTimeField(null=False, auto_now=True)
     author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="dashboard_author")

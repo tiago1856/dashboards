@@ -1,3 +1,5 @@
+import re
+
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db import connection
@@ -14,7 +16,6 @@ from dashboards.serializers import LayoutSerializer
 from dashboards.serializers import ConfigSerializer
 from dashboards.models import Query, Component, Dashboard, Layout, Config
 
-from django.db import OperationalError, ProgrammingError
 
 # required for the raw queries
 def dictfetchall(cursor):
@@ -59,12 +60,25 @@ def exec_query(request):
    """Executes a query."""
    if request.method == 'POST' or 'query' not in request.data:
          try:
-            #print(request.data.get('query'))
+            query = request.data.get('query')
+
+            # TODO: $,# ARE TEMP - A SQL PARSER SHOULD BE USED
+            # remove $ and # from conditions
+            conditions = re.findall(r"\$\w{0,100}?\$", query) 
+            for i in conditions:
+               rep = i.replace('$','')               
+               query = query.replace(i, rep)
+            conditions = re.findall(r"\#\w{0,100}?\#", query) 
+            #for i in conditions:
+            #   rep = i.replace('#','')               
+            #   query = query.replace(i, rep)
+
             with connection.cursor() as cursor:
-               if 'rows' in request.data:                  
-                  cursor.execute(request.data.get('query') + " limit " + str(request.data.get('rows')))
+               if 'rows' in request.data:
+                  # TODO: LIMIT ONLY APPLIES TO MYSQL, MARIASB, POSTGRESQL, MSSQL
+                  cursor.execute(query + " limit " + str(request.data.get('rows')))
                else:
-                  cursor.execute(request.data.get('query'))
+                  cursor.execute(query)
                results = dictfetchall(cursor)
                #print(results)
                return Response(data=results, status=status.HTTP_200_OK)
@@ -331,6 +345,7 @@ def save_dashboard(request):
          description = request.data.get('description')
          title = request.data.get('title')
          data = request.data.get('data')
+         date_format = request.data.get('date_format')
          user = None
          layout = Layout.objects.get(pk = request.data.get('layout'))
          if request.user.is_authenticated:
@@ -346,6 +361,7 @@ def save_dashboard(request):
             dashboard.data = data
             dashboard.updated_by = user
             dashboard.layout = layout
+            dashboard.date_format = date_format
          else:
             print("NEW")
             dashboard = Dashboard(
@@ -355,7 +371,8 @@ def save_dashboard(request):
                data = data,
                author = user, 
                updated_by = user,
-               layout = layout
+               layout = layout,
+               date_format = date_format
             )
 
          dashboard.save()

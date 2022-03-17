@@ -46,11 +46,15 @@ const DASHBOARD_DELETE_BTN = $('#delete-btn');
 const SWAP_BTN = $('#swap-btn');
 const PIN_DASH_BTN = $('#pin-dash-btn');
 const DASH_EDIT_TAB = $('#dash-edit-tab');
+const COMMS_BTN = $('#comms-btn');
+const EXIT_COMMS_BTN = $('#exit-comms-btn');
+const COMMS_SCREEN = $('#comms-tab-content');
+const LAYOUT_SCREEN = $('#layout-tab-content');
+
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
 const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
-const DATARANGE_BTN_ID = '#daterange-btn';
 
 const DEFAULT_LAYOUT = 2;   // if doesn't exists => fetch first | error
 
@@ -132,9 +136,20 @@ const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
 
 
 /**
- * Communications manager
+ * COMMUNICATIONS MANAGER
  */
  const comms = new CommsManager(context);
+
+/**
+ * GLOBAL DATE INTERVAL PICKER
+ */
+ const date_interval = new DataRangePicker(context, (start, end) => {
+    DATE_INTERVAL.html(start + ' - ' + end);
+    context.date_start = start;
+    context.date_end = end;
+    console.log(start, end);
+    //context.signals.onGlobalData.dispatch(start, end);
+})
 
 
 // -----------------
@@ -202,6 +217,19 @@ context.signals.onLayoutEditor.add((spot) => {
 // TOP ROW ACTIONS
 // ----------------
 
+// ENTER COMMS SCREEN
+COMMS_BTN.on('click', function() {
+    LAYOUT_SCREEN.removeClass('d-block').addClass('d-none');
+    COMMS_SCREEN.removeClass('d-none').addClass('d-block');
+})
+
+// EXITS COMMS SCREEN
+EXIT_COMMS_BTN.on('click', function() {
+    COMMS_SCREEN.removeClass('d-block').addClass('d-none');
+    LAYOUT_SCREEN.removeClass('d-none').addClass('d-block');
+})
+
+
 // ENTERS EDIT MODE
 DASHBOARD_EDIT_BTN.on('click',function() {
     enterEditMode(true);
@@ -209,15 +237,6 @@ DASHBOARD_EDIT_BTN.on('click',function() {
 
 // EXITS EDIT MODE
 EDIT_APPLY_BTN.on('click',function() {
-    /*
-    if (context.changed) {
-        context.signals.onAYS.dispatch(MSG_NO_SAVE, () => {
-            exitEditMode();
-        });
-    } else {
-        exitEditMode();
-    }
-    */
     enterEditMode(false);
 })
 
@@ -229,8 +248,8 @@ DASHBOARD_OPEN_BTN.on('click',function() {
         getDashboard(dash_id, (result) => {
             dashboard = new Dashboard(context, result.layout, result);
             comms.restore(result);
+            date_interval.setFormat(result.date_format);
         });
-        //dashboard = new Dashboard(context, dashboard_id, null);
     });
 })
 
@@ -310,15 +329,6 @@ PIN_DASH_BTN.on('click',function() {
 // INIT
 // -------------
 
-//DASH_EDIT_TAB.hide();
-
-const date_interval = new DataRangePicker(DATARANGE_BTN_ID, (start, end) => {
-    DATE_INTERVAL.html(start + ' - ' + end);
-    context.date_start = start;
-    context.date_end = end;
-    console.log(start, end);
-    //context.signals.onGlobalData.dispatch(start, end);
-})
 
 $(function(){
     // default date: last month
@@ -336,6 +346,7 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
         if (config.config !== null) {
             getDashboard(config.dashboard, (result) => {
                 dashboard = new Dashboard(context, result.layout, result);
+                date_interval.setFormat(result.date_format);
                 comms.restore(result);
                 new_dash = false;
                 changeSaveStatus(false);
@@ -466,9 +477,7 @@ function getDashboard(dash_id, onReady = null) {
     fetchGET(URL_GET_DASHBOARD + dash_id, 
         (result) => {                
             $("body").css("cursor","auto");
-            //console.log(result);
             if (onReady) onReady(result);
-            //dashboard = new Dashboard(context, result.layout, result);
         },
         (error) => {
             $("body").css("cursor","auto");

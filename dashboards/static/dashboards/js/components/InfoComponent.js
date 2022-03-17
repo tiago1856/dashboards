@@ -28,7 +28,7 @@ export class InfoComponent extends MasterComponent {
 
         const open_btn = toolButton('fas fa-folder-open', 'text-danger editable-component info-component-button', 'Abrir component').attachTo(card_tools);
         const save_btn = toolButton('fas fa-save', 'text-danger editable-component info-component-button', 'Guardar component').attachTo(card_tools);
-        const edit_btn = toolButton('fas fa-pencil-alt', 'text-danger editable-component info-component-button', 'Nova/Editar Query').attachTo(card_tools);
+        const edit_btn = toolButton('fas fa-pencil-alt', 'text-danger editable-component info-component-button', 'Novo/Editar Component').attachTo(card_tools);
         const delete_btn = toolButton('fas fa-trash', 'text-danger editable-component info-component-button', 'Apagar component').attachTo(card_tools);
         this.options_btn = toolButton('fas fa-cog', 'non-editable-component info-component-button', 'Configuração').attachTo(card_tools);
       

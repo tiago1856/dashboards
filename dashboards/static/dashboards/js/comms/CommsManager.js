@@ -39,7 +39,6 @@ export function CommsManager (context) {
     });
 
     context.signals.onComponentUpdated.add(component_data => {
-        console.warn(">>>>> ", component_data);
         this.updateComponent(component_data);
     });
 
@@ -110,6 +109,7 @@ CommsManager.prototype = {
             {
                 console.log("restore component I/O > SIMPLE TABLE");
                 outputs = component_data.query.query_selected_fields;
+                inputs = this.extractConditionals(component_data.query.query);
                 console.log("IN > ", inputs);
                 console.log("OUT > ", outputs);
                 break;
@@ -118,6 +118,7 @@ CommsManager.prototype = {
             {
                 console.log("restore component I/O > COMPLEX TABLE");
                 outputs = component_data.query.query_selected_fields;
+                inputs = this.extractConditionals(component_data.query.query);
                 console.log("IN > ", inputs);
                 console.log("OUT > ", outputs);
                 break;
@@ -125,18 +126,21 @@ CommsManager.prototype = {
             case VISUALIZATION_TYPE.G1N:
             {
                 console.log("restore component I/O > GRAPH 1N");
+                inputs = this.extractConditionals(component_data.query.query);
                 console.log("IN > ", inputs);
                 break;
             }
             case VISUALIZATION_TYPE.GDN:            
             {
                 console.log("restore component I/O > GRAPH DN");
+                inputs = this.extractConditionals(component_data.query.query);
                 console.log("IN > ", inputs);
                 break;
             }
             case VISUALIZATION_TYPE.ISL:
             {
                 console.log("restore component I/O > INFO SIMPLE LEFT");
+                inputs = this.extractConditionals(component_data.query.query);
                 console.log("IN > ", inputs);
                 break;
             }
@@ -180,6 +184,14 @@ CommsManager.prototype = {
             this.context.signals.onXCommInput.dispatch(component_data.name, input, false);
         });        
     },
+
+    extractConditionals(query) {
+        const inputs = [];
+        var target_regex = /\$(.*?)\$/g;
+        const target = [...query.matchAll(target_regex)];
+        target.forEach(t => inputs.push(t[1]))        
+        return inputs;        
+    }
 }
 
 

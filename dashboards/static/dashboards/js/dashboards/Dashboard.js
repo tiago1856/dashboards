@@ -12,6 +12,7 @@ import {
 import { getAllNumbers } from '../utils/jsutils.js';
 import { fetchGET, fetchPOST } from "../Fetch.js";
 import { COMPONENT_TYPE } from "../Components/ComponentType.js";
+import { DEFAULT_DATE_FORMAT } from '../constants.js';
 
 
 const DASHBOARD_CONTAINER = $('#layout-container');
@@ -34,6 +35,7 @@ export class Dashboard extends Div {
         this.description = null;
         this.components = {};
         this.id = data?data.id:null;
+        this.date_format = data?data.date_format:DEFAULT_DATE_FORMAT;
         this.layout_id = layout_id;
         this.changed = false;   // something changed and it's not saved
 
@@ -65,6 +67,11 @@ export class Dashboard extends Div {
                 spot++;    
             })
         })
+
+        context.signals.onGlobalDateFormatChanged.add(selected_format => {
+            this.date_format = selected_format;
+        });
+
                
     }
 
@@ -188,6 +195,7 @@ export class Dashboard extends Div {
                 layout: this.layout_id,
                 data: data,
                 id: this.id,
+                date_format: this.date_format,
             }, 
             result => {
                 $("body").css("cursor","auto");
