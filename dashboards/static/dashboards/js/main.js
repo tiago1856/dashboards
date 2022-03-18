@@ -302,9 +302,10 @@ DASHBOARD_NEW_BTN.on('click',function() {
 DASHBOARD_DELETE_BTN.on('click',function() {
     if (!dashboard.id) return;
     context.signals.onAYS.dispatch(MSG_DELETE_DASHBOARD, () => {
-        dashboard.delete(() => {
-            comms.reset();
-            dashboard = new Dashboard(context, 2, null/*, true*/);
+        dashboard.delete(() => {            
+            //comms.reset();
+            //dashboard = new Dashboard(context, 2, null/*, true*/);            
+            window.location.replace(PAGE_URL);
         });
     });
 });

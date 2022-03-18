@@ -43,6 +43,14 @@ export const COMPONENT_TYPE = {
             {id: VISUALIZATION_TYPE.TEC, class:SimpleCalendar},
         ]        
     },
+    CONTROLS: {
+        name: 'CONTROLS',
+        classes: [
+            {id: VISUALIZATION_TYPE.CN, class:null},
+            {id: VISUALIZATION_TYPE.CS, class:null},
+            {id: VISUALIZATION_TYPE.CB, class:null},
+        ]        
+    },    
 }
 
 

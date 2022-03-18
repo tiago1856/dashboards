@@ -74,6 +74,23 @@ const ISL_ICON_PREVIEW_AREA = $("#cdc-info-simple-left-icon-preview");
 const ISL_TEXT_1 = $("#cdc-info-simple-left-text-1");
 const ISL_VALUE = $("#cdc-info-simple-left-value");
 const ISL_TEXT_2 = $("#cdc-info-simple-left-text-2");
+// CONTROL NUMBER
+const CN_NAME = $("#cdc-controls-number-name");
+const CN_DEFAULT= $("#cdc-controls-number-default-value");
+const CN_MIN= $("#cdc-controls-number-min");
+const CN_MAX= $("#cdc-controls-number-max");
+const CN_STEP= $("#cdc-controls-number-step");
+const CN_TYPE= $("#cdc-controls-number-type");
+// CONTROL STRING
+const CS_NAME = $("#cdc-controls-string-name");
+const CS_DEFAULT= $("#cdc-controls-string-default-value");
+const CS_TYPE= $("#cdc-controls-string-type");
+// CONTROL BOOL
+const CB_NAME = $("#cdc-controls-boolean-name");
+const CB_DEFAULT= $("#cdc-controls-boolean-default-value");
+const CB_TRUE= $("#cdc-controls-bool-true");
+const CB_FALSE= $("#cdc-controls-bool-false");
+const CB_TYPE= $("#cdc-controls-bool-type");
 
 // SAVE
 const SAVE_COMPONENT_BTN = $("#scs-save-btn");
@@ -328,12 +345,34 @@ EditComponentModal.prototype = {
             case VISUALIZATION_TYPE.TEC:
                 console.log("CALENDAR [clearVisualizationConfigPanel]");
                 break;
+            case VISUALIZATION_TYPE.CN:
+                console.log("CONTROL NUMBER [clearVisualizationConfigPanel]");
+                CN_NAME.val(uuidv4());
+                CN_DEFAULT.val(0);
+                CN_MIN.val(0);
+                CN_MAX.val(100);
+                CN_STEP.val(1);
+                CN_TYPE.val('box');
+                break;
+            case VISUALIZATION_TYPE.CS:
+                console.log("CONTROL STRING [clearVisualizationConfigPanel]");
+                CS_NAME.val(uuidv4());
+                CS_DEFAULT.val('');
+                CS_TYPE.val('box');
+                break;
+            case VISUALIZATION_TYPE.CB:
+                console.log("CONTROL BOOL [clearVisualizationConfigPanel]");
+                CB_NAME.val(uuidv4());
+                CB_DEFAULT.val('');
+                CB_TRUE.val('V');
+                CB_FALSE.val('F');
+                CB_TYPE.val('radio');
+                break;                                                
         }
-
     },
 
     /**
-     * Displays the respective panel and sets it's initial state or restore one.
+     * Displays the respective panel and sets it's initial state or restores one.
      */
     setVisualizationConfigPanel: function(restore=true) {
         $('.cdc-config-panel').hide();
@@ -556,7 +595,56 @@ EditComponentModal.prototype = {
             {
                 console.log("TEMPLATE CALENDAR [setVisualizationConfigPanel]");
                 break;
-            }                 
+            }
+            case VISUALIZATION_TYPE.CN:
+            {
+                if (restore) {
+                    CN_NAME.val(this.state.data_config.name);
+                    CN_DEFAULT.val(this.state.data_config.default);
+                    CN_MIN.val(this.state.data_config.min);
+                    CN_MAX.val(this.state.data_config.max);
+                    CN_STEP.val(this.state.data_config.step);
+                    CN_TYPE.val(this.state.data_config.type);
+                } else {
+                    CN_NAME.val(uuidv4());
+                    CN_DEFAULT.val(0);
+                    CN_MIN.val(0);
+                    CN_MAX.val(100);
+                    CN_STEP.val(1);
+                    CN_TYPE.val('box');
+                }
+                break;
+            }
+            case VISUALIZATION_TYPE.CS:
+            {
+                if (restore) {
+                    CS_NAME.val(this.state.data_config.name);
+                    CN_DEFAULT.val(this.state.data_config.default);
+                    CS_TYPE.val(this.state.data_config.type);
+                } else {
+                    CS_NAME.val(uuidv4());
+                    CS_DEFAULT.val('');
+                    CS_TYPE.val('box');
+                }
+                break;
+            }
+            case VISUALIZATION_TYPE.CB:
+            {
+                if (restore) {
+                    CB_NAME.val(this.state.data_config.name);
+                    CB_DEFAULT.val(this.state.data_config.default);
+                    CB_TRUE.val(this.state.data_config.true);
+                    CB_FALSE.val(this.state.data_config.false);
+                    CB_TYPE.val(this.state.data_config.type);
+                } else {
+                    CB_NAME.val(uuidv4());
+                    CB_DEFAULT.val('');
+                    CB_TRUE.val('V');
+                    CB_FALSE.val('F');
+                    CB_TYPE.val('radio');                    
+                }
+                break;
+            }
         }        
     },
 
@@ -623,6 +711,32 @@ EditComponentModal.prototype = {
                 self.state.data_config.value = ISL_VALUE.val();
                 break;
             }
+            case VISUALIZATION_TYPE.CN:
+            {
+                self.state.data_config.name = CN_NAME.val();
+                self.state.data_config.default = CN_DEFAULT.val();
+                self.state.data_config.min = CN_MIN.val();
+                self.state.data_config.max = CN_MAX.val();
+                self.state.data_config.step = CN_STEP.val();
+                self.state.data_config.type = CN_TYPE.val();
+                break;
+            }
+            case VISUALIZATION_TYPE.CS:
+            {
+                self.state.data_config.name = CS_NAME.val();
+                self.state.data_config.default = CS_DEFAULT.val();
+                self.state.data_config.type = CS_TYPE.val();                
+                break;
+            }
+            case VISUALIZATION_TYPE.CB:
+            {
+                self.state.data_config.name = CN_NAME.val();
+                self.state.data_config.default = CN_DEFAULT.val();
+                self.state.data_config.min = CB_TRUE.val();
+                self.state.data_config.max = CB_FALSE.val();
+                self.state.data_config.type = CB_TYPE.val();           
+                break;
+            }            
         }
 
 

@@ -22,4 +22,8 @@ export const VISUALIZATION_TYPE = {
     GQ: 'GQ',
 
     TEC: 'TEC',     // template calendar
+
+    CN: 'CN',       // number control
+    CS: 'CS',       // string control
+    CB: 'CB',       // boolean control
 }

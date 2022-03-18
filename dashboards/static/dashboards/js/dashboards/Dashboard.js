@@ -30,13 +30,14 @@ export class Dashboard extends Div {
         DASHBOARD_CONTAINER.empty();
         this.attachTo(DASHBOARD_CONTAINER.get(0));
         const self = this;
+        //this.data = data?JSON.parse(JSON.stringify(data)):{};        
         this.title = null;
-        this.name = null;
-        this.description = null;
-        this.components = {};
+        this.name = data?data.name:null;
+        this.description = data?data.description:null;        
         this.id = data?data.id:null;
-        this.date_format = data?data.date_format:DEFAULT_DATE_FORMAT;
+        this.date_format = data?data.date_format:DEFAULT_DATE_FORMAT;        
         this.layout_id = layout_id;
+        this.components = {};
         this.changed = false;   // something changed and it's not saved
 
 

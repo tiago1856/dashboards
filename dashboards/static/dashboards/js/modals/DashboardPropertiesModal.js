@@ -46,7 +46,7 @@ DashboardPropertiesModal.prototype = {
         DASH_PROPERTIES_ALERT.hide();
         const name = dash.name;
         if (name && name !== '') {
-            DASH_PROPERTIES_NAME.val();
+            DASH_PROPERTIES_NAME.val(name);
         } else {
             DASH_PROPERTIES_NAME.val(uuidv4());
         }

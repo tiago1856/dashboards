@@ -129,7 +129,7 @@
 
 		<div class="card my-0">
 			<div class="card-header clickable collapse-header-display" data-toggle="collapse" href="#data-visualization-templates">
-				Templates & Especiais
+				Templates
 				<span class="float-right">
 					<i class="fa fa-plus"></i>
 				</span>				
@@ -141,16 +141,43 @@
 							<a href="#" class="data-visualization-selection" id="data-visualization-template-calendar" data-type="TEMPLATE" data-vis='TEC'>
 								<img src="{% static 'dashboards/images/display/template_calendar.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
 							</a>
-						</div><!-- /col -->
-						<div class="col-lg-3 col-md-4 col-xs-6">
-							<a href="#" class="data-visualization-selection" id="data-visualization-template-user-control" data-type="TEMPLATE" data-vis='TUC'>
-								<img src="{% static 'dashboards/images/display/user_control.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
-							</a>
-						</div><!-- /col -->						
+						</div><!-- /col -->					
 					</div><!-- /row -->
 			  	</div><!-- /card-body -->
 			</div><!-- /collapse -->
 		</div><!-- /card -->
+
+
+		<div class="card my-0">
+			<div class="card-header clickable collapse-header-display" data-toggle="collapse" href="#data-visualization-controls">
+				Controlos
+				<span class="float-right">
+					<i class="fa fa-plus"></i>
+				</span>				
+			</div><!-- /card-header -->
+			<div id="data-visualization-controls" class="collapse" data-parent="#data-visualization-accordion">
+			  	<div class="card-body">
+					<div class="row">
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-controls-user-control" data-type="CONTROLS" data-vis='CN'>
+								<img src="{% static 'dashboards/images/display/control_number.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->	
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-controls-user-control" data-type="CONTROLS" data-vis='CS'>
+								<img src="{% static 'dashboards/images/display/control_string.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->	
+						<div class="col-lg-3 col-md-4 col-xs-6">
+							<a href="#" class="data-visualization-selection" id="data-visualization-controls-user-control" data-type="CONTROLS" data-vis='CB'>
+								<img src="{% static 'dashboards/images/display/control_bool.png' %}" class="img-fluid img-zoom img-vis" alt="Responsive image">
+							</a>
+						</div><!-- /col -->																		
+					</div><!-- /row -->
+			  	</div><!-- /card-body -->
+			</div><!-- /collapse -->
+		</div><!-- /card -->
+
 
 	</div><!-- /accordion -->
 	
