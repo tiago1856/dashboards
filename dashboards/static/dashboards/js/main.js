@@ -185,10 +185,12 @@ context.signals.onZoomComponent.add((msg, body) => {
 context.signals.onEditComponent.add((spot, original_type) => {
     const component = dashboard.getComponentAt(spot);
     edit_component_modal.show(component, () => {
-        if (component.data.component_type === 'INFO' && original_type !== 'INFO') {
+        if ((component.data.component_type === 'INFO' ||  component.data.component_type === 'CONTROL')
+            && (original_type !== 'INFO' && original_type !== 'CONTROL')) {
             const new_comp = dashboard.changeComponentContainer(spot, true);
             new_comp.update();
-        } else if (component.data.component_type !== 'INFO' && original_type === 'INFO') {
+        } else if ((component.data.component_type !== 'INFO' && component.data.component_type !== 'CONTROL')
+            && (original_type === 'INFO' || original_type === 'CONTROL')) {
             const new_comp = dashboard.changeComponentContainer(spot, false);
             new_comp.update();
         } else {           

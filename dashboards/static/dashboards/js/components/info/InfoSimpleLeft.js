@@ -12,7 +12,7 @@ export class InfoSimpleLeft extends BaseComponentContent {
         super(context, data, parent);
 
         const div = new Div().attachTo(parent);
-        div.addClass("info-box");
+        div.addClass("info-box info-component-content");
 
         //div.setStyle('height','100%');
         const span = new Span().attachTo(div);

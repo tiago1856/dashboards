@@ -59,7 +59,7 @@ export class Dashboard extends Div {
                 const div = new Div().attachTo(display);
                 div.addClass("span-col-" + dims[0] + (dims[1]>1?(" span-row-" + dims[1]):""));
                 div.setStyle('width','100%');
-                if (data && data.data[spot].component_type === 'INFO') {
+                if (data && (data.data[spot].component_type === 'INFO' || data.data[spot].component_type === 'CONTROL')) {
                     this.components[spot] = new InfoComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
                 } else {
                     this.components[spot] = new Component(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
@@ -149,7 +149,8 @@ export class Dashboard extends Div {
                 const data = JSON.parse(JSON.stringify(result.data));
                 data.id = result.id;
                 let comp = null;
-                if (data.component_type === COMPONENT_TYPE.INFO.name) {
+                if (data.component_type === COMPONENT_TYPE.INFO.name || 
+                    data.component_type === COMPONENT_TYPE.CONTROL.name) {
                     comp = new InfoComponent(this.context, spot, null, 'light', data);
                 } else {
                     comp = new Component(this.context, spot, null, 'light', data);

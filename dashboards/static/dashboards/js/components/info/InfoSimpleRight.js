@@ -6,7 +6,7 @@ export class InfoSimpleRight extends Div {
   constructor(context, data, parent, opt_btn) {
       super(context, data, parent);
 
-      this.addClass("small-box bg-danger");
+      this.addClass("small-box bg-danger  info-component-content");
       this.attachTo(parent);
       this.setStyle('height','100%');
       const inner = new Div().attachTo(this);

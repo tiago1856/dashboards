@@ -66,6 +66,17 @@ input:focus.valid-input  {
 /*  INFO EDITABLE COMPONENTS    */
 /* **************************** */
 
+.info-component-content {
+    /*
+    border: #f7f7f7 solid 3px;
+    */
+    /* taken from bootstrap.css */
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    background-clip: border-box;
+}
+
+
 .info-component-container:hover .info-component-container-buttons   {
    display: inline-block;
 }

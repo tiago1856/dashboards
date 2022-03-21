@@ -352,13 +352,13 @@ EditComponentModal.prototype = {
                 CN_MIN.val(0);
                 CN_MAX.val(100);
                 CN_STEP.val(1);
-                CN_TYPE.val('box');
+                //CN_TYPE.val('box');
                 break;
             case VISUALIZATION_TYPE.CS:
                 console.log("CONTROL STRING [clearVisualizationConfigPanel]");
                 CS_NAME.val(uuidv4());
                 CS_DEFAULT.val('');
-                CS_TYPE.val('box');
+                //CS_TYPE.val('box');
                 break;
             case VISUALIZATION_TYPE.CB:
                 console.log("CONTROL BOOL [clearVisualizationConfigPanel]");
@@ -366,7 +366,7 @@ EditComponentModal.prototype = {
                 CB_DEFAULT.val('');
                 CB_TRUE.val('V');
                 CB_FALSE.val('F');
-                CB_TYPE.val('radio');
+                //CB_TYPE.val('switch');
                 break;                                                
         }
     },
@@ -611,7 +611,7 @@ EditComponentModal.prototype = {
                     CN_MIN.val(0);
                     CN_MAX.val(100);
                     CN_STEP.val(1);
-                    CN_TYPE.val('box');
+                    //CN_TYPE.val('box');
                 }
                 break;
             }
@@ -624,7 +624,7 @@ EditComponentModal.prototype = {
                 } else {
                     CS_NAME.val(uuidv4());
                     CS_DEFAULT.val('');
-                    CS_TYPE.val('box');
+                    //CS_TYPE.val('box');
                 }
                 break;
             }
@@ -638,10 +638,10 @@ EditComponentModal.prototype = {
                     CB_TYPE.val(this.state.data_config.type);
                 } else {
                     CB_NAME.val(uuidv4());
-                    CB_DEFAULT.val('');
+                    CB_DEFAULT.val('V');
                     CB_TRUE.val('V');
                     CB_FALSE.val('F');
-                    CB_TYPE.val('radio');                    
+                    //CB_TYPE.val('radio');                    
                 }
                 break;
             }
@@ -730,10 +730,10 @@ EditComponentModal.prototype = {
             }
             case VISUALIZATION_TYPE.CB:
             {
-                self.state.data_config.name = CN_NAME.val();
-                self.state.data_config.default = CN_DEFAULT.val();
-                self.state.data_config.min = CB_TRUE.val();
-                self.state.data_config.max = CB_FALSE.val();
+                self.state.data_config.name = CB_NAME.val();
+                self.state.data_config.default = CB_DEFAULT.val();
+                self.state.data_config.true = CB_TRUE.val();
+                self.state.data_config.false = CB_FALSE.val();
                 self.state.data_config.type = CB_TYPE.val();           
                 break;
             }            

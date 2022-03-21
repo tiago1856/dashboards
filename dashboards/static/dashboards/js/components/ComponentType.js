@@ -8,6 +8,9 @@ import { InfoSimpleRight } from './info/InfoSimpleRight.js'
 import { InfoSimpleLeft } from './info/InfoSimpleLeft.js'
 import { InfoComplexPercentage } from './info/InfoComplexPercentage.js'
 import { SimpleCalendar } from './template/SimpleCalendar.js'
+import { ControlNumber } from './controls/ControlNumber.js'
+import { ControlString } from './controls/ControlString.js'
+import { ControlBool } from './controls/ControlBool.js'
 
 
 
@@ -43,12 +46,12 @@ export const COMPONENT_TYPE = {
             {id: VISUALIZATION_TYPE.TEC, class:SimpleCalendar},
         ]        
     },
-    CONTROLS: {
-        name: 'CONTROLS',
+    CONTROL: {
+        name: 'CONTROL',
         classes: [
-            {id: VISUALIZATION_TYPE.CN, class:null},
-            {id: VISUALIZATION_TYPE.CS, class:null},
-            {id: VISUALIZATION_TYPE.CB, class:null},
+            {id: VISUALIZATION_TYPE.CN, class:ControlNumber},
+            {id: VISUALIZATION_TYPE.CS, class:ControlString},
+            {id: VISUALIZATION_TYPE.CB, class:ControlBool},
         ]        
     },    
 }
