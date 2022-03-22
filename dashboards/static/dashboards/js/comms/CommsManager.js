@@ -149,7 +149,38 @@ CommsManager.prototype = {
                 console.log("restore component I/O > TEMPLATE CALENDAR");
                 console.log("OUT > ", outputs);
                 break;
-            }                
+            }
+            case VISUALIZATION_TYPE.CN:
+            {
+                outputs = [component_data.data_config.name]
+                console.log("restore component I/O > CONTROL NUMBER");
+                console.log("OUT > ", outputs);                
+                break;
+            }
+            case VISUALIZATION_TYPE.CS:
+            {
+                outputs = [component_data.data_config.name]
+                console.log("restore component I/O > CONTROL STRING");
+                console.log("OUT > ", outputs);
+
+                break;
+            }
+            case VISUALIZATION_TYPE.CB:
+            {
+                outputs = [component_data.data_config.name]
+                console.log("restore component I/O > CONTROL BOOL");
+                console.log("OUT > ", outputs);
+                break;
+            }
+            /*
+            case VISUALIZATION_TYPE.CNI:
+            {
+                outputs = [component_data.data_config.name]
+                console.log("restore component I/O > CONTROL NUMBER INTERVAL");
+                console.log("OUT > ", outputs);
+                break;
+            }
+            */
         }
 
         let add_in = inputs;

@@ -367,7 +367,9 @@ EditComponentModal.prototype = {
                 CB_TRUE.val('V');
                 CB_FALSE.val('F');
                 //CB_TYPE.val('switch');
-                break;                                                
+                break;
+            case VISUALIZATION_TYPE.CNI:
+                break;
         }
     },
 
@@ -645,7 +647,11 @@ EditComponentModal.prototype = {
                 }
                 break;
             }
-        }        
+            case VISUALIZATION_TYPE.CNI:
+            {
+                break;
+            }
+        }
     },
 
 
@@ -736,7 +742,11 @@ EditComponentModal.prototype = {
                 self.state.data_config.false = CB_FALSE.val();
                 self.state.data_config.type = CB_TYPE.val();           
                 break;
-            }            
+            }
+            case VISUALIZATION_TYPE.CNI:
+            {
+                break;
+            }
         }
 
 
@@ -749,6 +759,9 @@ EditComponentModal.prototype = {
         }
 
         console.warn("SAVE > ", this.state);
+        // ------------------ TO PREVENT CANCEL BUG -------------
+        this.component.data = JSON.parse(JSON.stringify(this.state));
+        // ------------------
 
         // CLOSE MODAL
         if (close) {
@@ -789,7 +802,11 @@ EditComponentModal.prototype = {
             QUERY_SELECTION.trigger('change');
             */
             console.warn("RESTORE > ", component.data);
-            this.state = component.data;
+            // ------------------ TO PREVENT CANCEL BUG -------------
+            // all changes are done in a copy of the components data and not directly
+            // any change is only applied if Apply click
+            this.state = JSON.parse(JSON.stringify(component.data));
+            // ------------------
             // open first tab
             $('.process-model a[href="#edit-component-description-tab"]').tab('show');
             $('.img-vis').removeClass('img-vis-selected');
@@ -875,7 +892,7 @@ EditComponentModal.prototype = {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                if (getAllNumbers(error.toString())[0] == 500)
+                if (error && getAllNumbers(error.toString())[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[EditComponentModal::fetchQueries]");
                 else
                     this.context.signals.onError.dispatch(error,"[EditComponentModal::fetchQueries]");

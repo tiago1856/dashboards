@@ -26,4 +26,5 @@ export const VISUALIZATION_TYPE = {
     CN: 'CN',       // number control
     CS: 'CS',       // string control
     CB: 'CB',       // boolean control
+    CNI:'CNI',      // number interval control
 }

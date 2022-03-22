@@ -1,5 +1,5 @@
 import { BaseComponentContent } from '../BaseComponentContent.js';
-import { Div, Input, Label, InputNumber } from '../../builders/BuildingBlocks.js';
+import { Div, Input, Label, Span, Br } from '../../builders/BuildingBlocks.js';
 
 
 export class ControlNumber extends BaseComponentContent {
@@ -8,39 +8,46 @@ export class ControlNumber extends BaseComponentContent {
 
 
     const div = new Div().attachTo(parent);
-    div.addClass("info-box  info-component-content");
-    //div.setTextContent('NUMBER CONTROL')
-    //div.setStyle('height','100%');
-    /*
-    if (data.data_config.type === 'box') {
-      const group = new Div().attachTo(div);
-      group.dom.style.width = '100%';
-      new Label(data.data_config.name).attachTo(group);
-      const input = new InputNumber().attachTo(group);
-      input.addClass('form-control');
-      input.setAttribute('value', data.data_config.default);
-      input.setAttribute('min', data.data_config.min);
-      input.setAttribute('max', data.data_config.max);
-      input.setAttribute('step', data.data_config.step);
-      //input.dom.style.width = '100%';
-    } else {
-      */
-      // slider
-      const group = new Div().attachTo(div);
-      group.dom.style.width = '100%';
-      new Label(data.data_config.name).attachTo(group);
+    div.addClass("info-box info-component-content");
+
+    const cont = new Div().attachTo(div);
+    cont.dom.style.width = '100%';
+
+    new Label(data.data_config.name).attachTo(cont);
+
+
+      const group = new Div().attachTo(cont);
+      group.addClass('mx-auto');
+
       const slider = new Div().attachTo(group);
-      slider.addClass("range range-primary");
+      slider.addClass("slidecontainer");      
+
+      const lower = new Span().attachTo(slider);
+      lower.addClass('slider-output');
+      lower.setTextContent(data.data_config.min);
+
       const input = new Input().attachTo(slider);
+      input.addClass('slider');
       input.setAttribute('type','range');
       input.setAttribute('value', data.data_config.default);
       input.setAttribute('min', data.data_config.min);
       input.setAttribute('max', data.data_config.max);
       input.setAttribute('step', data.data_config.step);
-      const output = $('<output>');
-      output.text(data.data_config.default);
-      $(slider.dom).append(output);
 
+      const upper = new Span().attachTo(slider);
+      upper.addClass('slider-output');
+      upper.setTextContent(data.data_config.max);
+
+      const value = new Span().attachTo(slider);
+      value.addClass('slider-output2');
+      value.setTextContent(data.data_config.default);
+
+      $(input.dom).on('change', function(e) {
+        value.setTextContent($(this).val());
+        
+      })
+
+      context.signals.onComponentUpdated.dispatch(data);
 
   }
 }
@@ -48,12 +55,11 @@ export class ControlNumber extends BaseComponentContent {
 /*
 
 
-        <div class="col-xs-6">
-          <div class="range range-primary">
-            <input type="range" name="range" min="1" max="100" value="50" onchange="rangePrimary.value=value">
-            <output id="rangePrimary">50</output>
-          </div>
-        </div>
+<div class="slidecontainer">
+	<output class="range-limits">0</output>
+  <input type="range" min="1" max="100" value="50" class="slider" id="myRange">
+  <output class="range-limits">100</output>
+</div>
 
                     CN_DEFAULT.val(this.state.data_config.default);
                     CN_MIN.val(this.state.data_config.min);

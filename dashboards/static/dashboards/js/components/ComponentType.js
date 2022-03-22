@@ -11,6 +11,7 @@ import { SimpleCalendar } from './template/SimpleCalendar.js'
 import { ControlNumber } from './controls/ControlNumber.js'
 import { ControlString } from './controls/ControlString.js'
 import { ControlBool } from './controls/ControlBool.js'
+import { ControlNumberInterval } from './controls/ControlNumberInterval.js'
 
 
 
@@ -52,6 +53,7 @@ export const COMPONENT_TYPE = {
             {id: VISUALIZATION_TYPE.CN, class:ControlNumber},
             {id: VISUALIZATION_TYPE.CS, class:ControlString},
             {id: VISUALIZATION_TYPE.CB, class:ControlBool},
+            {id: VISUALIZATION_TYPE.CNI, class:ControlNumberInterval},
         ]        
     },    
 }

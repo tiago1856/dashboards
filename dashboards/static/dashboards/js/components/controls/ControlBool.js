@@ -10,11 +10,13 @@ export class ControlBool extends BaseComponentContent {
     const div = new Div().attachTo(parent);
     div.addClass("info-box info-component-content");
 
-    const group = new Div().attachTo(div);
-    //group.addClass('text-center');
-    group.dom.style.width = '100%';
-    new Label(data.data_config.name).attachTo(group);
-    new Br().attachTo(group);
+    const cont = new Div().attachTo(div);
+    cont.dom.style.width = '100%';
+
+    new Label(data.data_config.name).attachTo(cont);
+
+    const group = new Div().attachTo(cont);
+    group.addClass('mx-auto');
 
     const input = new Input().attachTo(group);
     input.addClass('text-center');
@@ -27,6 +29,9 @@ export class ControlBool extends BaseComponentContent {
     input.setAttribute('data-offstyle', 'danger');
     input.setAttribute('data-width', '100%');
     $(input.dom).bootstrapToggle();
+
+    context.signals.onComponentUpdated.dispatch(data);
+
 
   }
 }

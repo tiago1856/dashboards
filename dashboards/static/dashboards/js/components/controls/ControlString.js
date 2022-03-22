@@ -1,5 +1,5 @@
 import { BaseComponentContent } from '../BaseComponentContent.js';
-import { Div, Input, Label } from '../../builders/BuildingBlocks.js';
+import { Div, Input, Label, Button } from '../../builders/BuildingBlocks.js';
 
 
 export class ControlString extends BaseComponentContent {
@@ -10,13 +10,25 @@ export class ControlString extends BaseComponentContent {
     const div = new Div().attachTo(parent);
     div.addClass("info-box info-component-content");
 
-    const group = new Div().attachTo(div);
-    group.dom.style.width = '100%';
-    new Label(data.data_config.name).attachTo(group);
+    const cont = new Div().attachTo(div);
+    cont.dom.style.width = '100%';
+
+    new Label(data.data_config.name).attachTo(cont);
+
+    const group = new Div().attachTo(cont);
+    group.addClass('input-group mx-auto')
+
     const input = new Input().attachTo(group);
     input.addClass('form-control');
     input.setAttribute('value', data.data_config.default);
 
+    const append = new Div().attachTo(group);
+    append.addClass("input-group-append");
+    const button = new Button('Ok').attachTo(append);
+    button.addClass("btn btn-outline-secondary");
+    button.setAttribute('type','button');
+
+    context.signals.onComponentUpdated.dispatch(data);
 
   }
 }
