@@ -43,8 +43,9 @@ export class ControlNumber extends BaseComponentContent {
       value.setTextContent(data.data_config.default);
 
       $(input.dom).on('change', function(e) {
-        value.setTextContent($(this).val());
-        
+        const _value = $(this).val();
+        value.setTextContent(_value);        
+        context.signals.onCommOut.dispatch(data.name, data.data_config.name, _value);
       })
 
       context.signals.onComponentUpdated.dispatch(data);

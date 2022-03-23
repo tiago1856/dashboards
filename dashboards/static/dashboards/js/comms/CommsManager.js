@@ -42,6 +42,11 @@ export function CommsManager (context) {
         this.updateComponent(component_data);
     });
 
+    context.signals.onCommOut.add((component_name, outpin, value) => {
+        console.log(component_name, outpin, value);
+    });
+
+
 }
 
 CommsManager.prototype = {
