@@ -50,7 +50,7 @@ export class CommLink extends SimpleCard {
             if (onRemove) onRemove(id);
             $(self.dom).remove();
         })
-
+        /*
         context.signals.onXCommOutput.add((name, uuid, output, add=true) => {
             //console.log("<< OUT >> [" + name + "]", output);
             const _existing_option = $(this.origin.dom).find(`[data-uuid='${uuid}'][value='${output}']`);
@@ -76,6 +76,7 @@ export class CommLink extends SimpleCard {
 
             this.destination.checkStatus();
         });
+        */
 
         context.signals.onComponentNameChanged.add((uuid, old_name, new_name) => {
             $(this.origin.dom).find(`[data-component='${old_name}']`).each(function() {
@@ -105,6 +106,25 @@ export class CommLink extends SimpleCard {
         };
     }
 
+    removeAllLinksFromComponent(uuid) {
+        const _existing_option_to = $(this.destination.dom).find(`[data-uuid='${uuid}']`);
+        _existing_option_to.remove();
+        const _existing_option_from = $(this.origin.dom).find(`[data-uuid='${uuid}']`);
+        _existing_option_from.remove();
+    }
+
+    setPinsForComponent(uuid, data) {
+        data.outputs.forEach(output_pin => {
+            CommLink.createItem(this.origin, data.name, output_pin, uuid);
+        });
+        data.inputs.forEach(input_pin => {
+            CommLink.createItem(this.destination, data.name, input_pin, uuid);
+        });
+
+        this.destination.checkStatus();
+        this.origin.checkStatus();
+    }
+
     /**
      * 
      * @param {object} data {uuid: {inputs: inputs, outputs: outputs, name: name}, ...}
@@ -121,6 +141,7 @@ export class CommLink extends SimpleCard {
             }            
         }
         this.origin.checkStatus();
+        this.destination.checkStatus();
     }
 
 
@@ -143,9 +164,10 @@ export class CommLink extends SimpleCard {
 
     /**
      * 
-     * @param {*} parent 
-     * @param {*} component 
-     * @param {*} text 
+     * @param {*} parent Parent node.
+     * @param {*} component Component's name.
+     * @param {*} text Pin name.
+     * @param {*} uuid Component's uuid.
      */
     static createItem(parent, component, text, uuid = null) {
         const option = new Option(text, "[" + component + "] " + text).attachTo(parent);

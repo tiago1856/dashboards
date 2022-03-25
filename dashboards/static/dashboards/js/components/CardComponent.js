@@ -124,7 +124,7 @@ export class CardComponent extends MasterComponent {
     update(new_query = null) {
       super.update(new_query);
       this.setTitle(this.data.title);
-      
+      /*
       if (this.content) {
         //if (!this.content.hasOwnProperty('getQuery')) return;
         const old_query = this.content.getQuery();
@@ -133,6 +133,7 @@ export class CardComponent extends MasterComponent {
           return;
         }
       }
+      */
       
       const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {

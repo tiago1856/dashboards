@@ -60,6 +60,7 @@ export class NonCardComponent extends MasterComponent {
      */
     update(new_query = null) {
       super.update(new_query);
+      /*
       if (this.content) {
         //if (!this.content.hasOwnProperty('getQuery')) return;
         const old_query = this.content.getQuery();
@@ -67,7 +68,8 @@ export class NonCardComponent extends MasterComponent {
         if (old_query && old_query === (new_query?new_query:this.data.query.query)) {         
           return;
         }
-      }  
+      }
+      */
       const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {
           if (this.body) $(this.body.dom).remove();

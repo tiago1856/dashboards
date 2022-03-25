@@ -28,8 +28,8 @@ export function Context() {
         //onComponentChanged: new Signal(),
 
         // comms
-        onXCommOutput: new Signal(),
-        onXCommInput: new Signal(),
+        //onXCommOutput: new Signal(),
+        //onXCommInput: new Signal(),
         onCommTriggered: new Signal(),
         onQueryUpdated: new Signal(),
 
