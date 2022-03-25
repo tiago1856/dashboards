@@ -6,7 +6,7 @@ import { MasterComponent } from './MasterComponent.js';
 /**
  * INFO component.
  */
-export class InfoComponent extends MasterComponent {
+export class NonCardComponent extends MasterComponent {
   /**
    * Constructor.
    * The component is identified not by its ID but by its spot.
@@ -19,8 +19,8 @@ export class InfoComponent extends MasterComponent {
     constructor(context, spot, _title=null, color_scheme = 'light', data=null) {
         super(context, spot, data);
         this.addClass('info-component-container');
-        this.setStyle('position','relative');      
-        
+        this.setStyle('position','relative'); 
+
         const self = this;
        
         const card_tools = new Div().attachTo(this);
@@ -44,7 +44,13 @@ export class InfoComponent extends MasterComponent {
         // restoring a saved component
         if (data) {
           this.update();
-        }         
+        }
+
+        context.signals.onQueryUpdated.add((destination_component, new_query = null) => {
+          if (destination_component === data.uuid && new_query) {
+            this.update(new_query);
+          }
+        });
     
     }
 
@@ -52,19 +58,39 @@ export class InfoComponent extends MasterComponent {
      * Update component.
      * Called when something fundamental change, like the component's type.
      */
-    update() {
-      super.update();
-        const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
-        if (component) {
+    update(new_query = null) {
+      super.update(new_query);
+      if (this.content) {
+        //if (!this.content.hasOwnProperty('getQuery')) return;
+        const old_query = this.content.getQuery();
+        // only update if query different
+        if (old_query && old_query === (new_query?new_query:this.data.query.query)) {         
+          return;
+        }
+      }  
+      const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
+      if (component) {
           if (this.body) $(this.body.dom).remove();
           this.body = new Div().attachTo(this);
           this.body.setStyle('width','100%');
           this.body.setStyle("overflow","auto");
-          this.body.setId(uuidv4());
+          this.body.setId(uuidv4());          
           this.content = null;
-          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom);
-        }
+          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, new_query);
+          this.content.execute(()=>{
+            if (this.data.component_type === 'CONTROL') {
+              this.context.signals.onComponentUpdated.dispatch(this.data.uuid, true);
+            } else {
+              this.context.signals.onComponentUpdated.dispatch(this.data.uuid, new_query?false:true);
+            }
+          })
+          /*
+          if (this.data.component_type === 'CONTROL') {
+            this.context.signals.onComponentUpdated.dispatch(this.data.uuid);
+          }
+          */
       }
+    }
 
 }
 

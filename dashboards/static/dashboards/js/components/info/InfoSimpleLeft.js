@@ -8,8 +8,8 @@ import { getNumberField, getStringField, isNumber } from '../Discovery.js';
  * 
  */
 export class InfoSimpleLeft extends BaseComponentContent {
-    constructor(context, data, parent, opt_btn) {
-        super(context, data, parent);
+    constructor(context, data, parent, opt_btn, new_query=null) {
+        super(context, data, new_query?new_query:data.query.query);
 
         const div = new Div().attachTo(parent);
         div.addClass("info-box info-component-content");
@@ -17,22 +17,22 @@ export class InfoSimpleLeft extends BaseComponentContent {
         //div.setStyle('height','100%');
         const span = new Span().attachTo(div);
         span.addClass('info-box-icon bg-danger');
-        const icon = new I().attachTo(span);
-        icon.addClass("icon ion-md-alert");
-        icon.setStyle("font-size","56px");
+        this.icon = new I().attachTo(span);
+        this.icon.addClass("icon ion-md-alert");
+        this.icon.setStyle("font-size","56px");
 
 
         const content = new Div().attachTo(div);
         content.addClass('info-box-content');
-        const text = new Span().attachTo(content);
-        text.addClass("info-box-text lead");
-        text.setTextContent('SEM TEXTO');
-        const value = new Span().attachTo(content);
-        value.addClass("info-box-number");
-        value.setTextContent('SEM VALOR');
+        this.text = new Span().attachTo(content);
+        this.text.addClass("info-box-text lead");
+        this.text.setTextContent('SEM TEXTO');
+        this.value = new Span().attachTo(content);
+        this.value.addClass("info-box-number");
+        this.value.setTextContent('SEM VALOR');
      
-
-        this.execQuery(data.query.query, null, (results) => {
+        /*
+        this.execQuery(new_query?new_query:data.query.query, null, (results) => {
             const [comp_text_1, comp_value] = this.prepareData(results, data);
             if (data.data_config.icon !== '') {
                 $(icon.dom).removeClass();
@@ -43,12 +43,30 @@ export class InfoSimpleLeft extends BaseComponentContent {
                 const _value = comp_value + (data.data_config.text_2!==''?data.data_config.text_2:"");
                 value.setTextContent(_value);
             }
-            context.signals.onComponentUpdated.dispatch(data);
+            context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);
         });
+        */
 
         $(opt_btn).on('click',function() {
         });
     }
+
+    execute(onReady=null) {
+        this.execQuery(this.query, null, (results) => {
+            const [comp_text_1, comp_value] = this.prepareData(results, this.data);
+            if (this.data.data_config.icon !== '') {
+                $(this.icon.dom).removeClass();
+                $(this.icon.dom).addClass(this.data.data_config.icon);
+            }
+            if (comp_text_1 !== '') this.text.setTextContent(comp_text_1,);            
+            if (comp_value) {
+                const _value = comp_value + (this.data.data_config.text_2!==''?this.data.data_config.text_2:"");
+                this.value.setTextContent(_value);
+            }
+            if (onReady) onReady();
+        });
+    }
+
 
     /**
      * 

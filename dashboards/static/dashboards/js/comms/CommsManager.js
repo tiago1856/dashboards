@@ -16,11 +16,10 @@ export function CommsManager (context) {
     this.context = context;
     this.links = {};
     this.ios = {};
+    this.dashboard = null;
     const self = this;
 
-    this.addLink();
-    this.addLink();
-    this.addLink();
+    //this.addLink();
 
     ADD_LINK_BTN.on('click', function() {
         self.addLink();
@@ -31,19 +30,30 @@ export function CommsManager (context) {
     })
 
 
-    context.signals.onComponentNameChanged.add((old_name, new_name) => {
-        if (this.ios.hasOwnProperty(old_name)) {   
-            this.ios[new_name] = JSON.parse(JSON.stringify(this.ios[old_name]));
-            delete this.ios[old_name];
+    context.signals.onComponentNameChanged.add((uuid, old_name, new_name) => {
+        if (this.ios.hasOwnProperty(uuid)) {   
+            this.ios[uuid].name = new_name;
         }
     });
 
-    context.signals.onComponentUpdated.add(component_data => {
-        this.updateComponent(component_data);
+    // component was updated, either the query structure or some other thing
+    context.signals.onComponentUpdated.add((component_uuid, update_comms = true) => {
+        if (update_comms) this.updateComponentComms(component_uuid);
     });
 
-    context.signals.onCommOut.add((component_name, outpin, value) => {
-        console.log(component_name, outpin, value);
+    context.signals.onCommTriggered.add((uuid, outpin, value) => {
+        console.log(uuid, outpin, value);
+        for(const key in this.links) {
+            const link = this.links[key];
+            const link_data = link.getCommData();
+            console.warn("link data > ", link_data);
+
+            // find
+            // component = this.dashboard.getComponent(uuid);
+            // new_query = change query (component.query)
+            // update component
+            //context.signals.onQueryUpdated.dispatch(destination_component, new_query);
+        }
     });
 
 
@@ -58,6 +68,7 @@ CommsManager.prototype = {
         }).attachTo(COMMS_AREA.get(0));
         // recreate the options
         this.links[id].setFields(this.ios);
+        console.log(this.ios);
     },
 
     removeLink: function(id) {
@@ -66,11 +77,11 @@ CommsManager.prototype = {
 
     /**
      * Updates the comms accordindly with the updated component.
-     * @param {object} component Updated component's data.
+     * @param {string} component_uuid Component's uuid.
      */
-    updateComponent: function(component_data) {
-        console.log("UPDATE COMMS > ", component_data.name);
-        this.setIO(component_data, true);
+    updateComponentComms: function(component_uuid) {        
+        console.log("UPDATE COMMS > ", component_uuid);
+        this.setIO(component_uuid, true);
     },
 
 
@@ -81,6 +92,7 @@ CommsManager.prototype = {
         console.log("COMMS RESET");
         this.ios = {};
         this.links = [];
+        this.dashboard = null;
         COMMS_AREA.empty();
     },
 
@@ -92,142 +104,84 @@ CommsManager.prototype = {
         return this.data;
     },
 
+    setDashoard(dash) {
+        this.dashboard = dash;
+    },
+
     /**
      * Restores the comms.
      * @param {object} data Dashboard data to restore the comms.
      */
     restore: function(data) {
+        /*
         console.log("COMMS RESTORE DATA > ", data);
         for (const spot in data.data) {
-            const component = data.data[spot];
-            this.setIO(component);        
+            const component_data = data.data[spot];
+            //this.setIO(component);        
+            this.setIO(component_data.uuid);
         }
         console.log("COMMS RESTORE LINKS");
+        */
     },
 
-    setIO(component_data, update=false) {
-        console.log(">>>>", component_data);
-        let outputs = [];
-        let inputs = [];
-        switch(component_data.visualization.visualization_type) {
-            case VISUALIZATION_TYPE.TS:
-            {
-                console.log("restore component I/O > SIMPLE TABLE");
-                outputs = component_data.query.query_selected_fields;
-                inputs = this.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                console.log("OUT > ", outputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.TC:
-            {
-                console.log("restore component I/O > COMPLEX TABLE");
-                outputs = component_data.query.query_selected_fields;
-                inputs = this.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                console.log("OUT > ", outputs);
-                break;
-            }                
-            case VISUALIZATION_TYPE.G1N:
-            {
-                console.log("restore component I/O > GRAPH 1N");
-                inputs = this.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.GDN:            
-            {
-                console.log("restore component I/O > GRAPH DN");
-                inputs = this.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.ISL:
-            {
-                console.log("restore component I/O > INFO SIMPLE LEFT");
-                inputs = this.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.TEC:
-            {
-                console.log("restore component I/O > TEMPLATE CALENDAR");
-                console.log("OUT > ", outputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.CN:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL NUMBER");
-                console.log("OUT > ", outputs);                
-                break;
-            }
-            case VISUALIZATION_TYPE.CS:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL STRING");
-                console.log("OUT > ", outputs);
-
-                break;
-            }
-            case VISUALIZATION_TYPE.CB:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL BOOL");
-                console.log("OUT > ", outputs);
-                break;
-            }
-            /*
-            case VISUALIZATION_TYPE.CNI:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL NUMBER INTERVAL");
-                console.log("OUT > ", outputs);
-                break;
-            }
-            */
-        }
+    setIO(component_uuid, update=false) {
+        const component = this.dashboard.getComponent(component_uuid);
+        const component_data = component.data;
+        console.warn("#######>", component);
+        const [outputs, inputs] = component.content.getComponentIO();
 
         let add_in = inputs;
         let add_out = outputs;
         let remove_in = [];
         let remove_out = [];
-        if (update) {            
-            if (this.ios.hasOwnProperty(component_data.name)) {
-                const old_in = this.ios[component_data.name].inputs;
-                const old_out = this.ios[component_data.name].outputs;
+        if (update) {
+            console.log("1111111111111", outputs, inputs);
+            if (this.ios.hasOwnProperty(component_data.uuid)) {
+                const old_in = this.ios[component_data.uuid].inputs;
+                const old_out = this.ios[component_data.uuid].outputs;
 
                 remove_out = disjoint(old_out, outputs);
                 remove_in = disjoint(old_in, inputs);
                 add_out = disjoint(outputs, old_out);
                 add_in = disjoint(inputs, old_in);
+                console.log("3333333333", remove_out, remove_in, add_out, add_in);
             }
         }
 
-        this.ios[component_data.name] = {inputs: inputs, outputs: outputs};
+        this.ios[component_data.uuid] = {inputs: inputs, outputs: outputs, name: component_data.name};
 
         // communicate with all links
         add_out.forEach(output => {
-            this.context.signals.onXCommOutput.dispatch(component_data.name, output, true);
+            this.context.signals.onXCommOutput.dispatch(component_data.name, component_data.uuid, output, true);
         });
         remove_out.forEach(output => {
-            this.context.signals.onXCommOutput.dispatch(component_data.name, output, false);
+            this.context.signals.onXCommOutput.dispatch(component_data.name, component_data.uuid, output, false);
         });        
         add_in.forEach(input => {
-            this.context.signals.onXCommInput.dispatch(component_data.name, input, true);
+            this.context.signals.onXCommInput.dispatch(component_data.name, component_data.uuid, input, true);
         }); 
         remove_in.forEach(input => {
-            this.context.signals.onXCommInput.dispatch(component_data.name, input, false);
+            this.context.signals.onXCommInput.dispatch(component_data.name, component_data.uuid, input, false);
         });        
     },
-
+    /*
+    // temp - this data should come from teh analyzer
     extractConditionals(query) {
         const inputs = [];
         var target_regex = /\$(.*?)\$/g;
         const target = [...query.matchAll(target_regex)];
         target.forEach(t => inputs.push(t[1]))        
         return inputs;        
-    }
+    },
+
+    analizeQuery(uuid, query) {
+
+    },
+
+    createNewQuery(uuid) {
+
+    },
+    */
 }
 
 

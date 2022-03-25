@@ -4,7 +4,7 @@ import { Div, Input, Label, Span, Br } from '../../builders/BuildingBlocks.js';
 
 export class ControlNumberInterval extends BaseComponentContent {
   constructor(context, data, parent, opt_btn) {
-    super(context, data, parent);
+    super(context, data);
 
 
     const div = new Div().attachTo(parent);
@@ -15,8 +15,10 @@ export class ControlNumberInterval extends BaseComponentContent {
 
     new Label('number interval').attachTo(cont);
 
+  }
 
-    context.signals.onComponentUpdated.dispatch(data);
+  execute(onReady=null) {
+    if (onReady) onReady();
   }
 }
 

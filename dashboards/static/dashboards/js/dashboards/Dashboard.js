@@ -1,8 +1,8 @@
 
 import { Div } from '../builders/BuildingBlocks.js';
-import { Component } from '../components/Component.js';
+import { CardComponent } from '../Components/CardComponent.js';
 import { DashboardTitle } from './DashboardTitle.js';
-import { InfoComponent } from '../components/InfoComponent.js';
+import { NonCardComponent } from '../components/NonCardComponent.js';
 import { 
     URL_GET_COMPONENT, 
     URL_SAVE_DASHBOARD, 
@@ -23,8 +23,9 @@ export class Dashboard extends Div {
      * @param {Context} context Context.
      * @param {number} layout_id Layout ID.
      * @param {object} data Data to restore the layout and all its components.
+     * @param {function} onReady Called when dashboard created and ready - the layout, not the components rendering.
      */
-    constructor (context, layout_id, data=null) {
+    constructor (context, layout_id, data=null, onReady=null) {
         super();
         this.context = context;
         DASHBOARD_CONTAINER.empty();
@@ -60,13 +61,14 @@ export class Dashboard extends Div {
                 div.addClass("span-col-" + dims[0] + (dims[1]>1?(" span-row-" + dims[1]):""));
                 div.setStyle('width','100%');
                 if (data && (data.data[spot].component_type === 'INFO' || data.data[spot].component_type === 'CONTROL')) {
-                    this.components[spot] = new InfoComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                    this.components[spot] = new NonCardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
                 } else {
-                    this.components[spot] = new Component(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                    this.components[spot] = new CardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
                 }                    
                 this.components[spot].setEditMode(context.edit_mode);
                 spot++;    
             })
+            if (onReady) onReady();
         })
 
         context.signals.onGlobalDateFormatChanged.add(selected_format => {
@@ -96,6 +98,7 @@ export class Dashboard extends Div {
         }
         return null;
     }
+ 
 
     /**
      * Get the dashboard title.
@@ -127,9 +130,9 @@ export class Dashboard extends Div {
         const data = JSON.parse(JSON.stringify(original.data));
         let comp = null;
         if (info)
-            comp = new InfoComponent(this.context, spot, null, 'light', data);
+            comp = new NonCardComponent(this.context, spot, null, 'light', data);
         else
-            comp = new Component(this.context, spot, null, 'light', data);
+            comp = new CardComponent(this.context, spot, null, 'light', data);
         $(original.dom).replaceWith($(comp.dom));
         comp.setEditMode(true);
         this.components[spot] = comp;
@@ -151,9 +154,9 @@ export class Dashboard extends Div {
                 let comp = null;
                 if (data.component_type === COMPONENT_TYPE.INFO.name || 
                     data.component_type === COMPONENT_TYPE.CONTROL.name) {
-                    comp = new InfoComponent(this.context, spot, null, 'light', data);
+                    comp = new NonCardComponent(this.context, spot, null, 'light', data);
                 } else {
-                    comp = new Component(this.context, spot, null, 'light', data);
+                    comp = new CardComponent(this.context, spot, null, 'light', data);
                 }
                 $(original.dom).replaceWith($(comp.dom));
                 comp.setEditMode(true);

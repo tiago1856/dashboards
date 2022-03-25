@@ -51,25 +51,25 @@ export class CommLink extends SimpleCard {
             $(self.dom).remove();
         })
 
-        context.signals.onXCommOutput.add((name, output, add=true) => {
+        context.signals.onXCommOutput.add((name, uuid, output, add=true) => {
             //console.log("<< OUT >> [" + name + "]", output);
-            const _existing_option = $(this.origin.dom).find(`[data-component='${name}'][value='${output}']`);
+            const _existing_option = $(this.origin.dom).find(`[data-uuid='${uuid}'][value='${output}']`);
             if (add) {
                 if (_existing_option.length > 0) return;
-                CommLink.createItem(this.origin, name, output);
+                CommLink.createItem(this.origin, name, output, uuid);
             } else {
                 _existing_option.remove();
             }
-            this.origin.checkStatus();           
+            this.origin.checkStatus();
         });
 
-        context.signals.onXCommInput.add((name, input, add=true) => {
+        context.signals.onXCommInput.add((name, uuid, input, add=true) => {
             //console.log("<< IN >> [" + name + "]", input);
 
-            const _existing_option = $(this.destination.dom).find(`[data-component='${name}'][value='${input}']`);
+            const _existing_option = $(this.destination.dom).find(`[data-uuid='${uuid}'][value='${input}']`);
             if (add) {
                 if (_existing_option.length > 0) return;
-                CommLink.createItem(this.destination, name, input);
+                CommLink.createItem(this.destination, name, input, uuid);
             } else {
                 _existing_option.remove();
             }
@@ -77,7 +77,7 @@ export class CommLink extends SimpleCard {
             this.destination.checkStatus();
         });
 
-        context.signals.onComponentNameChanged.add((old_name, new_name) => {
+        context.signals.onComponentNameChanged.add((uuid, old_name, new_name) => {
             $(this.origin.dom).find(`[data-component='${old_name}']`).each(function() {
                 $(this).attr('data-component', new_name);
                 //const key = $(this).val();
@@ -89,19 +89,36 @@ export class CommLink extends SimpleCard {
     }
 
     save() {
-
+        return getCommData();
+    }
+    
+    //input: Object { component: undefined, pin: null }    
+    getCommData() {
+        const origin = $(this.origin.dom);
+        const destination = $(this.destination.dom);
+        //console.log();
+        return {
+            from: 
+                {component: origin.find(":selected").attr('data-uuid'), pin: origin.val()}, 
+            to: 
+                {component: destination.find(":selected").attr('data-uuid'), pin: destination.val()}
+        };
     }
 
     /**
      * 
-     * @param {object} data {comp_name: {inputs: inputs, outputs: outputs}, ...}
+     * @param {object} data {uuid: {inputs: inputs, outputs: outputs, name: name}, ...}
      */
     setFields(data) {
         for (const key in data) {
             for (const k_output in data[key].outputs) {                
                 const output = data[key].outputs[k_output];
-                CommLink.createItem(this.origin, key, output);
+                CommLink.createItem(this.origin, data[key].name, output, key);
             }
+            for (const k_output in data[key].inputs) {                
+                const input = data[key].inputs[k_output];
+                CommLink.createItem(this.destination, data[key].name, input, key);
+            }            
         }
         this.origin.checkStatus();
     }
@@ -130,9 +147,10 @@ export class CommLink extends SimpleCard {
      * @param {*} component 
      * @param {*} text 
      */
-    static createItem(parent, component, text) {
+    static createItem(parent, component, text, uuid = null) {
         const option = new Option(text, "[" + component + "] " + text).attachTo(parent);
-        option.setAttribute('data-component', component);        
+        option.setAttribute('data-component', component);
+        option.setAttribute('data-uuid', uuid);
     }
 
 }

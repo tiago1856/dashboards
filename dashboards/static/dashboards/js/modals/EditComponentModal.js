@@ -766,7 +766,7 @@ EditComponentModal.prototype = {
         // CLOSE MODAL
         if (close) {
             if (this.old_name && this.old_name !== this.state.name) {
-                this.context.signals.onComponentNameChanged.dispatch(this.old_name, this.state.name);
+                this.context.signals.onComponentNameChanged.dispatch(this.state.uuid, this.old_name, this.state.name);
             }
             EDIT_COMPONENT_MODAL.modal('hide');
             // UPDATE COMPONENT
@@ -778,7 +778,7 @@ EditComponentModal.prototype = {
 
     /**
      * Opens the modal and sets its inputs and selection accoding to the saved state.
-     * @param {Component} component Component to edit.
+     * @param {MasterComponent} component Component to edit.
      * @param {function} onReady Called to apply the changes.
      */
     show: function(component, onReady=null) {

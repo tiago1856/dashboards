@@ -187,12 +187,12 @@ context.signals.onEditComponent.add((spot, original_type) => {
     edit_component_modal.show(component, () => {
         if ((component.data.component_type === 'INFO' ||  component.data.component_type === 'CONTROL')
             && (original_type !== 'INFO' && original_type !== 'CONTROL')) {
-            const new_comp = dashboard.changeComponentContainer(spot, true);
-            new_comp.update();
+                const new_comp = dashboard.changeComponentContainer(spot, true);
+                new_comp.update();
         } else if ((component.data.component_type !== 'INFO' && component.data.component_type !== 'CONTROL')
             && (original_type === 'INFO' || original_type === 'CONTROL')) {
-            const new_comp = dashboard.changeComponentContainer(spot, false);
-            new_comp.update();
+                const new_comp = dashboard.changeComponentContainer(spot, false);
+                new_comp.update();
         } else {           
             component.update();
         }
@@ -211,7 +211,9 @@ context.signals.onLoadComponent.add((spot) => {
 context.signals.onLayoutEditor.add((spot) => {
     layout_editor_modal.show((new_layout_id) => {
         comms.reset();
-        dashboard = new Dashboard(context, new_layout_id, null/*, true*/);        
+        dashboard = new Dashboard(context, new_layout_id, null, () => {
+            comms.setDashoard(dashboard);
+        });        
     });
 });
 
@@ -248,9 +250,11 @@ DASHBOARD_OPEN_BTN.on('click',function() {
         console.log("load dash > ", dash_id);
 
         getDashboard(dash_id, (result) => {
-            dashboard = new Dashboard(context, result.layout, result);
-            comms.restore(result);
-            date_interval.setFormat(result.date_format);
+            dashboard = new Dashboard(context, result.layout, result, () => {
+                comms.setDashoard(dashboard);
+                comms.restore(result);            
+                date_interval.setFormat(result.date_format);
+            });
         });
     });
 })
@@ -348,25 +352,31 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
     loadConfig((config) => {
         if (config.config !== null) {
             getDashboard(config.dashboard, (result) => {
-                dashboard = new Dashboard(context, result.layout, result);
-                date_interval.setFormat(result.date_format);
-                comms.restore(result);
-                new_dash = false;
-                changeSaveStatus(false);
+                dashboard = new Dashboard(context, result.layout, result, () => {
+                    date_interval.setFormat(result.date_format);
+                    comms.setDashoard(dashboard);
+                    comms.restore(result);                
+                    new_dash = false;
+                    changeSaveStatus(false);
+                });
             });        
         } else {
             comms.reset();
-            dashboard = new Dashboard(context, DEFAULT_LAYOUT);
-            new_dash = true;
-            changeSaveStatus(true);
+            dashboard = new Dashboard(context, DEFAULT_LAYOUT, null, () => {
+                comms.setDashoard(dashboard);
+                new_dash = true;
+                changeSaveStatus(true);
+            });
         }
     })
 } else {
     comms.reset();
-    dashboard = new Dashboard(context, DEFAULT_LAYOUT);
-    new_dash = true;
-    changeSaveStatus(true);
-    localStorage.removeItem("dash_new"); 
+    dashboard = new Dashboard(context, DEFAULT_LAYOUT, null, () => {
+        comms.setDashoard(dashboard);
+        new_dash = true;
+        changeSaveStatus(true);
+        localStorage.removeItem("dash_new"); 
+    });
 }
 //changeSaveStatus(true);
 
@@ -419,9 +429,11 @@ function enterEditMode(enter=true) {
  */
 function newDashboard(layout_id/*, edit_mode = false*/) {
     comms.reset();
-    dashboard = new Dashboard(context, layout_id, null/*, edit_mode*/);
-    $(SELECTABLE_COMPONENTS).show();
-    DASHBOARD_EDIT_BTN.trigger('click');
+    dashboard = new Dashboard(context, layout_id, null, () => {
+        comms.setDashoard(dashboard);
+        $(SELECTABLE_COMPONENTS).show();
+        DASHBOARD_EDIT_BTN.trigger('click');
+    });
 }
 
 

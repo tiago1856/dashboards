@@ -75,7 +75,7 @@ export class MasterComponent extends Div {
        * Updates the component.
        * Called when something fundamental change, like creation itself or just the component's type.
        */
-      update() {
+      update(new_query = null) {
       }
 
       /**

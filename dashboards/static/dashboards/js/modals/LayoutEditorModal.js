@@ -241,7 +241,7 @@ LayoutEditorModal.prototype = {
                 if (onReady) onReady(result.id);
             },
             (error) => {
-              this.context.signals.onError.dispatch(error,"[Component::saveComponent]");                
+              this.context.signals.onError.dispatch(error,"[LayoutEditorModal::saveComponent]");                
             }
         )
     },

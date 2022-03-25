@@ -12,4 +12,8 @@ export class SimpleCalendar extends BaseComponentContent {
         $(opt_btn).on('click',function() {
         });
     }
+
+    execute(onReady=null) {
+        if (onReady) onReady();
+    }
 }

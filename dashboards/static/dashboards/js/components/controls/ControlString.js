@@ -4,7 +4,7 @@ import { Div, Input, Label, Button } from '../../builders/BuildingBlocks.js';
 
 export class ControlString extends BaseComponentContent {
   constructor(context, data, parent, opt_btn) {
-    super(context, data, parent);
+    super(context, data);
 
 
     const div = new Div().attachTo(parent);
@@ -28,13 +28,9 @@ export class ControlString extends BaseComponentContent {
     button.addClass("btn btn-outline-secondary");
     button.setAttribute('type','button');
 
-    context.signals.onComponentUpdated.dispatch(data);
+  }
 
+  execute(onReady=null) {
+    if (onReady) onReady();
   }
 }
-
-/*
-                    CS_NAME.val(this.state.data_config.name);
-                    CN_DEFAULT.val(this.state.data_config.default);
-                    CS_TYPE.val(this.state.data_config.type);
-                    */

@@ -4,7 +4,7 @@ import { Div, Label, Input, Br } from '../../builders/BuildingBlocks.js';
 
 export class ControlBool extends BaseComponentContent {
   constructor(context, data, parent, opt_btn) {
-    super(context, data, parent);
+    super(context, data);
 
 
     const div = new Div().attachTo(parent);
@@ -30,32 +30,9 @@ export class ControlBool extends BaseComponentContent {
     input.setAttribute('data-width', '100%');
     $(input.dom).bootstrapToggle();
 
-    context.signals.onComponentUpdated.dispatch(data);
+  }
 
-
+  execute(onReady=null) {
+    if (onReady) onReady();
   }
 }
-/*
-
-
-<input type="checkbox" checked data-toggle="toggle" data-on="Ready" data-off="Not Ready" data-onstyle="success" data-offstyle="danger">
-</input>
-
-<div class="form-check-inline">
-  <label class="form-check-label">
-    <input type="radio" class="form-check-input" name="optradio">Option 1
-  </label>
-</div>
-<div class="form-check-inline">
-  <label class="form-check-label">
-    <input type="radio" class="form-check-input" name="optradio">Option 2
-  </label>
-</div>
-
-
-                    CB_NAME.val(this.state.data_config.name);
-                    CB_DEFAULT.val(this.state.data_config.default);
-                    CB_TRUE.val(this.state.data_config.true);
-                    CB_FALSE.val(this.state.data_config.false);
-                    CB_TYPE.val(this.state.data_config.type);
-                    */

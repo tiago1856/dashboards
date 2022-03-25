@@ -3,24 +3,37 @@ import { BaseComponentContent } from '../BaseComponentContent.js';
 import { getNumberField, getStringField, isNumber } from '../Discovery.js';
 
 export class Graph1Num extends BaseComponentContent {
-    constructor(context, data, parent, opt_btn) {
-        super(context, data, parent);
-        
-        this.execQuery(data.query.query, null, (results) => {
-            const component_data = this.prepareData(results, data);
-            context.react_message_broker.postMessage({
-                operation:'create_component', 
-                id: parent.getId(),
-                data: component_data,
-            });
-            context.signals.onComponentUpdated.dispatch(data);
-        });
+    /**
+     * Constructor.
+     * @param {*} context 
+     * @param {*} data 
+     * @param {*} parent 
+     * @param {*} opt_btn 
+     * @param {*} new_query 
+     */
+    constructor(context, data, parent, opt_btn, new_query=null) {
+        super(context, data, new_query?new_query:data.query.query);
+        this.parent = parent;
 
         $(opt_btn).on('click',function() {
             context.react_message_broker.postMessage({
               operation:'show_options', 
               id: parent.getId(),
             }); 
+        });
+    }
+
+    execute(onReady=null) {
+        this.execQuery(this.query, null, (results) => {
+            const component_data = this.prepareData(results, this.data);
+            this.context.react_message_broker.postMessage({
+                operation:'create_component', 
+                id: this.parent.getId(),
+                data: component_data,
+            });
+            // if new_query => only some query parameter changed => no need to update comms
+            //context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);
+            if (onReady) onReady();
         });
     }
 
@@ -57,5 +70,6 @@ export class Graph1Num extends BaseComponentContent {
         return {header, data};
 
     }
+
 }
 

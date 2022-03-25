@@ -30,7 +30,8 @@ export function Context() {
         // comms
         onXCommOutput: new Signal(),
         onXCommInput: new Signal(),
-        onCommOut: new Signal(),
+        onCommTriggered: new Signal(),
+        onQueryUpdated: new Signal(),
 
     }
 
