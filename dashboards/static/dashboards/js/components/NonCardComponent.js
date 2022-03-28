@@ -48,8 +48,14 @@ export class NonCardComponent extends MasterComponent {
 
         context.signals.onQueryUpdated.add((destination_component, outpin = null, value = null) => {
           if (destination_component === data.uuid && outpin && value) {
-            //this.update(new_query);
             console.warn("---- UPDATE QUERY NON CARD >>> ", outpin, value);
+            if (!this.content) {
+              console.warn("[CARDCOMPONENT] NO CONTENT!");
+              return;
+            }
+            const new_query = BaseComponentContent.modifyQuery(this.content.getQuery(), outpin, value)
+            console.log("NEW QUERY > ", new_query);
+            this.update(new_query);
           }
         });
     

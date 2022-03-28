@@ -129,7 +129,7 @@ export function EditComponentModal(context) {
         console.log("TODO: SAVE QUERY");
         self.updateQuery(() => {
             self.changeSaveStatus(false);
-            self.context.signals.onChanged.dispatch();
+            //self.context.signals.onChanged.dispatch();
         });
     })
 
@@ -138,7 +138,7 @@ export function EditComponentModal(context) {
         context.signals.onAYS.dispatch(MSG_DELETE_QUERY, 
         () => {
             self.deleteQuery();
-            self.context.signals.onChanged.dispatch();
+            //self.context.signals.onChanged.dispatch();
         });
     })
     
@@ -151,14 +151,14 @@ export function EditComponentModal(context) {
     // NEW QUERY
     NEW_QUERY_BUTTON.on('click',function() {
         self.newQuery(QUERY_SELECTION.val() !== '');
-        self.context.signals.onChanged.dispatch();
+        //self.context.signals.onChanged.dispatch();
     })
 
     // EDITs QUERY
     EDIT_BTN.on('click',function() {
         QUERY_AREA.removeAttr('disabled');
         EDIT_BTN.attr('disabled',true);
-        self.context.signals.onChanged.dispatch();
+        //self.context.signals.onChanged.dispatch();
     })
 
     // EXECs QUERY
@@ -173,7 +173,7 @@ export function EditComponentModal(context) {
             QUERY_SELECTION.val(new_query_value);
             QUERY_SELECTION.trigger('change');
             QUERY_AREA.removeAttr('disabled');
-            self.context.signals.onChanged.dispatch();
+            //self.context.signals.onChanged.dispatch();
         });
     });
 
@@ -186,7 +186,7 @@ export function EditComponentModal(context) {
     // COMPONENT (NOT IN THE DATABASE)
     APPLY_BTN.on('click', function() {
         self.save();
-        self.context.signals.onChanged.dispatch();
+        //self.context.signals.onChanged.dispatch();
         //self.context.signals.onComponentChanged.dispatch(self.state.name);        
     });
 
@@ -204,7 +204,7 @@ export function EditComponentModal(context) {
 
     SELECTED_FIELDS.on('change', function(e) {
         self.setVisualizationConfigPanel(self.state.data_config.fields !== undefined);
-        self.context.signals.onChanged.dispatch();
+        //self.context.signals.onChanged.dispatch();
     })
 
 
@@ -220,7 +220,7 @@ export function EditComponentModal(context) {
             // check name
         }
         self.checkName(self.state.id, e.target.value);
-        self.context.signals.onChanged.dispatch();
+        //self.context.signals.onChanged.dispatch();
     });
 
     // on query selection
@@ -236,7 +236,7 @@ export function EditComponentModal(context) {
             DELETE_BTN.attr('disabled', true);
             EXCEL_BTN.attr('disabled', true);
             EXEC_QUERY.attr('disabled', true);
-            self.context.signals.onChanged.dispatch();
+            //self.context.signals.onChanged.dispatch();
         } else {
             EDIT_BTN.removeAttr('disabled');
             DELETE_BTN.removeAttr('disabled');
@@ -255,7 +255,7 @@ export function EditComponentModal(context) {
     QUERY_AREA.on('change keyup', function(e) {
         if (original_query !== QUERY_AREA.val()) {
             self.changeSaveStatus(true);
-            self.context.signals.onChanged.dispatch();
+            //self.context.signals.onChanged.dispatch();
         } else {
             self.changeSaveStatus(false);
         }
@@ -266,7 +266,7 @@ export function EditComponentModal(context) {
         const val = $(this).val();
         if (val !== '') {
             NEW_QUERY_SAVE_BTN.removeAttr('disabled');
-            self.context.signals.onChanged.dispatch();
+            //self.context.signals.onChanged.dispatch();
         } else {
             NEW_QUERY_SAVE_BTN.attr('disabled', true);
         }
@@ -286,7 +286,7 @@ export function EditComponentModal(context) {
         self.state.component_type = $(this).data('type');
         //self.context.signals.onVisualizationSelected.dispatch(this.id);
         self.setVisualizationConfigPanel(false);
-        self.context.signals.onChanged.dispatch();
+        //self.context.signals.onChanged.dispatch();
     });
 
 
@@ -300,7 +300,7 @@ export function EditComponentModal(context) {
         self.icons_modal.show(self.state.data_config.icon, (icon) => {
             ISL_ICON_PREVIEW_AREA.removeClass();
             ISL_ICON_PREVIEW_AREA.addClass(icon);
-            self.context.signals.onChanged.dispatch();
+            //self.context.signals.onChanged.dispatch();
         });
     });
 
@@ -759,7 +759,9 @@ EditComponentModal.prototype = {
         }
 
         console.warn("SAVE > ", this.state);
-        // ------------------ TO PREVENT CANCEL BUG -------------
+        // did something changed?
+        if (JSON.stringify(this.component.data) !== JSON.stringify(this.state)) this.context.signals.onChanged.dispatch();
+        // ------------------ TO PREVENT CANCEL BUG -------------        
         this.component.data = JSON.parse(JSON.stringify(this.state));
         // ------------------
 

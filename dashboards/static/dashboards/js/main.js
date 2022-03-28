@@ -50,7 +50,7 @@ const COMMS_BTN = $('#comms-btn');
 const EXIT_COMMS_BTN = $('#exit-comms-btn');
 const COMMS_SCREEN = $('#comms-tab-content');
 const LAYOUT_SCREEN = $('#layout-tab-content');
-
+const SYNC_COMMS = $('#sync-comms-btn');
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -220,6 +220,12 @@ context.signals.onLayoutEditor.add((spot) => {
 // ----------------
 // TOP ROW ACTIONS
 // ----------------
+
+// SYNC COMMS - used for when a new component is added
+/*
+SYNC_COMMS.on('click', function() {
+});
+*/
 
 // ENTER COMMS SCREEN
 COMMS_BTN.on('click', function() {
