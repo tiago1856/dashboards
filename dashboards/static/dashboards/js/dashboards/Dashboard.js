@@ -54,7 +54,6 @@ export class Dashboard extends Div {
         display.addClass('dashboard-grid');
 
         let spot = 0
-
         this.getLayout(data?data.layout:layout_id, (grid) => {
             grid.forEach(dims => {
                 const div = new Div().attachTo(display);

@@ -37,22 +37,31 @@ export function CommsManager (context) {
     });
 
     // component was updated, either the query structure or some other thing
-    context.signals.onComponentUpdated.add((component_uuid, update_comms = true) => {
-        if (update_comms) this.updateComponentComms(component_uuid);
+    //context.signals.onComponentUpdated.add((component_uuid, update_comms = true) => {
+        context.signals.onComponentUpdated.add((component, update_comms = true) => {
+        if (update_comms) this.updateComponentComms(component);
     });
 
     context.signals.onCommTriggered.add((uuid, outpin, value) => {
         console.log(uuid, outpin, value);
+        if (!this.dashboard) {
+            console.warn("[COMMSMANAGER] NO DASHBOARD!");
+            return;
+        }
         for(const key in this.links) {
             const link = this.links[key];
             const link_data = link.getCommData();
             console.warn("link data > ", link_data);
-
-            // find
-            // component = this.dashboard.getComponent(uuid);
-            // new_query = change query (component.query)
-            // update component
-            //context.signals.onQueryUpdated.dispatch(destination_component, new_query);
+            if (link_data.from.component === uuid) {
+                if (link_data.to.component && link_data.to.component !== 'undefined') {
+                    /*
+                    console.log("new value > ", value);
+                    console.log("new value > ", value);
+                    console.log("new value > ", value);
+                    */
+                    context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, value);
+                }
+            }
         }
     });
 
@@ -79,9 +88,9 @@ CommsManager.prototype = {
      * Updates the comms accordindly with the updated component.
      * @param {string} component_uuid Component's uuid.
      */
-    updateComponentComms: function(component_uuid) {        
-        console.log("UPDATE COMMS > ", component_uuid);
-        this.setIO(component_uuid, true);
+    updateComponentComms: function(component) {        
+        console.log("UPDATE COMMS > ", component.uuid);
+        this.setIO(component, true);
     },
 
 
@@ -89,7 +98,6 @@ CommsManager.prototype = {
      * Resets all comms.
      */
     reset: function() {
-        console.log("COMMS RESET");
         this.ios = {};
         this.links = [];
         this.dashboard = null;
@@ -129,10 +137,9 @@ CommsManager.prototype = {
      * @param {*} component_uuid 
      * @param {*} update 
      */
-    setIO(component_uuid, update=false) {
-        const component = this.dashboard.getComponent(component_uuid);
+    setIO(component, update=false) {
+        //const component = this.dashboard.getComponent(component_uuid);
         const component_data = component.data;
-        console.warn("#######>", component);
         const [outputs, inputs] = component.content.getComponentIO();
 
         

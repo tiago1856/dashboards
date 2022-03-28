@@ -1,6 +1,7 @@
 
 import { Div, AwesomeIconAndButton, Text } from '../builders/BuildingBlocks.js';
 import { NO_TITLE_DEFINED } from '../constants.js';
+import { BaseComponentContent } from './BaseComponentContent.js';
 import { getComponentClass } from './ComponentType.js';
 import { MasterComponent } from './MasterComponent.js';
 
@@ -70,8 +71,15 @@ export class CardComponent extends MasterComponent {
           this.update();
         } 
 
-        context.signals.onQueryUpdated.add((destination_component, new_query = null) => {
-          if (destination_component === data.uuid && new_query) {
+        context.signals.onQueryUpdated.add((destination_component, outpin = null, value = null) => {
+          if (destination_component === data.uuid && outpin && value) {
+            console.warn("---- UPDATE QUERY CARD >>> ", outpin, value);
+            if (!this.content) {
+              console.warn("[CARDCOMPONENT] NO CONTENT!");
+              return;
+            }
+            const new_query = BaseComponentContent.modifyQuery(this.content.getQuery(), outpin, value)
+            console.log("NEW QUERY > ", new_query);
             this.update(new_query);
           }
         });
@@ -146,7 +154,7 @@ export class CardComponent extends MasterComponent {
           this.content = null;
           this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, new_query);
           this.content.execute(()=>{
-            this.context.signals.onComponentUpdated.dispatch(this.data.uuid, new_query?false:true);
+            this.context.signals.onComponentUpdated.dispatch(this, new_query?false:true);
           })
         }
     }   

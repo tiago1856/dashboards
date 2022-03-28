@@ -46,9 +46,10 @@ export class NonCardComponent extends MasterComponent {
           this.update();
         }
 
-        context.signals.onQueryUpdated.add((destination_component, new_query = null) => {
-          if (destination_component === data.uuid && new_query) {
-            this.update(new_query);
+        context.signals.onQueryUpdated.add((destination_component, outpin = null, value = null) => {
+          if (destination_component === data.uuid && outpin && value) {
+            //this.update(new_query);
+            console.warn("---- UPDATE QUERY NON CARD >>> ", outpin, value);
           }
         });
     
@@ -81,16 +82,11 @@ export class NonCardComponent extends MasterComponent {
           this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, new_query);
           this.content.execute(()=>{
             if (this.data.component_type === 'CONTROL') {
-              this.context.signals.onComponentUpdated.dispatch(this.data.uuid, true);
+              this.context.signals.onComponentUpdated.dispatch(this, true);
             } else {
-              this.context.signals.onComponentUpdated.dispatch(this.data.uuid, new_query?false:true);
+              this.context.signals.onComponentUpdated.dispatch(this, new_query?false:true);
             }
           })
-          /*
-          if (this.data.component_type === 'CONTROL') {
-            this.context.signals.onComponentUpdated.dispatch(this.data.uuid);
-          }
-          */
       }
     }
 

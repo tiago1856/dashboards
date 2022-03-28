@@ -144,5 +144,22 @@ export class BaseComponentContent {
         target.forEach(t => inputs.push(t[1]))        
         return inputs;        
     }
+  
+    // temp - this alteration should be made with the analyzer
+    static modifyQuery(query, what = null, new_value = null) {
+        if (!what || !new_value) return query;
+        let index = query.indexOf(what);
+        let index_2 = query.indexOf('#', index);
+        let index_3 = query.indexOf('#', index_2 + 1);
+        if (index <= 0 || index_2 <= 0 || index_3 <= 0) return query;
+        const new_query = query.replaceBetween(index_2 + 1, index_3, new_value)
+        console.warn("old query > ", query);
+        console.warn("new query > ", new_query);
+        return new_query;
+    }
 
 }
+
+String.prototype.replaceBetween = function(start, end, what) {
+    return this.substring(0, start) + what + this.substring(end);
+};
