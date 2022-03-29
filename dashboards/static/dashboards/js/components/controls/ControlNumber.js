@@ -13,7 +13,7 @@ export class ControlNumber extends BaseComponentContent {
     const cont = new Div().attachTo(div);
     cont.dom.style.width = '100%';
 
-    new Label(data.data_config.name).attachTo(cont);
+      new Label(data.data_config.name).attachTo(cont);
 
 
       const group = new Div().attachTo(cont);
@@ -47,6 +47,11 @@ export class ControlNumber extends BaseComponentContent {
         value.setTextContent(_value);
         context.signals.onCommTriggered.dispatch(data.uuid, data.data_config.name, _value);
       })
+
+      $(input.dom).on('input', function(e) {
+        const _value = $(this).val();
+        value.setTextContent(_value);
+      })      
   }
 
   execute(onReady=null) {

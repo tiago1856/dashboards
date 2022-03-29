@@ -179,10 +179,10 @@ def check_name_component(request):
    """
    if request.method == 'POST':
       try:
-         if (request.data.get('id')):
-            components = Component.objects.filter(~Q(id=request.data.get('id')) & Q(name = request.data.get('name')))
-         else:
-            components = Component.objects.filter(name = request.data.get('name'))
+         #if (request.data.get('id')):
+         #   components = Component.objects.filter(~Q(id=request.data.get('id')) & Q(name = request.data.get('name')))
+         #else:
+         components = Component.objects.filter(name = request.data.get('name'))
          if components.count() > 0:
             data = {'status': 666, 'result': 'CONFLICT'}
          else: 
@@ -227,15 +227,22 @@ def save_component(request):
             component.data = data
             component.updated_by = user
          else:
-            component = Component(
-               uuid = uuid,
-               name = name,
-               description = description,
-               title = title,
-               data = data,
-               author = user, 
-               updated_by = user
-            )
+            try:
+               component = Component.objects.get(name=name)
+               component.description = description
+               component.title = title
+               component.data = data
+               component.updated_by = user
+            except Component.DoesNotExist:   
+               component = Component(
+                  uuid = uuid,
+                  name = name,
+                  description = description,
+                  title = title,
+                  data = data,
+                  author = user, 
+                  updated_by = user
+               )
          component.save()
          serializer = ComponentSerializer(component)
          return Response(serializer.data, status=status.HTTP_200_OK)

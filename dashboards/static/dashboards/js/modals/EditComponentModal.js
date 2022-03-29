@@ -94,7 +94,7 @@ const CB_TYPE= $("#cdc-controls-bool-type");
 
 // SAVE
 const SAVE_COMPONENT_BTN = $("#scs-save-btn");
-
+const EDIT_SAVE_COMPONENT_TAB = $('#edit-component-save-tab');
 
 export function EditComponentModal(context) {
 
@@ -123,6 +123,15 @@ export function EditComponentModal(context) {
     // ----------------
     // BUTTONS
     // ----------------
+
+    // SAVE COMPONENT TAB SELECTED
+    EDIT_SAVE_COMPONENT_TAB.on('click', function() {
+        self.checkName(self.state.id, GLOBAL_NAME.val(), () => {
+            GLOBAL_NAME_ALERT.show();
+        }, () => {
+            GLOBAL_NAME_ALERT.hide();
+        });
+    })
 
     // SAVEs QUERY
     SAVE_BTN.on('click',function() {
@@ -219,7 +228,13 @@ export function EditComponentModal(context) {
             GLOBAL_NAME.addClass('valid-input');
             // check name
         }
-        self.checkName(self.state.id, e.target.value);
+        self.checkName(self.state.id, e.target.value, () => {
+            GLOBAL_NAME_ALERT.show();
+            //SAVE_COMPONENT_BTN.attr('disabled',false);
+        }, () => {
+            GLOBAL_NAME_ALERT.hide();
+            //SAVE_COMPONENT_BTN.attr('disabled', true);  
+        });
         //self.context.signals.onChanged.dispatch();
     });
 
@@ -759,11 +774,14 @@ EditComponentModal.prototype = {
         }
 
         console.warn("SAVE > ", this.state);
+
         // did something changed?
-        if (JSON.stringify(this.component.data) !== JSON.stringify(this.state)) this.context.signals.onChanged.dispatch();
+        const changed = (JSON.stringify(this.component.data) !== JSON.stringify(this.state));
+        //if (changed) this.context.signals.onChanged.dispatch();
         // ------------------ TO PREVENT CANCEL BUG -------------        
         this.component.data = JSON.parse(JSON.stringify(this.state));
-        // ------------------
+        // ------------------        
+        //if (changed) this.component.setChanged(true);
 
         // CLOSE MODAL
         if (close) {
@@ -772,7 +790,7 @@ EditComponentModal.prototype = {
             }
             EDIT_COMPONENT_MODAL.modal('hide');
             // UPDATE COMPONENT
-            if (this.onReady) this.onReady();
+            if (this.onReady) this.onReady(changed);
         }        
 
         return this.state;
@@ -781,7 +799,7 @@ EditComponentModal.prototype = {
     /**
      * Opens the modal and sets its inputs and selection accoding to the saved state.
      * @param {MasterComponent} component Component to edit.
-     * @param {function} onReady Called to apply the changes.
+     * @param {function} onReady Called when modal closes through the apply button.
      */
     show: function(component, onReady=null) {
         this.old_name = null;
@@ -1033,7 +1051,7 @@ EditComponentModal.prototype = {
      * Checks if name exists,
      * if so, show error message
      */
-    checkName: function(id, name) {
+    checkName: function(id, name, onExist = null, onClear = null) {
         fetchPOST(
             URL_CHECK_NAME_COMPONENT, 
             {
@@ -1042,11 +1060,17 @@ EditComponentModal.prototype = {
             }, 
             result => {
                 if (result.status == 200) {
+                    if (onClear) onClear();
+                    /*
                     GLOBAL_NAME_ALERT.hide();
                     SAVE_COMPONENT_BTN.attr('disabled',false);
+                    */
                 } else {
+                    if (onExist) onExist();
+                    /*
                     GLOBAL_NAME_ALERT.show();
                     SAVE_COMPONENT_BTN.attr('disabled', true); 
+                    */
                 }
             },
             (error) => {

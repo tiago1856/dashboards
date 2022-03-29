@@ -184,7 +184,7 @@ context.signals.onZoomComponent.add((msg, body) => {
 
 context.signals.onEditComponent.add((spot, original_type) => {
     const component = dashboard.getComponentAt(spot);
-    edit_component_modal.show(component, () => {
+    edit_component_modal.show(component, (changed) => {
         if ((component.data.component_type === 'INFO' ||  component.data.component_type === 'CONTROL')
             && (original_type !== 'INFO' && original_type !== 'CONTROL')) {
                 const new_comp = dashboard.changeComponentContainer(spot, true);
@@ -193,11 +193,14 @@ context.signals.onEditComponent.add((spot, original_type) => {
             && (original_type === 'INFO' || original_type === 'CONTROL')) {
                 const new_comp = dashboard.changeComponentContainer(spot, false);
                 new_comp.update();
-        } else {           
-            component.update();
+        } else {
+            // only update component if something changed
+            if (changed) component.update();
         }
-        // UPDATE COMMS        
-        //comms.updateComponent(component);
+        if (changed) {
+            context.signals.onChanged.dispatch();
+            component.setChanged(true);
+        }
     });
 });
 
@@ -256,6 +259,7 @@ DASHBOARD_OPEN_BTN.on('click',function() {
         console.log("load dash > ", dash_id);
 
         getDashboard(dash_id, (result) => {
+            comms.reset();
             dashboard = new Dashboard(context, result.layout, result, () => {
                 comms.setDashoard(dashboard);
                 comms.restore(result);            
@@ -358,6 +362,7 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
     loadConfig((config) => {
         if (config.config !== null) {
             getDashboard(config.dashboard, (result) => {
+                comms.reset();
                 dashboard = new Dashboard(context, result.layout, result, () => {
                     date_interval.setFormat(result.date_format);
                     comms.setDashoard(dashboard);

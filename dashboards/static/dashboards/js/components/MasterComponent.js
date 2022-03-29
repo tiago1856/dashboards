@@ -42,8 +42,8 @@ export class MasterComponent extends Div {
     /**
      * Something in this component changed.
      */
-    changed() {
-      this.changed = true;
+    setChanged(changed = true) {
+      this.changed = changed;
       //this.data.id = null;
     }
 

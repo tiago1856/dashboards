@@ -89,7 +89,7 @@ CommsManager.prototype = {
      * @param {string} component_uuid Component's uuid.
      */
     updateComponentComms: function(component) {        
-        console.log("UPDATE COMMS > ", component.uuid);
+        console.log("UPDATE COMMS > ", component.data.uuid);
         this.setIO(component, true);
     },
 
