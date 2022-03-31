@@ -47,6 +47,8 @@ export function Context() {
     // channel to communicate with the visualization framework
     this.react_message_broker = new BroadcastChannel('react_channel');
 
+    
+
     // ready
     this.signals.onStuffDone.add((msg) => console.log("Log message > ", msg));
 

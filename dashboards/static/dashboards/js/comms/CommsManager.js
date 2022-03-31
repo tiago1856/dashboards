@@ -54,12 +54,7 @@ export function CommsManager (context) {
             console.warn("link data > ", link_data);
             if (link_data.from.component === uuid) {
                 if (link_data.to.component && link_data.to.component !== 'undefined') {
-                    /*
-                    console.log("new value > ", value);
-                    console.log("new value > ", value);
-                    console.log("new value > ", value);
-                    */
-                    context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, value);
+                    context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, value, link_data.to.index);
                 }
             }
         }

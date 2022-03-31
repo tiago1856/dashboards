@@ -1,18 +1,22 @@
 import { fetchPOST } from "../Fetch.js";
 import { URL_EXEC_QUERY } from "../urls.js";
-import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
+import { SqlQueryAnalyzer } from '../query/SqlQueryAnalyzer.js';
 
 /**
  * Component's inside.
  */
 export class BaseComponentContent {
+
     constructor(context, data, query = null) {
         this.context = context;
         this.component_data = null;
         this.data = data;
 
         this.query = query;
-        this.component_analysis = null;        
+        this.component_analysis = null;  
+        
+        this.conditionals = [];
+        this.ast = null;
     }
 
     prepareData(_data) {
@@ -44,122 +48,22 @@ export class BaseComponentContent {
     }
 
     getComponentIO() {
-       // if (!this.component_analysis || force) {
-            this.component_analysis = BaseComponentContent.analyzeComponent(this.data);
-       // }
+        let inputs = [];
+        let outputs = [];
+        [this.ast, this.conditionals, outputs, inputs] = SqlQueryAnalyzer.analyzeComponent(this.data, this.query);
+        this.component_analysis = [outputs, inputs];
         return this.component_analysis;
     }
 
-    static analyzeComponent(component_data) {
-        let outputs = [];   // from
-        let inputs = [];    // to
-        switch(component_data.visualization.visualization_type) {
-            case VISUALIZATION_TYPE.TS:
-            {
-                console.log("restore component I/O > SIMPLE TABLE");
-                outputs = component_data.query.query_selected_fields;
-                inputs = BaseComponentContent.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                console.log("OUT > ", outputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.TC:
-            {
-                console.log("restore component I/O > COMPLEX TABLE");
-                outputs = component_data.query.query_selected_fields;
-                inputs = BaseComponentContent.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                console.log("OUT > ", outputs);
-                break;
-            }                
-            case VISUALIZATION_TYPE.G1N:
-            {
-                console.log("restore component I/O > GRAPH 1N");
-                inputs = BaseComponentContent.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.GDN:            
-            {
-                console.log("restore component I/O > GRAPH DN");
-                inputs = BaseComponentContent.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.ISL:
-            {
-                console.log("restore component I/O > INFO SIMPLE LEFT");
-                inputs = BaseComponentContent.extractConditionals(component_data.query.query);
-                console.log("IN > ", inputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.TEC:
-            {
-                console.log("restore component I/O > TEMPLATE CALENDAR");
-                console.log("OUT > ", outputs);
-                break;
-            }
-            case VISUALIZATION_TYPE.CN:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL NUMBER");
-                console.log("OUT > ", outputs);                
-                break;
-            }
-            case VISUALIZATION_TYPE.CS:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL STRING");
-                console.log("OUT > ", outputs);
-
-                break;
-            }
-            case VISUALIZATION_TYPE.CB:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL BOOL");
-                console.log("OUT > ", outputs);
-                break;
-            }
-            /*
-            case VISUALIZATION_TYPE.CNI:
-            {
-                outputs = [component_data.data_config.name]
-                console.log("restore component I/O > CONTROL NUMBER INTERVAL");
-                console.log("OUT > ", outputs);
-                break;
-            }
-            */
+    getModifiedQuery(outpin, new_value, index = 0) {
+        // if ast is null => new content but same query => requires new parsing
+        if (!this.ast) {
+            [this.ast, this.conditionals] = SqlQueryAnalyzer.getASTConditionals(this.query);
         }
-        return [outputs, inputs];
-
-        //return BaseQueryComponentContent.extractConditionals(query);
-    }
-
-    // temp - this data should come from teh analyzer
-    static extractConditionals(query) {
-        const inputs = [];
-        const target_regex = /\$(.*?)\$/g;
-        const target = [...query.matchAll(target_regex)];
-        target.forEach(t => inputs.push(t[1]))        
-        return inputs;        
-    }
-  
-    // temp - this alteration should be made with the analyzer
-    static modifyQuery(query, what = null, new_value = null) {
-        if (!what || !new_value) return query;
-        let index = query.indexOf(what);
-        let index_2 = query.indexOf('#', index);
-        let index_3 = query.indexOf('#', index_2 + 1);
-        if (index <= 0 || index_2 <= 0 || index_3 <= 0) return query;
-        const new_query = query.replaceBetween(index_2 + 1, index_3, new_value)
-        console.warn("old query > ", query);
-        console.warn("new query > ", new_query);
-        return new_query;
+        if (!this.ast || this.conditionals.length == 0 || !new_value) return this.query;
+        SqlQueryAnalyzer.changeConditionalValue(this.conditionals, index, new_value);
+        return SqlQueryAnalyzer.recreateSQL(this.ast);
     }
 
 }
 
-String.prototype.replaceBetween = function(start, end, what) {
-    return this.substring(0, start) + what + this.substring(end);
-};

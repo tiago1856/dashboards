@@ -50,33 +50,6 @@ export class CommLink extends SimpleCard {
             if (onRemove) onRemove(id);
             $(self.dom).remove();
         })
-        /*
-        context.signals.onXCommOutput.add((name, uuid, output, add=true) => {
-            //console.log("<< OUT >> [" + name + "]", output);
-            const _existing_option = $(this.origin.dom).find(`[data-uuid='${uuid}'][value='${output}']`);
-            if (add) {
-                if (_existing_option.length > 0) return;
-                CommLink.createItem(this.origin, name, output, uuid);
-            } else {
-                _existing_option.remove();
-            }
-            this.origin.checkStatus();
-        });
-
-        context.signals.onXCommInput.add((name, uuid, input, add=true) => {
-            //console.log("<< IN >> [" + name + "]", input);
-
-            const _existing_option = $(this.destination.dom).find(`[data-uuid='${uuid}'][value='${input}']`);
-            if (add) {
-                if (_existing_option.length > 0) return;
-                CommLink.createItem(this.destination, name, input, uuid);
-            } else {
-                _existing_option.remove();
-            }
-
-            this.destination.checkStatus();
-        });
-        */
 
         context.signals.onComponentNameChanged.add((uuid, old_name, new_name) => {
             $(this.origin.dom).find(`[data-component='${old_name}']`).each(function() {
@@ -100,9 +73,9 @@ export class CommLink extends SimpleCard {
         //console.log();
         return {
             from: 
-                {component: origin.find(":selected").attr('data-uuid'), pin: origin.val()}, 
+                {component: origin.find(":selected").attr('data-uuid'), pin: origin.val(), index: origin.find(":selected").attr('data-index')}, 
             to: 
-                {component: destination.find(":selected").attr('data-uuid'), pin: destination.val()}
+                {component: destination.find(":selected").attr('data-uuid'), pin: destination.val(), index: destination.find(":selected").attr('data-index')}
         };
     }
 
@@ -114,11 +87,11 @@ export class CommLink extends SimpleCard {
     }
 
     setPinsForComponent(uuid, data) {
-        data.outputs.forEach(output_pin => {
-            CommLink.createItem(this.origin, data.name, output_pin, uuid);
+        data.outputs.forEach((output_pin, index) => {
+            CommLink.createItem(this.origin, data.name, output_pin, uuid, index);
         });
-        data.inputs.forEach(input_pin => {
-            CommLink.createItem(this.destination, data.name, input_pin, uuid);
+        data.inputs.forEach((input_pin, index) => {
+            CommLink.createItem(this.destination, data.name, input_pin, uuid, index);
         });
 
         this.destination.checkStatus();
@@ -133,11 +106,11 @@ export class CommLink extends SimpleCard {
         for (const key in data) {
             for (const k_output in data[key].outputs) {                
                 const output = data[key].outputs[k_output];
-                CommLink.createItem(this.origin, data[key].name, output, key);
+                CommLink.createItem(this.origin, data[key].name, output, key, k_output);
             }
             for (const k_output in data[key].inputs) {                
                 const input = data[key].inputs[k_output];
-                CommLink.createItem(this.destination, data[key].name, input, key);
+                CommLink.createItem(this.destination, data[key].name, input, key, k_output);
             }            
         }
         this.origin.checkStatus();
@@ -152,14 +125,14 @@ export class CommLink extends SimpleCard {
      */
     static defaultIOs(outputs, inputs) {
         // GLOBAL CALENDAR
-        CommLink.createItem(outputs, 'Global Calendar', 'Data Inicio');
-        CommLink.createItem(outputs, 'Global Calendar', 'Data Fim');
-        CommLink.createItem(outputs, 'Global Calendar', 'Ano Inicio');
-        CommLink.createItem(outputs, 'Global Calendar', 'Mês Inicio');
-        CommLink.createItem(outputs, 'Global Calendar', 'Dia Inicio');
-        CommLink.createItem(outputs, 'Global Calendar', 'Ano Fim');
-        CommLink.createItem(outputs, 'Global Calendar', 'Mês Fim');
-        CommLink.createItem(outputs, 'Global Calendar', 'Dia Fim');
+        CommLink.createItem(outputs, 'Global Calendar', 'Data Inicio',0);
+        CommLink.createItem(outputs, 'Global Calendar', 'Data Fim',1);
+        CommLink.createItem(outputs, 'Global Calendar', 'Ano Inicio',2);
+        CommLink.createItem(outputs, 'Global Calendar', 'Mês Inicio',3);
+        CommLink.createItem(outputs, 'Global Calendar', 'Dia Inicio',4);
+        CommLink.createItem(outputs, 'Global Calendar', 'Ano Fim',5);
+        CommLink.createItem(outputs, 'Global Calendar', 'Mês Fim',6);
+        CommLink.createItem(outputs, 'Global Calendar', 'Dia Fim',7);
     }
 
     /**
@@ -169,10 +142,11 @@ export class CommLink extends SimpleCard {
      * @param {*} text Pin name.
      * @param {*} uuid Component's uuid.
      */
-    static createItem(parent, component, text, uuid = null) {
+    static createItem(parent, component, text, uuid = null, index = 0) {
         const option = new Option(text, "[" + component + "] " + text).attachTo(parent);
         option.setAttribute('data-component', component);
         option.setAttribute('data-uuid', uuid);
+        option.setAttribute('data-index', index);
     }
 
 }
