@@ -7,16 +7,18 @@ import { SqlQueryAnalyzer } from '../query/SqlQueryAnalyzer.js';
  */
 export class BaseComponentContent {
 
-    constructor(context, data, query = null) {
+    constructor(context, component, query = null) {
         this.context = context;
         this.component_data = null;
-        this.data = data;
+        //this.data = data;
+        this.component = component;
 
         this.query = query;
-        this.component_analysis = null;  
-        
+        //this.component_analysis = null;  
+        /*
         this.conditionals = [];
         this.ast = null;
+        */
     }
 
     prepareData(_data) {
@@ -47,22 +49,19 @@ export class BaseComponentContent {
         return this.query;
     }
 
+
     getComponentIO() {
         let inputs = [];
         let outputs = [];
-        [this.ast, this.conditionals, outputs, inputs] = SqlQueryAnalyzer.analyzeComponent(this.data, this.query);
-        this.component_analysis = [outputs, inputs];
-        return this.component_analysis;
+        [this.component.ast, this.component.conditionals, outputs, inputs] = SqlQueryAnalyzer.analyzeComponent(this.component.data, this.query);
+        //this.component_analysis = [outputs, inputs];
+        return [outputs, inputs];
     }
 
     getModifiedQuery(outpin, new_value, index = 0) {
-        // if ast is null => new content but same query => requires new parsing
-        if (!this.ast) {
-            [this.ast, this.conditionals] = SqlQueryAnalyzer.getASTConditionals(this.query);
-        }
-        if (!this.ast || this.conditionals.length == 0 || !new_value) return this.query;
-        SqlQueryAnalyzer.changeConditionalValue(this.conditionals, index, new_value);
-        return SqlQueryAnalyzer.recreateSQL(this.ast);
+        if (!this.component.ast || this.component.conditionals.length == 0 || !new_value) return this.query;
+        SqlQueryAnalyzer.changeConditionalValue(this.component.conditionals, index, new_value);
+        return SqlQueryAnalyzer.recreateSQL(this.component.ast);
     }
 
 }

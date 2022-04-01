@@ -153,7 +153,7 @@ export class CardComponent extends MasterComponent {
           this.body.setStyle('width','100%');
           this.body.setStyle("overflow","auto"); 
           this.content = null;
-          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, new_query);
+          this.content = new component.class(this.context, this, new_query);
           this.content.execute(()=>{
             this.context.signals.onComponentUpdated.dispatch(this, new_query?false:true);
           })

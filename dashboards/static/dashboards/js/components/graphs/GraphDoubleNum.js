@@ -3,10 +3,9 @@ import { BaseComponentContent } from '../BaseComponentContent.js';
 import { getNumberField, getStringField, isNumber } from '../Discovery.js';
 
 export class GraphDoubleNum extends BaseComponentContent {
-    constructor(context, data, parent, opt_btn, new_query=null) {
-        super(context, data, new_query?new_query:data.query.query);
+    constructor(context, component, new_query=null) {
+        super(context, component, new_query?new_query:component.data.query.query);
 
-        this.parent = parent;
 
         /*
         this.execQuery(new_query?new_query:data.query.query, null, (results) => {
@@ -20,20 +19,20 @@ export class GraphDoubleNum extends BaseComponentContent {
         });
         */
 
-        $(opt_btn).on('click',function() {
+        $(component.opt_btn).on('click',function() {
             context.react_message_broker.postMessage({
               operation:'show_options', 
-              id: parent.getId(),
+              id: component.body.getId(),
             }); 
         });
     }
 
     execute(onReady=null) {
         this.execQuery(this.query, null, (results) => {
-            const component_data = this.prepareData(results, this.data);
+            const component_data = this.prepareData(results, this.component.data);
             this.context.react_message_broker.postMessage({
                 operation:'create_component', 
-                id: this.parent.getId(),
+                id: this.component.body.getId(),
                 data: component_data,
             });
             // if new_query => only some query parameter changed => no need to update comms

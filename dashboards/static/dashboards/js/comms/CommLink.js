@@ -143,7 +143,7 @@ export class CommLink extends SimpleCard {
      * @param {*} uuid Component's uuid.
      */
     static createItem(parent, component, text, uuid = null, index = 0) {
-        const option = new Option(text, "[" + component + "] " + text).attachTo(parent);
+        const option = new Option(text, "[" + component + "] [" + index + "] " + text).attachTo(parent);
         option.setAttribute('data-component', component);
         option.setAttribute('data-uuid', uuid);
         option.setAttribute('data-index', index);

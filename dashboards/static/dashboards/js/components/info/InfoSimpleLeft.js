@@ -8,10 +8,10 @@ import { getNumberField, getStringField, isNumber } from '../Discovery.js';
  * 
  */
 export class InfoSimpleLeft extends BaseComponentContent {
-    constructor(context, data, parent, opt_btn, new_query=null) {
-        super(context, data, new_query?new_query:data.query.query);
+    constructor(context, component, new_query=null) {
+        super(context, component, new_query?new_query:component.data.query.query);
 
-        const div = new Div().attachTo(parent);
+        const div = new Div().attachTo(component.body);
         div.addClass("info-box info-component-content");
 
         //div.setStyle('height','100%');
@@ -31,36 +31,20 @@ export class InfoSimpleLeft extends BaseComponentContent {
         this.value.addClass("info-box-number");
         this.value.setTextContent('SEM VALOR');
      
-        /*
-        this.execQuery(new_query?new_query:data.query.query, null, (results) => {
-            const [comp_text_1, comp_value] = this.prepareData(results, data);
-            if (data.data_config.icon !== '') {
-                $(icon.dom).removeClass();
-                $(icon.dom).addClass(data.data_config.icon);
-            }
-            if (comp_text_1 !== '') text.setTextContent(comp_text_1,);            
-            if (comp_value) {
-                const _value = comp_value + (data.data_config.text_2!==''?data.data_config.text_2:"");
-                value.setTextContent(_value);
-            }
-            context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);
-        });
-        */
-
-        $(opt_btn).on('click',function() {
+        $(component.opt_btn).on('click',function() {
         });
     }
 
     execute(onReady=null) {
         this.execQuery(this.query, null, (results) => {
-            const [comp_text_1, comp_value] = this.prepareData(results, this.data);
+            const [comp_text_1, comp_value] = this.prepareData(results, this.component.data);
             if (this.data.data_config.icon !== '') {
                 $(this.icon.dom).removeClass();
-                $(this.icon.dom).addClass(this.data.data_config.icon);
+                $(this.icon.dom).addClass(this.component.data.data_config.icon);
             }
             if (comp_text_1 !== '') this.text.setTextContent(comp_text_1,);            
             if (comp_value) {
-                const _value = comp_value + (this.data.data_config.text_2!==''?this.data.data_config.text_2:"");
+                const _value = comp_value + (this.component.data.data_config.text_2!==''?this.component.data.data_config.text_2:"");
                 this.value.setTextContent(_value);
             }
             if (onReady) onReady();

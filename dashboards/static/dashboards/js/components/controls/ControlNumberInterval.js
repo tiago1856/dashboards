@@ -3,11 +3,11 @@ import { Div, Input, Label, Span, Br } from '../../builders/BuildingBlocks.js';
 
 
 export class ControlNumberInterval extends BaseComponentContent {
-  constructor(context, data, parent, opt_btn) {
-    super(context, data);
+  constructor(context, component) {
+    super(context, component);
 
 
-    const div = new Div().attachTo(parent);
+    const div = new Div().attachTo(component.body);
     div.addClass("info-box info-component-content");
 
     const cont = new Div().attachTo(div);

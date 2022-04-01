@@ -86,7 +86,7 @@ export class NonCardComponent extends MasterComponent {
           this.body.setStyle("overflow","auto");
           this.body.setId(uuidv4());          
           this.content = null;
-          this.content = new component.class(this.context, this.data, this.body, this.options_btn.dom, new_query);
+          this.content = new component.class(this.context, this, new_query);
           this.content.execute(()=>{
             if (this.data.component_type === 'CONTROL') {
               this.context.signals.onComponentUpdated.dispatch(this, true);
