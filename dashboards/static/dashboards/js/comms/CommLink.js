@@ -125,14 +125,14 @@ export class CommLink extends SimpleCard {
      */
     static defaultIOs(outputs, inputs) {
         // GLOBAL CALENDAR
-        CommLink.createItem(outputs, 'Global Calendar', 'Data Inicio',0);
-        CommLink.createItem(outputs, 'Global Calendar', 'Data Fim',1);
-        CommLink.createItem(outputs, 'Global Calendar', 'Ano Inicio',2);
-        CommLink.createItem(outputs, 'Global Calendar', 'Mês Inicio',3);
-        CommLink.createItem(outputs, 'Global Calendar', 'Dia Inicio',4);
-        CommLink.createItem(outputs, 'Global Calendar', 'Ano Fim',5);
-        CommLink.createItem(outputs, 'Global Calendar', 'Mês Fim',6);
-        CommLink.createItem(outputs, 'Global Calendar', 'Dia Fim',7);
+        CommLink.createItem(outputs, 'Global Calendar', 'Data Inicio', null, 0);
+        CommLink.createItem(outputs, 'Global Calendar', 'Data Fim', null, 1);
+        CommLink.createItem(outputs, 'Global Calendar', 'Ano Inicio', null, 2);
+        CommLink.createItem(outputs, 'Global Calendar', 'Mês Inicio', null, 3);
+        CommLink.createItem(outputs, 'Global Calendar', 'Dia Inicio', null, 4);
+        CommLink.createItem(outputs, 'Global Calendar', 'Ano Fim', null, 5);
+        CommLink.createItem(outputs, 'Global Calendar', 'Mês Fim', null, 6);
+        CommLink.createItem(outputs, 'Global Calendar', 'Dia Fim', null, 7);
     }
 
     /**

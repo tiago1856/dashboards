@@ -1,6 +1,7 @@
 import { fetchPOST } from "../Fetch.js";
 import { URL_EXEC_QUERY } from "../urls.js";
 import { SqlQueryAnalyzer } from '../query/SqlQueryAnalyzer.js';
+import { MSG_QUERY_ANALYSIS_ERROR } from '../messages.js';
 
 /**
  * Component's inside.
@@ -53,7 +54,12 @@ export class BaseComponentContent {
     getComponentIO() {
         let inputs = [];
         let outputs = [];
-        [this.component.ast, this.component.conditionals, outputs, inputs] = SqlQueryAnalyzer.analyzeComponent(this.component.data, this.query);
+        try {
+            [this.component.ast, this.component.conditionals, outputs, inputs] = SqlQueryAnalyzer.analyzeComponent(this.component.data, this.query);
+        } catch (error) {
+            console.warn("[BaseComponentContent::getModifiedQuery] " + error);
+            this.context.signals.onWarning.dispatch(MSG_QUERY_ANALYSIS_ERROR);
+        }
         //this.component_analysis = [outputs, inputs];
         return [outputs, inputs];
     }

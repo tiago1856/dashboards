@@ -64,15 +64,14 @@ def exec_query(request):
 
             # TODO: $,# ARE TEMP - A SQL PARSER SHOULD BE USED
             # remove $ and # from conditions
-            conditions = re.findall(r"\$\w{0,100}?\$", query) 
-            for i in conditions:
-               rep = i.replace('$','')               
-               query = query.replace(i, rep)
-            values = re.findall(r"\#\w{0,100}?\#", query) 
-            for i in values:
-               rep = i.replace('#','')               
-               query = query.replace(i, rep)
-
+            #conditions = re.findall(r"\$\w{0,100}?\$", query) 
+            #for i in conditions:
+            #   rep = i.replace('$','')               
+            #   query = query.replace(i, rep)
+            #values = re.findall(r"\#\w{0,100}?\#", query) 
+            #for i in values:
+            #   rep = i.replace('#','')               
+            #   query = query.replace(i, rep)
             with connection.cursor() as cursor:
                if 'rows' in request.data:
                   # TODO: LIMIT ONLY APPLIES TO MYSQL, MARIASB, POSTGRESQL, MSSQL

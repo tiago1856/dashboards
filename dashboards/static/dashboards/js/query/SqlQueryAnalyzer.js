@@ -8,6 +8,10 @@ import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
 export class SqlQueryAnalyzer {
     static sql_parser = new NodeSQLParser.Parser();
 
+    static cleanQuery = (query) => {
+        //return query.replaceAll(/(\r\n|\n|\r|\t)/gm, " ");
+        return query.replaceAll(/(\r\n|\n|\r)/gm, " ");
+    }
 
     /**
      * 
@@ -15,7 +19,7 @@ export class SqlQueryAnalyzer {
      * @returns 
      */
     static getAST = (query) => {
-        const ast = SqlQueryAnalyzer.sql_parser.astify(query);
+        const ast = SqlQueryAnalyzer.sql_parser.astify(SqlQueryAnalyzer.cleanQuery(query));
         return ast;
     }
    
