@@ -4,8 +4,7 @@
 
 
 import { CommLink } from "./CommLink.js";
-import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
-import { disjoint } from '../utils/jsutils.js';
+import { equalsArrays } from '../utils/jsutils.js';
 
 
 const COMMS_AREA = $("#comms-container");
@@ -85,7 +84,7 @@ CommsManager.prototype = {
      */
     updateComponentComms: function(component) {        
         console.log("UPDATE COMMS > ", component.data.uuid);
-        this.setIO(component, true);
+        this.setIO(component);
     },
 
 
@@ -130,15 +129,21 @@ CommsManager.prototype = {
     /**
      * If a query changed => recreate the component and disconnect all current connections.
      * @param {*} component_uuid 
-     * @param {*} update 
      */
-    setIO(component, update=false) {
+    setIO(component) {
+
         //const component = this.dashboard.getComponent(component_uuid);
         const component_data = component.data;
         const [outputs, inputs] = component.content.getComponentIO();
 
-        
-        // already exists
+        // only update pins (remove -> add) if different from existing ones
+        if (this.ios.hasOwnProperty(component_data.uuid)) {
+            if (equalsArrays(this.ios[component_data.uuid].inputs,inputs) && equalsArrays(this.ios[component_data.uuid].outputs, outputs)) {
+                return;
+            }
+        }
+
+        // already exists --- remove / disconnect all connections
         if (this.ios.hasOwnProperty(component_data.uuid)) {
             for (const key in this.links) {
                 this.links[key].removeAllLinksFromComponent(component_data.uuid);

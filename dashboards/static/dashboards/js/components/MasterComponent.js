@@ -29,16 +29,12 @@ export class MasterComponent extends Div {
 
         this.spot = spot;     // place in the layout
         this.content = null;  // content of the panel
-        //this.query = null;
+
+        
         this.ast = null;
         this.conditionals = [];
 
         this.context = context;
-        /*
-        context.signals.onGlobalData.add((start, end) => {
-            console.log("[" + id + "] new date > ", start, end);
-        });
-        */
       
     }
 

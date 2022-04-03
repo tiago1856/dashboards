@@ -72,7 +72,7 @@ export class DataRangePicker {
     }
 
 
-    setFormat(format = null) {
+    setFormat(format = null, dispatch_signal = true) {
         if (!format) return;
         this.selected_format = format;
         const current = $('.date-format-selected');
@@ -83,6 +83,6 @@ export class DataRangePicker {
         $(DATARANGE_BTN_ID + ' span').html(this.start.format(this.selected_format) + ' - ' + this.end.format(this.selected_format));
 
         this.context.signals.onGlobalDateFormatChanged.dispatch(this.selected_format);
-        this.context.signals.onChanged.dispatch();
+        if (dispatch_signal) this.context.signals.onChanged.dispatch();
     }
 }

@@ -133,3 +133,16 @@ export function getAllNumbers(str) {
         arr2
     );
 }
+
+
+/**
+ * Check if 2 arrays are equal.
+ * Order is irrelevant.
+ * @param {array} a 
+ * @param {array} b 
+ * @returns True if a === b, else false.
+ */
+export const equalsArrays = (a,b) => {
+    if (a.every(item => b.includes(item)) && b.every(item => a.includes(item))) return true;
+    return false;
+  }

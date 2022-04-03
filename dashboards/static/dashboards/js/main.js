@@ -263,7 +263,7 @@ DASHBOARD_OPEN_BTN.on('click',function() {
             dashboard = new Dashboard(context, result.layout, result, () => {
                 comms.setDashoard(dashboard);
                 comms.restore(result);            
-                date_interval.setFormat(result.date_format);
+                date_interval.setFormat(result.date_format, false);
             });
         });
     });
@@ -364,7 +364,7 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
             getDashboard(config.dashboard, (result) => {
                 comms.reset();
                 dashboard = new Dashboard(context, result.layout, result, () => {
-                    date_interval.setFormat(result.date_format);
+                    date_interval.setFormat(result.date_format, false);
                     comms.setDashoard(dashboard);
                     comms.restore(result);                
                     new_dash = false;

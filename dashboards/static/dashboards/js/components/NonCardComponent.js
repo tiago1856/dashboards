@@ -66,8 +66,8 @@ export class NonCardComponent extends MasterComponent {
      * Update component.
      * Called when something fundamental change, like the component's type.
      */
-    update(new_query = null) {
-      super.update(new_query);
+    update(changed_query = null) {
+      super.update(changed_query);
       /*
       if (this.content) {
         //if (!this.content.hasOwnProperty('getQuery')) return;
@@ -86,12 +86,12 @@ export class NonCardComponent extends MasterComponent {
           this.body.setStyle("overflow","auto");
           this.body.setId(uuidv4());          
           this.content = null;
-          this.content = new component.class(this.context, this, new_query);
+          this.content = new component.class(this.context, this, changed_query);
           this.content.execute(()=>{
             if (this.data.component_type === 'CONTROL') {
               this.context.signals.onComponentUpdated.dispatch(this, true);
             } else {
-              this.context.signals.onComponentUpdated.dispatch(this, new_query?false:true);
+              this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true);
             }
           })
       }

@@ -32,7 +32,7 @@ export class CardComponent extends MasterComponent {
         
         this.title = new Text().attachTo(header);
         this.title.addClass('card-title');
-        this.setTitle(_title);
+        this.setTitle(_title?_title:(data?data.title:_title));
         
         const card_tools = new Div().attachTo(header);
         card_tools.addClass('card-tools');
@@ -130,8 +130,8 @@ export class CardComponent extends MasterComponent {
      * Called when something fundamental change, like creation itself or just the component's type.
      * 
      */
-    update(new_query = null) {
-      super.update(new_query);
+    update(changed_query = null) {
+      super.update(changed_query);
       this.setTitle(this.data.title);
       /*
       if (this.content) {
@@ -153,9 +153,9 @@ export class CardComponent extends MasterComponent {
           this.body.setStyle('width','100%');
           this.body.setStyle("overflow","auto"); 
           this.content = null;
-          this.content = new component.class(this.context, this, new_query);
+          this.content = new component.class(this.context, this, changed_query);
           this.content.execute(()=>{
-            this.context.signals.onComponentUpdated.dispatch(this, new_query?false:true);
+            this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true);
           })
         }
     }   

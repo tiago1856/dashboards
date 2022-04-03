@@ -87,10 +87,13 @@ const CS_DEFAULT= $("#cdc-controls-string-default-value");
 const CS_TYPE= $("#cdc-controls-string-type");
 // CONTROL BOOL
 const CB_NAME = $("#cdc-controls-boolean-name");
-const CB_DEFAULT= $("#cdc-controls-boolean-default-value");
+//const CB_DEFAULT= $("#cdc-controls-boolean-default-value");
+const CB_DEFAULT= $("#cdc-controls-bool-default-value");
 const CB_TRUE= $("#cdc-controls-bool-true");
 const CB_FALSE= $("#cdc-controls-bool-false");
 const CB_TYPE= $("#cdc-controls-bool-type");
+const CB_TRUE_OPTION= $("#cdc-controls-bool-default-value-true");
+const CB_FALSE_OPTION= $("#cdc-controls-bool-default-value-false");
 
 // SAVE
 const SAVE_COMPONENT_BTN = $("#scs-save-btn");
@@ -210,6 +213,15 @@ export function EditComponentModal(context) {
     // ----------------
     // EVENTS
     // ----------------
+
+    
+    CB_TRUE.on('change paste', function(e) {
+        CB_TRUE_OPTION.text($(this).val());
+    });
+    CB_FALSE.on('change paste', function(e) {
+        CB_FALSE_OPTION.text($(this).val());
+    });
+
 
     SELECTED_FIELDS.on('change', function(e) {
         self.setVisualizationConfigPanel(self.state.data_config.fields !== undefined);
@@ -372,13 +384,13 @@ EditComponentModal.prototype = {
             case VISUALIZATION_TYPE.CS:
                 console.log("CONTROL STRING [clearVisualizationConfigPanel]");
                 CS_NAME.val(uuidv4());
-                CS_DEFAULT.val('');
+                CS_DEFAULT.val('box');
                 //CS_TYPE.val('box');
                 break;
             case VISUALIZATION_TYPE.CB:
                 console.log("CONTROL BOOL [clearVisualizationConfigPanel]");
                 CB_NAME.val(uuidv4());
-                CB_DEFAULT.val('');
+                CB_DEFAULT.val('true');
                 CB_TRUE.val('V');
                 CB_FALSE.val('F');
                 //CB_TYPE.val('switch');
@@ -655,7 +667,7 @@ EditComponentModal.prototype = {
                     CB_TYPE.val(this.state.data_config.type);
                 } else {
                     CB_NAME.val(uuidv4());
-                    CB_DEFAULT.val('V');
+                    CB_DEFAULT.val('true');
                     CB_TRUE.val('V');
                     CB_FALSE.val('F');
                     //CB_TYPE.val('radio');                    
@@ -753,7 +765,7 @@ EditComponentModal.prototype = {
             {
                 self.state.data_config.name = CB_NAME.val();
                 self.state.data_config.default = CB_DEFAULT.val();
-                self.state.data_config.true = CB_TRUE.val();
+                self.state.data_config.true =  CB_TRUE.val();
                 self.state.data_config.false = CB_FALSE.val();
                 self.state.data_config.type = CB_TYPE.val();           
                 break;
