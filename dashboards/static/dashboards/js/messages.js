@@ -6,3 +6,4 @@ export const MSG_DELETE_DASHBOARD = "De certeza que deseja apagar o dashboard?";
 export const MSG_LAYOUT_IN_USE = "Não é possivel apagar. O layout está a ser utilizado pelo dashboard actual.";
 //export const MSG_OVERRIDE_DASHBOARD = "De certeza que deseja o dashboard?";
 export const MSG_QUERY_ANALYSIS_ERROR = "Erro na analise da query! Comunicações com este componente não é possível";
+export const MSG_QUERY_ERROR = "Erro na query!";

@@ -74,7 +74,7 @@ export class SqlQueryAnalyzer {
     static getInputs = (conditionals) => {
         const inputs = [];
         for (let i=0; i<conditionals.length; i+=2) {
-            inputs.push(conditionals[i].column)
+            inputs.push((conditionals[i].table?(conditionals[i].table + "."):"") + conditionals[i].column)
         }
         return inputs;
     }

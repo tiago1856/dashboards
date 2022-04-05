@@ -1,7 +1,7 @@
 import { fetchPOST } from "../Fetch.js";
 import { URL_EXEC_QUERY } from "../urls.js";
 import { SqlQueryAnalyzer } from '../query/SqlQueryAnalyzer.js';
-import { MSG_QUERY_ANALYSIS_ERROR } from '../messages.js';
+import { MSG_QUERY_ANALYSIS_ERROR, MSG_QUERY_ERROR } from '../messages.js';
 
 /**
  * Component's inside.
@@ -41,7 +41,8 @@ export class BaseComponentContent {
                 if (onReady) onReady(result);
             },
             (error) => {
-                this.context.signals.onError.dispatch(error,"[BaseComponentContent::execQuery]");
+                //console.error("[BaseComponentContent::execQuery]", error);
+                this.context.signals.onError.dispatch(MSG_QUERY_ERROR,"[BaseComponentContent::execQuery]");
             }
         )
     }
