@@ -45,7 +45,7 @@ export class ControlNumber extends BaseComponentContent {
       $(input.dom).on('change', function(e) {
         const _value = $(this).val();
         value.setTextContent(_value);
-        context.signals.onCommTriggered.dispatch(component.data.uuid, component.data.data_config.name, _value);
+        context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       })
 
       $(input.dom).on('input', function(e) {

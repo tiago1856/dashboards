@@ -129,7 +129,7 @@ export class CardComponent extends MasterComponent {
     /**
      * Updates the component.
      * Called when something fundamental change, like creation itself or just the component's type.
-     * 
+     * Body recreated because the graph framework does something weird to the container.
      */
     update(changed_query = null) {
       super.update(changed_query);

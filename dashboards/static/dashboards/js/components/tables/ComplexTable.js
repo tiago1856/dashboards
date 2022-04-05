@@ -24,10 +24,12 @@ export class ComplexTable extends BaseComponentContent {
             const table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
                 console.log("selected row > ", row, this.component.data.uuid);
 
-                // TODO: PASS ALL ROW
+                /*
                 row.forEach(cell => {
                     this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, cell.outpin, cell.value, cell.index);
                 })
+                */
+                this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);
 
             }).attachTo(this.container);
 

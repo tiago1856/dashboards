@@ -65,6 +65,7 @@ export class NonCardComponent extends MasterComponent {
     /**
      * Update component.
      * Called when something fundamental change, like the component's type.
+     * Body recreated because the graph framework does something weird to the container.
      */
     update(changed_query = null) {
       super.update(changed_query);

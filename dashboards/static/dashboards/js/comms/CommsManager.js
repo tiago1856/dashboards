@@ -42,21 +42,27 @@ export function CommsManager (context) {
     });
 
     // TODO: 
-    // 1 - outpin, value, index -> array of objects[{outpin, value, index}, ...]
+    // 1 - outpin, value, index -> array of objects[{outpin, value, index}, ...] --- DONE
     // 2 - store all changes and only trigger the updated in the end, with all changes
-    context.signals.onCommTriggered.add((uuid, outpin, value, index=0) => {
-        console.log(uuid, outpin, value, index);
+    //context.signals.onCommTriggered.add((uuid, outpin, value, index=0) => {
+    context.signals.onCommTriggered.add((uuid, new_values) => {
+        //console.log(uuid, outpin, value, index);
+        console.log(uuid, new_values);
 
-        for(const key in this.links) {
-            const link = this.links[key];
-            const link_data = link.getCommData();
-            console.warn("link data > ", link_data);
-            if (link_data.from.component === uuid && link_data.from.index == index) {
-                if (link_data.to.component && link_data.to.component !== 'undefined') {
-                    context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, value, link_data.to.index);
+        new_values.forEach(data => {        
+
+            for(const key in this.links) {
+                const link = this.links[key];
+                const link_data = link.getCommData();
+                console.warn("link data > ", link_data);
+                if (link_data.from.component === uuid && link_data.from.index == data.index) {
+                    if (link_data.to.component && link_data.to.component !== 'undefined') {
+                        context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, data.value, link_data.to.index);
+                    }
                 }
             }
-        }
+
+        })
     });
 
 
