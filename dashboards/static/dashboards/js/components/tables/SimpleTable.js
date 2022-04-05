@@ -20,10 +20,12 @@ export class SimpleTable extends BaseComponentContent {
             const component_data = this.prepareData(results, this.component.data);            
             new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
                 console.log("selected row > ", row, this.component.data.uuid);
-                
-                for (const key in row) {
-                    this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row[key][0], row[key][1]);
-                } 
+
+               // {pin: column, value: value, index: index}
+               // TODO: PASS ALL ROW
+               row.forEach(cell => {
+                this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, cell.outpin, cell.value, cell.index);
+               })
                        
             }).attachTo(this.container);
             //context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);

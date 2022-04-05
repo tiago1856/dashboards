@@ -71,6 +71,7 @@ export class CardComponent extends MasterComponent {
           this.update();
         } 
 
+        // outpin, value, index -> array of objects[{outpin, value, index}, ...]
         context.signals.onQueryUpdated.add((destination_component, outpin = null, value = null, index = 0) => {
           if (destination_component === data.uuid && outpin && value) {
             console.warn("---- UPDATE QUERY CARD >>> ", outpin, value);
