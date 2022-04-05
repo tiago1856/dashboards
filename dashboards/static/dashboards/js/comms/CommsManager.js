@@ -43,15 +43,17 @@ export function CommsManager (context) {
 
     context.signals.onCommTriggered.add((uuid, outpin, value) => {
         console.log(uuid, outpin, value);
+        /*
         if (!this.dashboard) {
             console.warn("[COMMSMANAGER] NO DASHBOARD!");
             return;
         }
+        */
         for(const key in this.links) {
             const link = this.links[key];
             const link_data = link.getCommData();
             console.warn("link data > ", link_data);
-            if (link_data.from.component === uuid) {
+            if (link_data.from.component === uuid && link_data.from.pin === outpin) {
                 if (link_data.to.component && link_data.to.component !== 'undefined') {
                     context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, value, link_data.to.index);
                 }

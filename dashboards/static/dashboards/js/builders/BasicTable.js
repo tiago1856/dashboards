@@ -57,7 +57,7 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null) {
 
     if (onSelect) {
         let old_selection = null;
-        $(table.dom).find('tr').on('click', function () {
+        $(table.dom).find('tr').on('click', function () {            
             const selected_row = {};
             const row = $(this).find('td'); 
             if (old_selection) old_selection.removeClass('selected-row');
@@ -66,8 +66,8 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null) {
                 row.removeClass('selected-row');
             } else {
                 row.addClass('selected-row');
-            }            
-            row.find('td').each(function(e) {
+            }
+            row.each(function(e) {
                 const value = $(this).text();
                 const column = $(this).attr('data-header');
                 // index necessary since columns can have the same name
