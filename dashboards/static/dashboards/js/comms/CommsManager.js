@@ -46,23 +46,32 @@ export function CommsManager (context) {
     // 2 - store all changes and only trigger the updated in the end, with all changes
     //context.signals.onCommTriggered.add((uuid, outpin, value, index=0) => {
     context.signals.onCommTriggered.add((uuid, new_values) => {
-        //console.log(uuid, outpin, value, index);
         console.log(uuid, new_values);
 
-        new_values.forEach(data => {        
+        const data_comm = {};
 
+        // TODO: REFACTOR
+        new_values.forEach(data => {        
             for(const key in this.links) {
                 const link = this.links[key];
                 const link_data = link.getCommData();
                 console.warn("link data > ", link_data);
                 if (link_data.from.component === uuid && link_data.from.index == data.index) {
                     if (link_data.to.component && link_data.to.component !== 'undefined') {
-                        context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, data.value, link_data.to.index);
+                        if (!data_comm.hasOwnProperty(link_data.to.component)) {
+                            data_comm[link_data.to.component] = [];
+                        }
+                        data_comm[link_data.to.component].push({pin: link_data.to.pin, value: data.value, index: link_data.to.index});
+                        //context.signals.onQueryUpdated.dispatch(link_data.to.component, link_data.to.pin, data.value, link_data.to.index);
                     }
                 }
             }
-
         })
+
+        for (const key in data_comm) {
+            console.warn("send > ", key, data_comm[key]);
+            context.signals.onQueryUpdated.dispatch(key, data_comm[key]);            
+        }
     });
 
 

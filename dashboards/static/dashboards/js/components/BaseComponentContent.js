@@ -65,9 +65,11 @@ export class BaseComponentContent {
         return [outputs, inputs];
     }
 
-    getModifiedQuery(outpin, new_value, index = 0) {
-        if (!this.component.ast || this.component.conditionals.length == 0 || !new_value) return this.query;
-        SqlQueryAnalyzer.changeConditionalValue(this.component.conditionals, index, new_value);
+    getModifiedQuery(comm_data) {
+        if (!this.component.ast || this.component.conditionals.length == 0) return this.query;
+        comm_data.forEach(data => {
+            SqlQueryAnalyzer.changeConditionalValue(this.component.conditionals, data.index, data.value);
+        })        
         return SqlQueryAnalyzer.recreateSQL(this.component.ast);
     }
 

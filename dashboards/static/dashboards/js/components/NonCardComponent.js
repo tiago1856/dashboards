@@ -46,15 +46,16 @@ export class NonCardComponent extends MasterComponent {
           this.update();
         }
 
-        context.signals.onQueryUpdated.add((destination_component, outpin = null, value = null, index = 0) => {
-          if (destination_component === data.uuid && outpin && value) {
-            console.warn("---- UPDATE QUERY NON CARD >>> ", outpin, value);
+        // outpin, value, index -> array of objects[{pin, value, index}, ...]
+        context.signals.onQueryUpdated.add((destination_component, comm_data)/*outpin = null, value = null, index = 0)*/ => {
+          if (destination_component === data.uuid /*&& outpin && value*/) {
+            console.warn("---- UPDATE QUERY CARD >>> ", data.uuid);
             if (!this.content) {
-              console.warn("[CARDCOMPONENT] NO CONTENT!");
+              console.warn("[NONCARDCOMPONENT] NO CONTENT!");
               return;
             }
             //const new_query = BaseComponentContent.modifyQuery(this.content.getQuery(), outpin, value, index)
-            const new_query = this.content.getModifiedQuery(outpin, value, index);
+            const new_query = this.content.getModifiedQuery(comm_data);//outpin, value, index);
             console.log("NEW QUERY > ", new_query);
             this.update(new_query);
           }
