@@ -14,7 +14,7 @@ export class Graph1Num extends BaseComponentContent {
     constructor(context, component, new_query=null) {
         super(context, component, new_query?new_query:component.data.query.query);
 
-        $(component.opt_btn).on('click',function() {
+        $(component.options_btn.dom).on('click',function() {            
             context.react_message_broker.postMessage({
               operation:'show_options', 
               id: component.body.getId(),

@@ -19,7 +19,7 @@ export class GraphDoubleNum extends BaseComponentContent {
         });
         */
 
-        $(component.opt_btn).on('click',function() {
+        $(component.options_btn.dom).on('click',function() {
             context.react_message_broker.postMessage({
               operation:'show_options', 
               id: component.body.getId(),
