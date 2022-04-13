@@ -2,6 +2,9 @@ import { fetchPOST } from "../Fetch.js";
 import { URL_EXEC_QUERY } from "../urls.js";
 import { SqlQueryAnalyzer } from '../query/SqlQueryAnalyzer.js';
 import { MSG_QUERY_ANALYSIS_ERROR, MSG_QUERY_ERROR } from '../messages.js';
+import { getAllNumbers } from "../utils/jsutils.js";
+
+
 
 /**
  * Component's inside.
@@ -41,8 +44,12 @@ export class BaseComponentContent {
                 if (onReady) onReady(result);
             },
             (error) => {
-                //console.error("[BaseComponentContent::execQuery]", error);
-                this.context.signals.onError.dispatch(MSG_QUERY_ERROR,"[BaseComponentContent::execQuery]");
+                const error_codes = getAllNumbers(error.toString());
+                if (error_codes && error_codes.length > 0 && error_codes[0] == 500) {
+                    this.context.signals.onError.dispatch(MSG_QUERY_ERROR,"[BaseComponentContent::execQuery]");
+                } else {
+                    this.context.signals.onError.dispatch(error,"[BaseComponentContent::execQuery]");
+                }
             }
         )
     }

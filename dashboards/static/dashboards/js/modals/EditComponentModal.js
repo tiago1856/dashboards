@@ -924,7 +924,8 @@ EditComponentModal.prototype = {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                if (error && getAllNumbers(error.toString())[0] == 500)
+                const error_codes = getAllNumbers(error.toString());
+                if (error_codes && error_codes.length > 0 && error_codes[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[EditComponentModal::fetchQueries]");
                 else
                     this.context.signals.onError.dispatch(error,"[EditComponentModal::fetchQueries]");
@@ -964,7 +965,8 @@ EditComponentModal.prototype = {
             },
             (error) => {
 				$("body").css("cursor","auto");
-                if (getAllNumbers(error.toString())[0] == 500)
+                const error_codes = getAllNumbers(error.toString());
+                if (error_codes && error_codes.length > 0 && error_codes[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados ou utilizador não identificado!","[EditComponentModal::saveQuery]");
                 else
                     this.context.signals.onError.dispatch(error,"[EditComponentModal::saveQuery]");
@@ -995,7 +997,8 @@ EditComponentModal.prototype = {
             },
             (error) => {
 				$("body").css("cursor","auto");
-                if (getAllNumbers(error.toString())[0] == 500)
+                const error_codes = getAllNumbers(error.toString());
+                if (error_codes && error_codes.length > 0 && error_codes[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados ou utilizador não identificado!","[EditComponentModal::saveQuery]");
                 else
                     this.context.signals.onError.dispatch(error,"[EditComponentModal::saveQuery]");

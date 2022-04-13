@@ -164,7 +164,8 @@ export class Dashboard extends Div {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                if (getAllNumbers(error.toString())[0] == 500)
+                const error_codes = getAllNumbers(error.toString());
+                if (error_codes && error_codes.length > 0 && error_codes[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[EditComponentModal::fetchQueries]");
                 else
                     this.context.signals.onError.dispatch(error,"[main::onLoadComponent]");
@@ -253,7 +254,8 @@ export class Dashboard extends Div {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                if (getAllNumbers(error.toString())[0] == 404) {
+                const error_codes = getAllNumbers(error.toString());
+                if (error_codes && error_codes.length > 0 && error_codes[0] == 404) {
                     //this.context.signals.onError.dispatch("Layout [" + layout_id + "] não existe!","[Dashboard::getLayout]");
                     this.context.signals.onError.dispatch("Não existem Layouts válidos!","[Dashboard::getLayout]");
                 } else {

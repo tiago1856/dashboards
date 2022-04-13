@@ -176,6 +176,12 @@ CommsManager.prototype = {
     },
   
     removeComponentFromDiagram: function(uuid) {
+        
+        //this.instance.detachAllConnections(uuid);
+        this.instance.deleteEveryEndpoint(uuid);
+        this.instance.removeAllEndpoints(uuid);
+        this.instance.detach(uuid);
+        
         this.instance.remove(uuid);
     },
 
@@ -282,6 +288,8 @@ CommsManager.prototype = {
             console.error("[deleteComponent] Invalid uuid!");
             return null;
         };
+
+
   
         // remove from diagram - component and connections
         this.removeComponentFromDiagram(uuid);
@@ -383,22 +391,13 @@ CommsManager.prototype = {
                 return;
             }
         }
-        /*
+        
         // already exists --- remove / disconnect all connections
-        if (this.ios.hasOwnProperty(component_data.uuid)) {
-            for (const key in this.links) {
-                this.links[key].removeAllLinksFromComponent(component_data.uuid);
-            }
+        if (this.ios.hasOwnProperty(component_data.uuid)) {            
+            this.deleteComponent(component_data.uuid)
         }
 
-        this.ios[component_data.uuid] = {inputs: inputs, outputs: outputs, name: component_data.name};
-
-        for (const key in this.links) {
-            this.links[key].setPinsForComponent(component_data.uuid, this.ios[component_data.uuid]);
-        }
-        */
-        this.createComponent(component_data.name, component_data.uuid, inputs, outputs)
-
+        this.createComponent(component_data.name, component_data.uuid, inputs, outputs);        
 
     },
 

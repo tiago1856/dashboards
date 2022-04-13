@@ -46,7 +46,8 @@ SelectDashboardModal.prototype = {
             },
             (error) => {
                 $("body").css("cursor","auto");
-                if (getAllNumbers(error.toString())[0] == 500)
+                const error_codes = getAllNumbers(error.toString());
+                if (error_codes && error_codes.length > 0 && error_codes[0] == 500)
                     this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[EditComponentModal::fetchQueries]");
                 else
                     this.context.signals.onError.dispatch(error,"[SelectLayoutModal::fetchLayouts]");
