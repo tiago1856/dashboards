@@ -231,11 +231,11 @@ export function EditComponentModal(context) {
 
     GLOBAL_NAME.on('change focus keyup paste', function(e) {
         if (e.target.value === '') {
-            console.log("invalid");
+            //console.log("invalid");
             GLOBAL_NAME.addClass('invalid-input');
             GLOBAL_NAME.removeClass('valid-input ');            
         } else {
-            console.log("valid");
+            //console.log("valid");
             GLOBAL_NAME.removeClass('invalid-input');
             GLOBAL_NAME.addClass('valid-input');
             // check name

@@ -125,14 +125,15 @@ export class CommLink extends SimpleCard {
      */
     static defaultIOs(outputs, inputs) {
         // GLOBAL CALENDAR
-        CommLink.createItem(outputs, 'Global Calendar', 'Data Inicio', null, 0);
-        CommLink.createItem(outputs, 'Global Calendar', 'Data Fim', null, 1);
-        CommLink.createItem(outputs, 'Global Calendar', 'Ano Inicio', null, 2);
-        CommLink.createItem(outputs, 'Global Calendar', 'Mês Inicio', null, 3);
-        CommLink.createItem(outputs, 'Global Calendar', 'Dia Inicio', null, 4);
-        CommLink.createItem(outputs, 'Global Calendar', 'Ano Fim', null, 5);
-        CommLink.createItem(outputs, 'Global Calendar', 'Mês Fim', null, 6);
-        CommLink.createItem(outputs, 'Global Calendar', 'Dia Fim', null, 7);
+        const uuid = uuidv4();
+        CommLink.createItem(outputs, 'Global Calendar', 'Data Inicio', uuid, 0);
+        CommLink.createItem(outputs, 'Global Calendar', 'Data Fim', uuid, 1);
+        CommLink.createItem(outputs, 'Global Calendar', 'Ano Inicio', uuid, 2);
+        CommLink.createItem(outputs, 'Global Calendar', 'Mês Inicio', uuid, 3);
+        CommLink.createItem(outputs, 'Global Calendar', 'Dia Inicio', uuid, 4);
+        CommLink.createItem(outputs, 'Global Calendar', 'Ano Fim', uuid, 5);
+        CommLink.createItem(outputs, 'Global Calendar', 'Mês Fim', uuid, 6);
+        CommLink.createItem(outputs, 'Global Calendar', 'Dia Fim', uuid, 7);
     }
 
     /**

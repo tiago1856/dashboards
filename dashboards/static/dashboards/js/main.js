@@ -215,7 +215,6 @@ context.signals.onLayoutEditor.add((spot) => {
     layout_editor_modal.show((new_layout_id) => {
         comms.reset();
         dashboard = new Dashboard(context, new_layout_id, null, () => {
-            comms.setDashoard(dashboard);
         });        
     });
 });
@@ -261,7 +260,6 @@ DASHBOARD_OPEN_BTN.on('click',function() {
         getDashboard(dash_id, (result) => {
             comms.reset();
             dashboard = new Dashboard(context, result.layout, result, () => {
-                comms.setDashoard(dashboard);
                 comms.restore(result);            
                 date_interval.setFormat(result.date_format, false);
             });
@@ -365,7 +363,6 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
                 comms.reset();
                 dashboard = new Dashboard(context, result.layout, result, () => {
                     date_interval.setFormat(result.date_format, false);
-                    comms.setDashoard(dashboard);
                     comms.restore(result);                
                     new_dash = false;
                     changeSaveStatus(false);
@@ -374,7 +371,6 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
         } else {
             comms.reset();
             dashboard = new Dashboard(context, DEFAULT_LAYOUT, null, () => {
-                comms.setDashoard(dashboard);
                 new_dash = true;
                 changeSaveStatus(true);
             });
@@ -383,7 +379,6 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
 } else {
     comms.reset();
     dashboard = new Dashboard(context, DEFAULT_LAYOUT, null, () => {
-        comms.setDashoard(dashboard);
         new_dash = true;
         changeSaveStatus(true);
         localStorage.removeItem("dash_new"); 
@@ -441,7 +436,6 @@ function enterEditMode(enter=true) {
 function newDashboard(layout_id/*, edit_mode = false*/) {
     comms.reset();
     dashboard = new Dashboard(context, layout_id, null, () => {
-        comms.setDashoard(dashboard);
         $(SELECTABLE_COMPONENTS).show();
         DASHBOARD_EDIT_BTN.trigger('click');
     });

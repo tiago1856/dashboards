@@ -27,7 +27,7 @@
 
 			<div class="d-none" id="comms-tab-content">
 				<div class="row">
-
+					<!--
 					<div class="col">
 						<div class="btn-group float-left">	
 							<button id="comms-text-mode-btn" class="btn btn-outline-secondary disabled" type="button" data-toggle="tooltip" title="Modo Texto">
@@ -38,10 +38,11 @@
 							</button>
 						</div>        
 					</div>
-
+					-->
 
 					<div class="col">
-						<div class="btn-group float-right">                
+						<div class="btn-group float-left">
+							<!--
 							<button id="add-link-btn" class="btn btn-outline-primary" type="button" data-toggle="tooltip" title="Adicionar Link">
 								<i class="fa fa-plus"></i> 
 							</button>
@@ -51,17 +52,26 @@
 							<button id="remove-all-links-btn" class="btn btn-outline-danger" type="button" data-toggle="tooltip" title="Remover todos os Links">
 								<i class="fa fa-trash"></i> 
 							</button>
-							<button id="exit-comms-btn" class="btn btn-outline-success" type="button" data-toggle="tooltip" title="Remover todos os Links">
-								<i class="fa fa-check"></i> 
+						-->
+							<button id="exit-comms-btn" class="btn btn-outline-primary" type="button" data-toggle="tooltip" title="Remover todos os Links">
+								<i class="fa fa-backward"></i> <i class="fa fa-backward"></i> <i class="fa fa-backward"></i> 
 							</button>							
 						</div><!-- /btn-group -->			
 					</div><!-- /col -->
 
 				</div>
+
 				<div class="row">
-					<div class="col-8 offset-md-2">
-						<div id="comms-container"></div>
-					</div> <!-- /col -->
+					<div class="col-md-2">
+						<div id="comm-components-list" class="justify-content-center">
+						</div>		
+					</div>
+					<div class="col-md-10">
+						<div id="comm-diagram-container">
+							<div id="comm-diagram">				
+							</div>
+						</div>
+					</div>
 				</div> <!-- /row -->				
 			</div>
 

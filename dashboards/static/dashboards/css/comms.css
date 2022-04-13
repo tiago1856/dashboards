@@ -1,0 +1,85 @@
+/*
+#comm-diagram, #comm-components-list {
+	margin: 20px 0;
+	border-width: 2px;
+	border-style: solid;
+	border-color: light-grey;
+	height: 90vh;
+	overflow-y: auto;	
+}*/
+#comm-diagram-container, #comm-components-list {
+	margin: 20px 0;
+	border-width: 2px;
+	border-style: solid;
+	border-color: light-grey;
+	overflow-y: auto;	
+	height: 90vh;
+}
+
+#comm-diagram {
+	height: 5000px; 
+	width: 5000px; 
+	position: relative;
+}
+
+
+#comm-components-list {
+	/*display: flex;*/
+	padding: 10px;
+/*	flex-grow: row warp;
+	align-content: flex-start;*/
+}
+
+.comm-component {
+	border-color: green;
+	border-radius: 10px;
+	border-width: 2px;
+	border-style: solid;
+	width: 180px;
+	text-align: center;
+	cursor: move;
+	height: fit-content;
+	height: -moz-max-content;
+	background-color: white;
+	min-height: 75px;
+}
+
+#comm-diagram .comm-component {
+	position: absolute;
+}
+
+#comm-components-list .comm-component {
+	margin: 10px auto;
+}
+
+.comm-diagram-component-name {
+	font-weight: bold;
+	background-color: black;
+	color: white;
+	border-color: black;
+	border-radius: 10px;
+	border-width: 1px;
+	border-style: solid;
+}
+
+.comm-custom-menu {
+	z-index: 1000;
+	position: absolute;
+	background-color: #c0c0c0;
+	border: 1px solid black;
+	padding: 2px;
+}
+
+.window {
+	z-index: 20;
+}
+.jtk-connector {
+	z-index: 4;
+}
+.jtk-endpoint {
+	z-index: 5;
+}
+.jtk-overlay {
+	z-index: 6;
+}
+

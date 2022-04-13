@@ -145,4 +145,19 @@ export function getAllNumbers(str) {
 export const equalsArrays = (a,b) => {
     if (a.every(item => b.includes(item)) && b.every(item => a.includes(item))) return true;
     return false;
-  }
+}
+
+/**
+ * Check if 2 arrays are equal.
+ * Order is relevant.
+ * @param {array} a 
+ * @param {array} b 
+ * @returns True if a === b, else false.
+ */
+export const equalsOrderedArrays = (a,b) => {
+    if (a.length !== b.length) return false;
+    for (let i=0; i<a.length; i++) {
+        if (a[i] !== b[i]) return false;
+    }    
+    return true;
+}
