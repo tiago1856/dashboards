@@ -233,6 +233,11 @@ SYNC_COMMS.on('click', function() {
 COMMS_BTN.on('click', function() {
     LAYOUT_SCREEN.removeClass('d-block').addClass('d-none');
     COMMS_SCREEN.removeClass('d-none').addClass('d-block');
+
+    setTimeout(() => {
+        comms.repaint();
+    }, 50);
+    
 })
 
 // EXITS COMMS SCREEN
