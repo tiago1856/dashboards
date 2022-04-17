@@ -5,6 +5,8 @@ import { MasterComponent } from './MasterComponent.js';
 
 /**
  * INFO component.
+ * 
+* ATTENTION: USE CREATECOMPONENT.
  */
 export class NonCardComponent extends MasterComponent {
   /**
@@ -41,10 +43,6 @@ export class NonCardComponent extends MasterComponent {
           context.signals.onLoadComponent.dispatch(self.spot);
         });
 
-        // restoring a saved component
-        if (data) {
-          this.update();
-        }
 
         // outpin, value, index -> array of objects[{pin, value, index}, ...]
         context.signals.onQueryUpdated.add((destination_component, comm_data)/*outpin = null, value = null, index = 0)*/ => {
@@ -57,19 +55,19 @@ export class NonCardComponent extends MasterComponent {
             //const new_query = BaseComponentContent.modifyQuery(this.content.getQuery(), outpin, value, index)
             const new_query = this.content.getModifiedQuery(comm_data);//outpin, value, index);
             console.log("NEW QUERY > ", new_query);
-            this.update(new_query);
+            this.setContent(new_query);
           }
         });
     
     }
 
     /**
-     * Update component.
+     * Updates the component's content.
      * Called when something fundamental change, like the component's type.
      * Body recreated because the graph framework does something weird to the container.
      */
-    update(changed_query = null) {
-      super.update(changed_query);
+     setContent(changed_query = null) {
+      super.setContent(changed_query);
       /*
       if (this.content) {
         //if (!this.content.hasOwnProperty('getQuery')) return;

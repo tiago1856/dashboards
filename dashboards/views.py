@@ -385,7 +385,8 @@ def save_dashboard(request):
 
          serializer = DashboardSerializer(dashboard)
          return Response(serializer.data, status=status.HTTP_200_OK)
-      except (Dashboard.DoesNotExist, Layout.DoesNotExist):
+      except (Dashboard.DoesNotExist, Layout.DoesNotExist) as e:
+         print(e)
          return Response(status=status.HTTP_404_NOT_FOUND)       
       except Exception as e:
          print (e)

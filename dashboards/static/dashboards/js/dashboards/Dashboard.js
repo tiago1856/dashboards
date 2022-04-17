@@ -7,16 +7,19 @@ import {
     URL_GET_COMPONENT, 
     URL_SAVE_DASHBOARD, 
     URL_GET_LAYOUT,
-    URL_DELETE_DASHBOARD
 } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
 import { fetchGET, fetchPOST } from "../Fetch.js";
 import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 import { DEFAULT_DATE_FORMAT } from '../constants.js';
-
+import { CONTAINER_TYPE, CreateComponent } from '../Components/CreateComponent.js';
 
 const DASHBOARD_CONTAINER = $('#layout-container');
 
+/**
+ * const d = new Dashboard()
+ * await d.init()
+ */
 export class Dashboard extends Div {
     /**
      * Constructor.
@@ -25,7 +28,7 @@ export class Dashboard extends Div {
      * @param {object} data Data to restore the layout and all its components.
      * @param {function} onReady Called when dashboard created and ready - the layout, not the components rendering.
      */
-    constructor (context, layout_id, data=null, onReady=null) {
+    constructor (context, layout_id, data=null) {
         super();
         this.context = context;
         DASHBOARD_CONTAINER.empty();
@@ -40,7 +43,7 @@ export class Dashboard extends Div {
         this.layout_id = layout_id;
         this.components = {};
         this.changed = false;   // something changed and it's not saved
-
+        this.data = data;
 
         this.dash_title = new DashboardTitle(
             context, 
@@ -48,33 +51,48 @@ export class Dashboard extends Div {
             (new_title) => {
                 this.title = new_title;
             }
-        ).attachTo(this);
-        
-        const display = new Div().attachTo(this);
-        display.addClass('dashboard-grid');
-
-        let spot = 0
-        this.getLayout(data?data.layout:layout_id, (grid) => {
-            grid.forEach(dims => {
-                const div = new Div().attachTo(display);
-                div.addClass("span-col-" + dims[0] + (dims[1]>1?(" span-row-" + dims[1]):""));
-                div.setStyle('width','100%');
-                if (data && (data.data[spot].component_type === 'INFO' || data.data[spot].component_type === 'CONTROL')) {
-                    this.components[spot] = new NonCardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
-                } else {
-                    this.components[spot] = new CardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
-                }                    
-                this.components[spot].setEditMode(context.edit_mode);
-                spot++;    
-            })
-            if (onReady) onReady();
-        })
-
+        ).attachTo(this);        
+     
         context.signals.onGlobalDateFormatChanged.add(selected_format => {
             this.date_format = selected_format;
         });
 
-               
+        context.signals.onDashboardSaved.add(result => {
+            this.id = result.id;
+            this.changed = false;
+            this.context.signals.onLayoutsChanged.dispatch(this.layout_id);
+        })   
+    }
+
+    /**
+     * Setups the dashboard asynchronously.
+     * If data => loaded => sets the layout + loads the components + displays the data.
+     * No data => new => sets the layouy (components are empty).
+     */
+    async init() {
+        const display = new Div().attachTo(this);
+        display.addClass('dashboard-grid');
+        const self = this;        
+        const grid = await this.getLayout(this.data?this.data.layout:this.layout_id);
+
+        await grid.forEach(async (grid_block, spot) => {
+            const div = new Div().attachTo(display);
+            div.addClass("span-col-" + grid_block[0] + (grid_block[1]>1?(" span-row-" + grid_block[1]):""));
+            div.setStyle('width','100%');
+            if (this.data && (this.data.data[spot].component_type === 'INFO' || this.data.data[spot].component_type === 'CONTROL')) {
+                return CreateComponent(CONTAINER_TYPE.NONCARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
+                    self.components[component.spot] = component;
+                    self.components[component.spot].attachTo(div);
+                    self.components[component.spot].setEditMode(self.context.edit_mode);
+                })
+            } else {
+                return CreateComponent(CONTAINER_TYPE.CARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
+                    self.components[component.spot] = component;
+                    self.components[component.spot].attachTo(div);
+                    self.components[component.spot].setEditMode(self.context.edit_mode);
+                })
+            } 
+        });
     }
 
     /**
@@ -124,14 +142,15 @@ export class Dashboard extends Div {
      * @param {boolean} info COMPONENT_TYPE.name (ComponentType.js)
      * @returns Component.
      */
-    changeComponentContainer(spot, info = false) {
+    async changeComponentContainer(spot, info = false) {
         const original = this.getComponentAt(spot);
         const data = JSON.parse(JSON.stringify(original.data));
         let comp = null;
-        if (info)
-            comp = new NonCardComponent(this.context, spot, null, 'light', data);
-        else
-            comp = new CardComponent(this.context, spot, null, 'light', data);
+        if (info) {
+            comp = await CreateComponent(CONTAINER_TYPE.NONCARD, this.context, spot, null, 'light', data);
+        } else {
+            comp = await CreateComponent(CONTAINER_TYPE.CARD, this.context, spot, null, 'light', data);
+        }
         $(original.dom).replaceWith($(comp.dom));
         comp.setEditMode(true);
         this.components[spot] = comp;
@@ -143,24 +162,24 @@ export class Dashboard extends Div {
      * @param {number} spot Spot in the Dashboard.
      * @param {number} component_id Component ID in the database.
      */
-    loadComponent(spot, component_id) {
+    async loadComponent(spot, component_id) {
         $("body").css("cursor","progress");        
-        fetchGET(URL_GET_COMPONENT + component_id, 
+        return fetchGET(URL_GET_COMPONENT + component_id, 
             (result) => {
                 const original = this.getComponentAt(spot);
                 const data = JSON.parse(JSON.stringify(result.data));
                 data.id = result.id;
-                let comp = null;
+                let type = CONTAINER_TYPE.CARD;
                 if (data.component_type === COMPONENT_TYPE.INFO.name || 
                     data.component_type === COMPONENT_TYPE.CONTROL.name) {
-                    comp = new NonCardComponent(this.context, spot, null, 'light', data);
-                } else {
-                    comp = new CardComponent(this.context, spot, null, 'light', data);
+                        type = CONTAINER_TYPE.NONCARD;                
                 }
-                $(original.dom).replaceWith($(comp.dom));
-                comp.setEditMode(true);
-                this.components[spot] = comp;
-                $("body").css("cursor","auto");
+                return CreateComponent(type, this.context, spot, null, 'light', data).then((comp) => {
+                    $(original.dom).replaceWith($(comp.dom));
+                    comp.setEditMode(true);
+                    this.components[spot] = comp;
+                    $("body").css("cursor","auto");
+                })
             },
             (error) => {
                 $("body").css("cursor","auto");
@@ -185,72 +204,34 @@ export class Dashboard extends Div {
      * Saves the dashboard in the database.
      * @param {function} onReady Called when done.
      */
-    save(onReady = null) {
-        const data = {}
+     getData() {
+        const components_data = {}
         for (const spot in this.components){
-            data[spot] = this.components[spot].data;
+            components_data[spot] = this.components[spot].data;
         }
-        $("body").css("cursor","progress");
-        fetchPOST(
-            URL_SAVE_DASHBOARD, 
-            {
-                name: this.name,
-                description: this.description,
-                title: this.title,
-                layout: this.layout_id,
-                data: data,
-                id: this.id,
-                date_format: this.date_format,
-            }, 
-            result => {
-                $("body").css("cursor","auto");
-                this.id = result.id;
-                this.changed = false;
-                this.context.signals.onLayoutsChanged.dispatch(this.layout_id);
-                if (onReady) onReady(result);
-            },
-            (error) => {
-                $("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[Dashboard::save]");                
-            }
-        )
-    }
+        return {
+            name: this.name,
+            description: this.description,
+            title: this.title,
+            layout_id: this.layout_id,
+            components_data: components_data,
+            id: this.id,
+            date_format: this.date_format,
+        }
+    };
 
-    /**
-     * Deletes the dashboard.
-     * @param {function} onReady Called when done.
-     */
-    delete(onReady = null) {
-        $("body").css("cursor","progress");
-        fetchPOST(
-            URL_DELETE_DASHBOARD, 
-            {
-                dashboard_id: this.id,
-            }, 
-            result => {
-                $("body").css("cursor","auto");
-                this.id = result.id;
-                this.context.signals.onLayoutsChanged.dispatch();
-                if (onReady) onReady();
-            },
-            (error) => {
-                $("body").css("cursor","auto");
-                this.context.signals.onError.dispatch(error,"[Dashboard::delete]");                
-            }
-        )
-    }
 
     /**
      * Loads a layout data from the database.
      * @param {number} layout_id Layout ID.
-     * @param {function} onReady CAlled when done.
      */
-    getLayout(layout_id, onReady = null) {
+    async getLayout(layout_id) {
         $("body").css("cursor","progress");        
-        fetchGET(URL_GET_LAYOUT + layout_id, 
+        return fetchGET(URL_GET_LAYOUT + layout_id, 
             (result) => {
                 $("body").css("cursor","auto");
-                if (onReady) onReady(result.data);
+                //if (onReady) onReady(result.data);
+                return result.data;
             },
             (error) => {
                 $("body").css("cursor","auto");
@@ -270,3 +251,41 @@ export class Dashboard extends Div {
 }
 
 
+
+    /*
+    async init() {
+        const display = new Div().attachTo(this);
+        display.addClass('dashboard-grid');
+        let spot = 0;
+        const self = this;        
+        const grid = await this.getLayout(this.data?this.data.layout:this.layout_id);
+
+        await [...Array(grid.length)].reduce( (p, _, i) => 
+        p.then(
+            () => {
+                const div = new Div().attachTo(display);
+                div.addClass("span-col-" + grid[spot][0] + (grid[spot][1]>1?(" span-row-" + grid[spot][1]):""));
+                div.setStyle('width','100%');
+                if (this.data && (this.data.data[spot].component_type === 'INFO' || this.data.data[spot].component_type === 'CONTROL')) {
+                    //this.components[spot] = new NonCardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                    return CreateComponent(CONTAINER_TYPE.NONCARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
+                        self.components[spot] = component;
+                        self.components[spot].attachTo(div);
+                        self.components[spot].setEditMode(self.context.edit_mode);
+                        spot++;
+                    })
+                } else {
+                    //this.components[spot] = new CardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
+                    return CreateComponent(CONTAINER_TYPE.CARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
+                        self.components[spot] = component;
+                        self.components[spot].attachTo(div);
+                        self.components[spot].setEditMode(self.context.edit_mode);
+                        spot++;
+                    })
+                }                   
+                
+            })
+        , Promise.resolve()); 
+    }
+
+    */

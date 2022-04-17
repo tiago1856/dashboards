@@ -22,7 +22,8 @@ import { fetchGET, fetchPOST } from "./Fetch.js";
 import { 
     URL_GET_DASHBOARD,
     URL_SAVE_CONFIG,
-    URL_GET_CONFIG
+    URL_GET_CONFIG,
+    URL_SAVE_DASHBOARD
 } from "./urls.js";
 import { CommsManager } from './comms/CommsManager.js';
 
@@ -187,15 +188,13 @@ context.signals.onEditComponent.add((spot, original_type) => {
     edit_component_modal.show(component, (changed) => {
         if ((component.data.component_type === 'INFO' ||  component.data.component_type === 'CONTROL')
             && (original_type !== 'INFO' && original_type !== 'CONTROL')) {
-                const new_comp = dashboard.changeComponentContainer(spot, true);
-                new_comp.update();
+                dashboard.changeComponentContainer(spot, true);
         } else if ((component.data.component_type !== 'INFO' && component.data.component_type !== 'CONTROL')
             && (original_type === 'INFO' || original_type === 'CONTROL')) {
-                const new_comp = dashboard.changeComponentContainer(spot, false);
-                new_comp.update();
+                dashboard.changeComponentContainer(spot, false);
         } else {
             // only update component if something changed
-            if (changed) component.update();
+            if (changed) component.setContent();
         }
         if (changed) {
             context.signals.onChanged.dispatch();
@@ -214,8 +213,8 @@ context.signals.onLoadComponent.add((spot) => {
 context.signals.onLayoutEditor.add((spot) => {
     layout_editor_modal.show((new_layout_id) => {
         comms.reset();
-        dashboard = new Dashboard(context, new_layout_id, null, () => {
-        });        
+        dashboard = new Dashboard(context, new_layout_id, null);
+        dashboard.init();
     });
 });
 
@@ -264,7 +263,8 @@ DASHBOARD_OPEN_BTN.on('click',function() {
 
         getDashboard(dash_id, (result) => {
             comms.reset();
-            dashboard = new Dashboard(context, result.layout, result, () => {
+            dashboard = new Dashboard(context, result.layout, result);
+            dashboard.init().then(() => {
                 comms.restore(result);            
                 date_interval.setFormat(result.date_format, false);
             });
@@ -298,9 +298,11 @@ DASHBOARD_PRINT_BTN.on('click',function() {
 // SAVE DASHBOARD
 DASHBOARD_SAVE_BTN.on('click',function() {
     dashboard_properties_modal.show(dashboard, () => {
-        console.log("DASHBOARD SAVED");
-        changeSaveStatus(false);
-    });
+        saveDashboard((result) => {
+            console.log("DASHBOARD SAVED");
+            changeSaveStatus(false);
+        });
+    })
 });
 
 // NEW DASHBOARD
@@ -366,7 +368,8 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
         if (config.config !== null) {
             getDashboard(config.dashboard, (result) => {
                 comms.reset();
-                dashboard = new Dashboard(context, result.layout, result, () => {
+                dashboard = new Dashboard(context, result.layout, result);
+                dashboard.init().then(() => {
                     date_interval.setFormat(result.date_format, false);
                     comms.restore(result);                
                     new_dash = false;
@@ -375,7 +378,8 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
             });        
         } else {
             comms.reset();
-            dashboard = new Dashboard(context, DEFAULT_LAYOUT, null, () => {
+            dashboard = new Dashboard(context, DEFAULT_LAYOUT, null);
+            dashboard.init().then(() => {
                 new_dash = true;
                 changeSaveStatus(true);
             });
@@ -383,7 +387,8 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
     })
 } else {
     comms.reset();
-    dashboard = new Dashboard(context, DEFAULT_LAYOUT, null, () => {
+    dashboard = new Dashboard(context, DEFAULT_LAYOUT, null);
+    dashboard.init().then(() => {
         new_dash = true;
         changeSaveStatus(true);
         localStorage.removeItem("dash_new"); 
@@ -440,7 +445,8 @@ function enterEditMode(enter=true) {
  */
 function newDashboard(layout_id/*, edit_mode = false*/) {
     comms.reset();
-    dashboard = new Dashboard(context, layout_id, null, () => {
+    dashboard = new Dashboard(context, layout_id, null);
+    dashboard.init().then(() => {
         $(SELECTABLE_COMPONENTS).show();
         DASHBOARD_EDIT_BTN.trigger('click');
     });
@@ -509,4 +515,32 @@ function getDashboard(dash_id, onReady = null) {
             context.signals.onError.dispatch(error,"[main::getDashboard]");                
         }
     );
+}
+
+
+function saveDashboard(onReady = null) {
+    $("body").css("cursor","progress");
+    const data = dashboard.getData();
+    fetchPOST(
+        URL_SAVE_DASHBOARD, 
+        {
+            name: data.name,
+            description: data.description,
+            title: data.title,
+            layout: data.layout_id,
+            data: data.components_data,
+            id: data.id,
+            date_format: data.date_format,
+            comms: comms.getData(),
+        }, 
+        result => {
+            $("body").css("cursor","auto");
+            context.signals.onDashboardSaved.dispatch(result);
+            if (onReady) onReady(result);
+        },
+        (error) => {
+            $("body").css("cursor","auto");
+            context.signals.onError.dispatch(error,"[main::saveDashboard]");                
+        }
+    )
 }

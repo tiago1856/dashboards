@@ -7,6 +7,8 @@ import { URL_SAVE_COMPONENT } from "../urls.js";
 
 /**
  * Container for all type of components.
+ * 
+ * ATTENTION: USE CREATECOMPONENT.
  */
 export class MasterComponent extends Div {
   /**
@@ -71,10 +73,10 @@ export class MasterComponent extends Div {
     }
 
       /**
-       * Updates the component.
+       * Updates the component's content.
        * Called when something fundamental change, like creation itself or just the component's type.
        */
-      update(new_query = null) {
+      async setContent(new_query = null) {
       }
 
       /**

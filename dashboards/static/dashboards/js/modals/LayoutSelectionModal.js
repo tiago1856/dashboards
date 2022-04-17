@@ -82,11 +82,7 @@ LayoutSelectionModal.prototype = {
             this.populate();
             this.changed = false;
         }
-        LSM_MODAL.modal('show');
-        console.log(current_layout_id);               
-        console.log(current_layout_id);               
-        console.log(current_layout_id);               
-        console.log(current_layout_id);               
+        LSM_MODAL.modal('show');              
     },
 
     /**

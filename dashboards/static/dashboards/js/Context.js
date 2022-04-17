@@ -23,6 +23,7 @@ export function Context() {
         onLayoutsChanged: new Signal(),
         onComponentNameChanged: new Signal(),
         onComponentUpdated: new Signal(),
+        onDashboardSaved: new Signal(),
         
 
         //onComponentChanged: new Signal(),

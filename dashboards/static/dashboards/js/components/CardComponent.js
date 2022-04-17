@@ -7,6 +7,8 @@ import { MasterComponent } from './MasterComponent.js';
 
 /**
  * Container for all type of components (except the INFO).
+ * 
+ * ATTENTION: USE CREATECOMPONENT.
  */
 export class CardComponent extends MasterComponent {
   /**
@@ -67,9 +69,11 @@ export class CardComponent extends MasterComponent {
         });
       
         // restoring a saved component
+        /*
         if (data) {
           this.update();
         } 
+        */
 
         // outpin, value, index -> array of objects[{pin, value, index}, ...]
         context.signals.onQueryUpdated.add((destination_component, comm_data)/*outpin = null, value = null, index = 0)*/ => {
@@ -82,7 +86,7 @@ export class CardComponent extends MasterComponent {
             //const new_query = BaseComponentContent.modifyQuery(this.content.getQuery(), outpin, value, index)
             const new_query = this.content.getModifiedQuery(comm_data);//outpin, value, index);
             console.log("NEW QUERY > ", new_query);
-            this.update(new_query);
+            this.setContent(new_query);
           }
         });
 
@@ -127,12 +131,12 @@ export class CardComponent extends MasterComponent {
     }
 
     /**
-     * Updates the component.
+     * Updates the component's content.
      * Called when something fundamental change, like creation itself or just the component's type.
      * Body recreated because the graph framework does something weird to the container.
      */
-    update(changed_query = null) {
-      super.update(changed_query);
+    async setContent(changed_query = null) {
+      super.setContent(changed_query);
       this.setTitle(this.data.title);
       /*
       if (this.content) {
@@ -155,12 +159,14 @@ export class CardComponent extends MasterComponent {
           this.body.setStyle("overflow","auto"); 
           this.content = null;
           this.content = new component.class(this.context, this, changed_query);
-          this.content.execute(()=>{
+          return this.content.execute(()=>{
             this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true);
+            
           })
         }
     }   
 }
+
 
 /**
  * Helper builder.

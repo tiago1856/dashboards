@@ -15,6 +15,7 @@ const DASH_PROPERTIES_ALERT = $("#dpm-name-alert");
 export function DashboardPropertiesModal(context) {
     this.context = context;
     this.dash = null;
+    this.save_callback = null;
     const self = this;
 
     DASH_PROPERTIES_TITLE.on('change blur paste keyup', function(e) {
@@ -39,9 +40,9 @@ export function DashboardPropertiesModal(context) {
 
 
 DashboardPropertiesModal.prototype = {
-    show: function(dash = null, onReady = null) {
+    show: function(dash = null, save_callback = null) {
         this.dash = dash;
-        this.onReady = onReady;
+        this.save_callback = save_callback;
         DASH_PROPERTIES_TITLE.val(dash.getTitle());
         DASH_PROPERTIES_ALERT.hide();
         const name = dash.name;
@@ -57,17 +58,13 @@ DashboardPropertiesModal.prototype = {
     save: function() {
         this.dash.name = DASH_PROPERTIES_NAME.val();
         this.dash.description = DASH_PROPERTIES_DESCRIPTION.val();
-        this.dash.save(            
-            (result) => {
-                DASH_PROPERTIES_MODAL.modal('hide');
-                if (this.onReady) this.onReady(this.result);
-            }
-        );
+        if (this.save_callback) this.save_callback();
+        DASH_PROPERTIES_MODAL.modal('hide');
     },
 
     /**
      * Checks if name exists,
-     * if so, show error message
+     * if so, shows error message
      */
      checkName: function() {
         fetchPOST(
