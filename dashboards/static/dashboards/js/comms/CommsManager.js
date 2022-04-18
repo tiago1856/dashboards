@@ -8,17 +8,43 @@ const COMP_LIST = $("#comm-components-list");
 const COMP_DIAGRAM = $("#comm-diagram");
 const SIZE_PER_IO = 48;
 
-
-
+/**
+ * component:
+ *      - inputs: left side | entries
+ *      - outputs: right side | exits
+ * 
+ * connections:
+ *      - sources: from | component's outputs
+ *      - targets: to | component's inputs
+ * 
+ * 
+ */
 export class CommsManager {
 
-    constructor (context) {
-        
+    /**
+     * Constructor.
+     * @param {Context} context Context.
+     */
+    constructor (context) {        
         this.context = context;
-        this.ios = {};	// uuid: {inputs, outputs, name, indices: {inputs, outputs}}; - indices: ordered arrays with the uuid of each endpoint
-        //connection_id: source(from): {component, pin, index}, target(target): {component, pin, index}
+        // uuid: {inputs, outputs, name, indices: {inputs, outputs}}; - indices: ordered arrays with the uuid of each endpoint
+        //      inputs [array strings] - pins names
+        //      outputs [array strings] - pins names
+        //      name [string] - component's name
+        //      indices.inputs [array uuids] - input pins uuids
+        //      indices.outputs [array uuids] - output pins uuids
+        this.ios = {};	
+        // connection_id: { source: {component, pin, index}, target: {component, pin, index} }
+        //      component [string] - component's uuid / id
+        //      pin [string] - pin name
+        //      index [number] - pin index related to ios.indices [uuids]
+        //          - source.index --> ios.uuid.indices.outputs[source.index] = pin uuid 
+        //          - target.index --> ios.uuid.indices.inputs[target.index] = pin uuid
         this.links = {};
         const self = this;
+        // flag required to indicate when the comms were restored.
+        // make sure to set to false, once the restore is completed.
+        this.restored = false;  
 
         this.instance = jsPlumb.getInstance();
         this.instance.setContainer(COMM_DIAGRAM_CONTAINER);
@@ -131,7 +157,7 @@ export class CommsManager {
     
 
 
-
+        // the name of a component changed
         context.signals.onComponentNameChanged.add((uuid, old_name, new_name) => {
             if (this.ios.hasOwnProperty(uuid)) {   
                 //this.ios[uuid].name = new_name;
@@ -149,11 +175,9 @@ export class CommsManager {
         });
 
 
+        // 
         context.signals.onCommTriggered.add((uuid, new_values) => {
-            //console.log(uuid, new_values);
-
             const data_comm = {};
-
             new_values.forEach(data => {
                 for(const key in this.links) {
                     const link = this.links[key];
@@ -174,11 +198,18 @@ export class CommsManager {
         });
     }
 
-
+    /**
+     * 
+     * @param {*} $item 
+     */
     removeComponentFromList = ( $item ) => {
         $item.remove();
     }
   
+    /**
+     * 
+     * @param {*} uuid 
+     */
     removeComponentFromDiagram = (uuid) => {
         this.instance.detachAllConnections(uuid);
         this.instance.removeAllEndpoints(uuid);
@@ -188,7 +219,18 @@ export class CommsManager {
     }
 
 
-    // inputs => in pins | outputs => out pins
+    /**
+     * inputs => in pins | outputs => out pins
+     * @param {*} name 
+     * @param {*} uuid 
+     * @param {*} inputs 
+     * @param {*} outputs 
+     * @param {*} parent 
+     * @param {*} in_diagram 
+     * @param {*} top 
+     * @param {*} left 
+     * @returns 
+     */
     createComponent = (name, uuid=null, inputs=[], outputs=[], parent = COMP_LIST.get(0), in_diagram=false, top=0, left=0) => {
         if (!uuid) {
             console.error("[CommsManager::createComponent] Invalid uuid | Name:", name);
@@ -233,18 +275,21 @@ export class CommsManager {
         return component
     }
 
-    // set the pins and labels
+    /**
+     * Sets the pins and labels.
+     * @param {node} component Component node.
+     * @returns 
+     */
     setupComponent = (component) => {
         const uuid = component.attr('data-uuid');
         if (!this.ios.hasOwnProperty(uuid)) return;
         const {inputs, outputs, name} = this.ios[uuid]
         const n_in = inputs.length;
-        const n_out = outputs.length;
-        
+        const n_out = outputs.length;       
         
         let delta = 1/(n_out + 1);
         outputs.forEach((output, index) => {
-            const pin_uuid = uuidv4();	// GET FROM DATA
+            const pin_uuid = this.restored?this.ios[uuid].indices.outputs[index]:uuidv4();
             this.instance.addEndpoint(component.attr('id'), {
                 endpoint: "Dot",
                 anchor: [ 1, delta + delta * index, 1, 0],
@@ -265,7 +310,7 @@ export class CommsManager {
         
         delta = 1/(n_in + 1);
         inputs.forEach((input, index) => {
-            const pin_uuid = uuidv4();
+            const pin_uuid = this.restored?this.ios[uuid].indices.inputs[index]:uuidv4();
             this.instance.addEndpoint(component.attr('id'), {
                 endpoint: "Rectangle",
                 anchor: [ 0, delta + delta * index, -1, 0],
@@ -279,12 +324,15 @@ export class CommsManager {
                 ],
             });	
             //io[uuid].uuids[pin_uuid] = input;
-            this.ios[uuid].indices.inputs.push(pin_uuid);
-            
+            this.ios[uuid].indices.inputs.push(pin_uuid);            
         }); 
     }
 
-    // deletes a component and its connections
+    /**
+     * Deletes a component and its connections.
+     * @param {string} uuid Component's uuid.
+     * @returns 
+     */
     deleteComponent = (uuid = null) => {
         if (!uuid) {
             console.error("[CommsManager::deleteComponent] Invalid uuid!");
@@ -306,6 +354,12 @@ export class CommsManager {
         delete this.ios[uuid];	
     }
 
+    /**
+     * Changes the name of a component, regardless of its location.
+     * @param {string} uuid Component's uuid.
+     * @param {string} new_name New name.
+     * @returns 
+     */
     changeComponentName = (uuid = null, new_name = null) => {
         if (!uuid) {
             console.error("[CommsManager::changeComponentName] Invalid uuid!");
@@ -344,13 +398,14 @@ export class CommsManager {
 
 
     /**
-     * Resets all comms.
+     * Resets the manager.
      */
     reset = () => {
         this.ios = {};	
         this.links = {};
         COMP_LIST.empty();
         COMP_DIAGRAM.empty();
+        this.restored = false;
         //this.instance.reset();
         console.warn("RESET");
     }
@@ -359,8 +414,11 @@ export class CommsManager {
      * Creates a data structure containing all data related with the comms.
      * @returns Data to save.
      */
-
-    // not in diagram = in_diagram / io
+    
+    /**
+     * Get the comms state.
+     * @returns object with all the date required to restore the comms.
+     */
     getData = () => {
         const data = {};
         data["io"] = this.ios;
@@ -383,17 +441,34 @@ export class CommsManager {
             return null;
         }
 
-        console.warn("comms data >", data);
+        this.restored = true;
         
+        this.ios = data.io;	
 
         for (const uuid in data.in_diagram) {
             const component = data.in_diagram[uuid];
             const top = component.top;
             const left = component.left;
-            console.log(">>>>", uuid, top, left);
+            this.moveComponent2Diagram(uuid, top, left);
         }
-       // this.ios = data.io;	
-       // this.links = data.links;
+        
+        for (const key in data.links) {
+            const source_uuid = data.links[key].source.component;
+            const source_index = data.links[key].source.index;
+            const target_uuid = data.links[key].target.component;
+            const target_index = data.links[key].target.index;
+            const source_pin = this.ios[source_uuid].indices.outputs[source_index];
+            const target_pin = this.ios[target_uuid].indices.inputs[target_index];
+            
+            this.instance.connect({ 
+                uuids:[source_pin,target_pin]            
+            }); 
+            
+           //console.log(source_pin, target_pin);
+        }
+
+        this.restored = false;
+
     }
 
     /**
@@ -407,7 +482,7 @@ export class CommsManager {
 
 
     /**
-     * If a query changed => recreate the component and disconnect all current connections.
+     * If a query changed => recreates the component and disconnects all current connections.
      * @param {*} component_uuid 
      */
     setIO = (component) => {
@@ -432,6 +507,10 @@ export class CommsManager {
 
     }
 
+    /**
+     * Repaints the canvas.
+     * Necessary if showing the canvas that was hidden when something changed.
+     */
     repaint = () => {
         this.instance.repaintEverything(); 
     }
