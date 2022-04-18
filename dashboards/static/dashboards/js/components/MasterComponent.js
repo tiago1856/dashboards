@@ -1,5 +1,5 @@
 
-import { Div } from '../builders/BuildingBlocks.js';
+import { Div, AwesomeIcon } from '../builders/BuildingBlocks.js';
 import { ComponentData } from './ComponentData.js';
 import { fetchPOST } from "../Fetch.js";
 import { URL_SAVE_COMPONENT } from "../urls.js";
@@ -38,6 +38,16 @@ export class MasterComponent extends Div {
 
         this.context = context;
       
+        this.spinner = new Div().attachTo(this);
+        this.spinner.addClass('d-none spinner-overlay');
+        new AwesomeIcon('fa fa-sync-alt fa-spin').attachTo(this.spinner);
+    }
+
+    setSpinnerVisibility(show = true) {
+      if (show)
+        this.spinner.removeClass('d-none');
+      else
+        this.spinner.addClass('d-none');
     }
 
     /**

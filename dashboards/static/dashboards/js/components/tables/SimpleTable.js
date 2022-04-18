@@ -15,24 +15,14 @@ export class SimpleTable extends BaseComponentContent {
         });
     }
 
-    execute(onReady=null) {
-        this.execQuery(this.query, null, (results) => {            
-            const component_data = this.prepareData(results, this.component.data);            
-            new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
-                console.log("selected row > ", row, this.component.data.uuid);
-
-               // {pin: column, value: value, index: index}
-                /*
-                row.forEach(cell => {
-                    this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, cell.outpin, cell.value, cell.index);
-                })
-                */
-                this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);
-                       
-            }).attachTo(this.container);
-            //context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);
-            if (onReady) onReady();
-        });
+    async execute() {
+        const results = await this.execQuery(this.query, null);
+        const component_data = this.prepareData(results, this.component.data);            
+        new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
+            console.log("selected row > ", row, this.component.data.uuid);
+            this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);                       
+        }).attachTo(this.container);
+        //context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);
     }
 
     prepareData(data_2_display, _data=null) {

@@ -28,20 +28,21 @@ export class BaseComponentContent {
     prepareData(_data) {
     }
 
-    execute(onReady=null) {        
+    async execute() {        
     }
 
-    execQuery(query=null, rows=null, onReady=null) {
+    async execQuery(query=null, rows=null) {
         if (!query) return null;
         let options = null;
         if (rows) 
             options = { query: query, rows: rows };
         else
             options = { query: query };
-        fetchPOST(URL_EXEC_QUERY,
+        return fetchPOST(URL_EXEC_QUERY,
             options,
             (result) => {
-                if (onReady) onReady(result);
+                return result;
+                //if (onReady) onReady(result);
             },
             (error) => {
                 const error_codes = getAllNumbers(error.toString());

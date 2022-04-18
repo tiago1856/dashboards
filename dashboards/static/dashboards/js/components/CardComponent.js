@@ -138,6 +138,7 @@ export class CardComponent extends MasterComponent {
     async setContent(changed_query = null) {
       super.setContent(changed_query);
       this.setTitle(this.data.title);
+      
       /*
       if (this.content) {
         //if (!this.content.hasOwnProperty('getQuery')) return;
@@ -151,21 +152,27 @@ export class CardComponent extends MasterComponent {
       
       const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {
-          if (this.body) $(this.body.dom).remove();
-          this.body = new Div().attachTo(this);
-          this.body.addClass('card-body');
-          this.body.setId(uuidv4());
-          this.body.setStyle('width','100%');
-          this.body.setStyle("overflow","auto"); 
-          this.content = null;
-          this.content = new component.class(this.context, this, changed_query);
-          return this.content.execute(()=>{
-            this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true);
-            
-          })
+            this.setSpinnerVisibility(true);
+            if (this.body) $(this.body.dom).remove();
+            this.body = new Div().attachTo(this);
+            this.body.addClass('card-body');
+            this.body.setId(uuidv4());
+            this.body.setStyle('width','100%');
+            this.body.setStyle("overflow","auto"); 
+            this.content = null;
+            this.content = new component.class(this.context, this, changed_query);
+            //await delay(Math.random() * 5000);
+            await this.content.execute();
+            this.setSpinnerVisibility(false);
+            this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true); 
         }
     }   
 }
+
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 
 /**

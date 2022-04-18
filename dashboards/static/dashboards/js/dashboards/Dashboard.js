@@ -1,15 +1,12 @@
 
 import { Div } from '../builders/BuildingBlocks.js';
-import { CardComponent } from '../Components/CardComponent.js';
 import { DashboardTitle } from './DashboardTitle.js';
-import { NonCardComponent } from '../components/NonCardComponent.js';
 import { 
     URL_GET_COMPONENT, 
-    URL_SAVE_DASHBOARD, 
     URL_GET_LAYOUT,
 } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
-import { fetchGET, fetchPOST } from "../Fetch.js";
+import { fetchGET } from "../Fetch.js";
 import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 import { DEFAULT_DATE_FORMAT } from '../constants.js';
 import { CONTAINER_TYPE, CreateComponent } from '../Components/CreateComponent.js';
@@ -69,31 +66,42 @@ export class Dashboard extends Div {
      * If data => loaded => sets the layout + loads the components + displays the data.
      * No data => new => sets the layouy (components are empty).
      */
-    async init() {
+     async init() {
         const display = new Div().attachTo(this);
         display.addClass('dashboard-grid');
         const self = this;        
         const grid = await this.getLayout(this.data?this.data.layout:this.layout_id);
+        const promises = [];      
 
-        await grid.forEach(async (grid_block, spot) => {
-            const div = new Div().attachTo(display);
-            div.addClass("span-col-" + grid_block[0] + (grid_block[1]>1?(" span-row-" + grid_block[1]):""));
-            div.setStyle('width','100%');
-            if (this.data && (this.data.data[spot].component_type === 'INFO' || this.data.data[spot].component_type === 'CONTROL')) {
-                return CreateComponent(CONTAINER_TYPE.NONCARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
-                    self.components[component.spot] = component;
-                    self.components[component.spot].attachTo(div);
-                    self.components[component.spot].setEditMode(self.context.edit_mode);
-                })
-            } else {
-                return CreateComponent(CONTAINER_TYPE.CARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
-                    self.components[component.spot] = component;
-                    self.components[component.spot].attachTo(div);
-                    self.components[component.spot].setEditMode(self.context.edit_mode);
-                })
-            } 
+        grid.forEach((grid_block, spot) => {
+            promises.push( new Promise(resolve => {
+                const div = new Div().attachTo(display);
+                // check for legacy (old => only components data)
+                const component_data = this.data?(this.data.data.hasOwnProperty("components")?this.data.data.components[spot]:this.data.data[spot]):null;
+                div.addClass("span-col-" + grid_block[0] + (grid_block[1]>1?(" span-row-" + grid_block[1]):""));
+                div.setStyle('width','100%');
+                if (this.data && (component_data.component_type === 'INFO' || component_data.component_type === 'CONTROL')) {
+                    CreateComponent(CONTAINER_TYPE.NONCARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
+                        self.components[component.spot] = component;
+                        //self.components[component.spot].attachTo(div);
+                        self.components[component.spot].setEditMode(self.context.edit_mode);
+                        resolve();
+                    })
+                } else {
+                    CreateComponent(CONTAINER_TYPE.CARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
+                        self.components[component.spot] = component;
+                        //self.components[component.spot].attachTo(div);
+                        self.components[component.spot].setEditMode(self.context.edit_mode);
+                        resolve();
+                    })
+                } 
+            }))
         });
+
+        
+        await Promise.all(promises);
     }
+
 
     /**
      * Get the component at a specific location in the grid.
@@ -147,9 +155,9 @@ export class Dashboard extends Div {
         const data = JSON.parse(JSON.stringify(original.data));
         let comp = null;
         if (info) {
-            comp = await CreateComponent(CONTAINER_TYPE.NONCARD, this.context, spot, null, 'light', data);
+            comp = await CreateComponent(CONTAINER_TYPE.NONCARD, null, this.context, spot, null, 'light', data);
         } else {
-            comp = await CreateComponent(CONTAINER_TYPE.CARD, this.context, spot, null, 'light', data);
+            comp = await CreateComponent(CONTAINER_TYPE.CARD, null, this.context, spot, null, 'light', data);
         }
         $(original.dom).replaceWith($(comp.dom));
         comp.setEditMode(true);
@@ -174,7 +182,7 @@ export class Dashboard extends Div {
                     data.component_type === COMPONENT_TYPE.CONTROL.name) {
                         type = CONTAINER_TYPE.NONCARD;                
                 }
-                return CreateComponent(type, this.context, spot, null, 'light', data).then((comp) => {
+                return CreateComponent(type, null, this.context, spot, null, 'light', data).then((comp) => {
                     $(original.dom).replaceWith($(comp.dom));
                     comp.setEditMode(true);
                     this.components[spot] = comp;
@@ -250,6 +258,36 @@ export class Dashboard extends Div {
 
 }
 
+
+    /*
+    async init() {
+        const display = new Div().attachTo(this);
+        display.addClass('dashboard-grid');
+        const self = this;        
+        const grid = await this.getLayout(this.data?this.data.layout:this.layout_id);
+
+        await grid.forEach(async (grid_block, spot) => {
+            const div = new Div().attachTo(display);
+            // check for legacy (old => only components data)
+            const component_data = this.data?(this.data.data.hasOwnProperty("components")?this.data.data.components[spot]:this.data.data[spot]):null;
+            div.addClass("span-col-" + grid_block[0] + (grid_block[1]>1?(" span-row-" + grid_block[1]):""));
+            div.setStyle('width','100%');
+            if (this.data && (component_data.component_type === 'INFO' || component_data.component_type === 'CONTROL')) {
+                return CreateComponent(CONTAINER_TYPE.NONCARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
+                    self.components[component.spot] = component;
+                    //self.components[component.spot].attachTo(div);
+                    self.components[component.spot].setEditMode(self.context.edit_mode);
+                })
+            } else {
+                return CreateComponent(CONTAINER_TYPE.CARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
+                    self.components[component.spot] = component;
+                    //self.components[component.spot].attachTo(div);
+                    self.components[component.spot].setEditMode(self.context.edit_mode);
+                })
+            } 
+        });
+    }
+    */
 
 
     /*

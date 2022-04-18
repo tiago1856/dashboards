@@ -80,6 +80,7 @@ export class NonCardComponent extends MasterComponent {
       */
       const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {
+          this.setSpinnerVisibility(true);
           if (this.body) $(this.body.dom).remove();
           this.body = new Div().attachTo(this);
           this.body.setStyle('width','100%');
@@ -87,13 +88,13 @@ export class NonCardComponent extends MasterComponent {
           this.body.setId(uuidv4());          
           this.content = null;
           this.content = new component.class(this.context, this, changed_query);
-          this.content.execute(()=>{
-            if (this.data.component_type === 'CONTROL') {
-              this.context.signals.onComponentUpdated.dispatch(this, true);
-            } else {
-              this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true);
-            }
-          })
+          this.content.execute();
+          this.setSpinnerVisibility(false);
+          if (this.data.component_type === 'CONTROL') {
+            this.context.signals.onComponentUpdated.dispatch(this, true);
+          } else {
+            this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true);
+          }
       }
     }
 

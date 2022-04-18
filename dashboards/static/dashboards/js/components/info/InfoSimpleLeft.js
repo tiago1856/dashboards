@@ -35,20 +35,19 @@ export class InfoSimpleLeft extends BaseComponentContent {
         });
     }
 
-    execute(onReady=null) {
-        this.execQuery(this.query, null, (results) => {
-            const [comp_text_1, comp_value] = this.prepareData(results, this.component.data);
-            if (this.component.data.data_config.icon !== '') {
-                $(this.icon.dom).removeClass();
-                $(this.icon.dom).addClass(this.component.data.data_config.icon);
-            }
-            if (comp_text_1 !== '') this.text.setTextContent(comp_text_1,);   
-            if (comp_value) {
-                const _value = comp_value + (this.component.data.data_config.text_2!==''?this.component.data.data_config.text_2:"");
-                this.value.setTextContent(_value);
-            }
-            if (onReady) onReady();
-        });
+    async execute() {
+        const results = await this.execQuery(this.query, null);
+        const [comp_text_1, comp_value] = this.prepareData(results, this.component.data);
+        if (this.component.data.data_config.icon !== '') {
+            $(this.icon.dom).removeClass();
+            $(this.icon.dom).addClass(this.component.data.data_config.icon);
+        }
+        if (comp_text_1 !== '') this.text.setTextContent(comp_text_1,);   
+        if (comp_value) {
+            const _value = comp_value + (this.component.data.data_config.text_2!==''?this.component.data.data_config.text_2:"");
+            this.value.setTextContent(_value);
+        }
+        //if (onReady) onReady();
     }
 
 

@@ -57,6 +57,7 @@ export class CommsManager {
                     } );
                     self.removeComponentFromList( ui.draggable );
                     self.setupComponent(clone);
+                    context.signals.onChanged.dispatch();
                 }
             });
             
@@ -64,6 +65,7 @@ export class CommsManager {
             $('body').on('click','.delete-connection',function(event) {
                 self.instance.detach(window.selectedConnection);
                 $('div.comm-custom-menu').remove();
+                context.signals.onChanged.dispatch();
             });
 
 
@@ -83,6 +85,7 @@ export class CommsManager {
                 self.removeComponentFromDiagram(window.selectedControl);
                 $('div.comm-custom-menu').remove();
                 self.createComponent(restore.name, window.selectedControl, restore.inputs, restore.outputs);
+                context.signals.onChanged.dispatch();
             });
             
             // remove custom menu
@@ -114,7 +117,7 @@ export class CommsManager {
                 };
                 self.links[connection_id] = conn_data;
                 console.log(self.links);
-                
+                context.signals.onChanged.dispatch();
             });
             
             // on desconnection
@@ -123,6 +126,7 @@ export class CommsManager {
                 //const con = info.connection;
                 const connection_id = info.connection.id;  
                 delete self.links[connection_id];
+                context.signals.onChanged.dispatch();
             });
     
 
@@ -132,13 +136,16 @@ export class CommsManager {
             if (this.ios.hasOwnProperty(uuid)) {   
                 //this.ios[uuid].name = new_name;
                 this.changeComponentName(uuid, new_name)
-            }
+                context.signals.onChanged.dispatch();
+            }            
         });
 
         // component was updated, either the query structure or some other thing
         //context.signals.onComponentUpdated.add((component_uuid, update_comms = true) => {
             context.signals.onComponentUpdated.add((component, update_comms = true) => {
-            if (update_comms) this.updateComponentComms(component);
+            if (update_comms) {
+                this.updateComponentComms(component);
+            }
         });
 
 
@@ -184,7 +191,7 @@ export class CommsManager {
     // inputs => in pins | outputs => out pins
     createComponent = (name, uuid=null, inputs=[], outputs=[], parent = COMP_LIST.get(0), in_diagram=false, top=0, left=0) => {
         if (!uuid) {
-            console.error("[createComponent] Invalid uuid | Name:", name);
+            console.error("[CommsManager::createComponent] Invalid uuid | Name:", name);
             return null;
         }
         const component = new Div().attachTo(parent);
@@ -229,6 +236,7 @@ export class CommsManager {
     // set the pins and labels
     setupComponent = (component) => {
         const uuid = component.attr('data-uuid');
+        if (!this.ios.hasOwnProperty(uuid)) return;
         const {inputs, outputs, name} = this.ios[uuid]
         const n_in = inputs.length;
         const n_out = outputs.length;
@@ -279,7 +287,7 @@ export class CommsManager {
     // deletes a component and its connections
     deleteComponent = (uuid = null) => {
         if (!uuid) {
-            console.error("[deleteComponent] Invalid uuid!");
+            console.error("[CommsManager::deleteComponent] Invalid uuid!");
             return null;
         };
 
@@ -300,7 +308,7 @@ export class CommsManager {
 
     changeComponentName = (uuid = null, new_name = null) => {
         if (!uuid) {
-            console.error("[deleteComponent] Invalid uuid!");
+            console.error("[CommsManager::changeComponentName] Invalid uuid!");
             return null;
         }	
         if (!new_name || new_name === '') return;
@@ -315,6 +323,24 @@ export class CommsManager {
         }        
     }
 
+  
+    moveComponent2Diagram = (uuid = null, top = 0, left = 0) => {
+        if (!uuid) {
+           console.error("[CommsManager::moveComponent2Diagram] Invalid uuid!");
+           return;
+       }       
+        const comp_2_move = COMP_LIST.find(`[data-uuid='${uuid}']`);
+        const component = comp_2_move.clone(false);
+        component.attr("id",uuid);
+        component.css('top', top + "px");
+        component.css('left', left + "px");
+        component.appendTo(COMP_DIAGRAM);
+        this.instance.draggable(uuid, {containment: true, scroll: true} );
+        this.removeComponentFromList( comp_2_move );
+        this.setupComponent(component);	
+    }
+
+
 
 
     /**
@@ -324,7 +350,9 @@ export class CommsManager {
         this.ios = {};	
         this.links = {};
         COMP_LIST.empty();
-        COMP_DIAGRAM.empty();        
+        COMP_DIAGRAM.empty();
+        //this.instance.reset();
+        console.warn("RESET");
     }
 
     /**
@@ -333,13 +361,13 @@ export class CommsManager {
      */
 
     // not in diagram = in_diagram / io
-    save = () => {
+    getData = () => {
         const data = {};
         data["io"] = this.ios;
         data["links"] = this.links;
         data["in_diagram"] = {};	
         COMP_DIAGRAM.find('div.comm-component').each(function(index, value) {
-            data["in_diagram"][$(this).attr('data-uuid')] = {top: $(this).css('top'), left: $(this).css('left')};
+            data["in_diagram"][$(this).attr('data-uuid')] = {top: parseFloat($(this).css('top')), left: parseFloat($(this).css('left'))};
         });	
         return data;
     }
@@ -351,15 +379,21 @@ export class CommsManager {
      */
     restore = (data=null) => {
         if (!data) {
-            console.error("[restore] No data to restore!");
+            console.warn("[CommsManager::restore] No comms data to restore!");
             return null;
         }
+
+        console.warn("comms data >", data);
         
-        //const io = {};	
-        //const links = {};
-        //COMP_LIST.empty();
-        //COMP_DIAGRAM.empty();
-        
+
+        for (const uuid in data.in_diagram) {
+            const component = data.in_diagram[uuid];
+            const top = component.top;
+            const left = component.left;
+            console.log(">>>>", uuid, top, left);
+        }
+       // this.ios = data.io;	
+       // this.links = data.links;
     }
 
     /**

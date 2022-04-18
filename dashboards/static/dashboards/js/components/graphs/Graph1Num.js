@@ -22,18 +22,17 @@ export class Graph1Num extends BaseComponentContent {
         });
     }
 
-    execute(onReady=null) {
-        this.execQuery(this.query, null, (results) => {
-            const component_data = this.prepareData(results, this.component.data);
-            this.context.react_message_broker.postMessage({
+    async execute() {
+        const results = await this.execQuery(this.query, null);
+        const component_data = this.prepareData(results, this.component.data);
+        this.context.react_message_broker.postMessage({
                 operation:'create_component', 
                 id: this.component.body.getId(),
                 data: component_data,
-            });
-            // if new_query => only some query parameter changed => no need to update comms
-            //context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);
-            if (onReady) onReady();
         });
+        // if new_query => only some query parameter changed => no need to update comms
+        //context.signals.onComponentUpdated.dispatch(data.uuid, new_query?false:true);
+        // if (onReady) onReady();
     }
 
     prepareData(data_2_display, _data=null) {

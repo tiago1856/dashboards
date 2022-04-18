@@ -1,0 +1,37 @@
+
+/* ------------------------- */
+/* ---- LOADING SPINNER ---- */
+/* ------------------------- */ 
+
+
+/*
+  example:
+            <div class="spinner-overlay">
+              <i class="fa fa-sync-alt fa-spin" aria-hidden="true"></i>
+            </div>
+*/
+.spinner-overlay {
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 100%;  
+    border-radius: 0.25rem;
+    -ms-flex-align: center;
+    align-items: center;
+    background: rgba(44, 44, 44, 0.7) !important;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: center;
+    justify-content: center;
+    z-index: 50;
+    font-size: 2rem;
+    color: white !important;
+  }
+  
+  .spinner-overlay > .fa,
+  .spinner-overlay > .fas {
+    color: #ffffff !important;
+  }
+  
+  

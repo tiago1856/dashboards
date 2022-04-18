@@ -265,9 +265,13 @@ DASHBOARD_OPEN_BTN.on('click',function() {
             comms.reset();
             dashboard = new Dashboard(context, result.layout, result);
             dashboard.init().then(() => {
-                comms.restore(result);            
+                //console.warn("1111111111111111");
+                if (result.hasOwnProperty('data') && result.data.hasOwnProperty('comms')) {
+                    comms.restore(result.data.comms);
+                }
                 date_interval.setFormat(result.date_format, false);
             });
+            //console.warn("222222222222");
         });
     });
 })
@@ -371,7 +375,9 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
                 dashboard = new Dashboard(context, result.layout, result);
                 dashboard.init().then(() => {
                     date_interval.setFormat(result.date_format, false);
-                    comms.restore(result);                
+                    if (result.hasOwnProperty('data') && result.data.hasOwnProperty('comms')) {
+                        comms.restore(result.data.comms);
+                    }              
                     new_dash = false;
                     changeSaveStatus(false);
                 });
@@ -528,10 +534,13 @@ function saveDashboard(onReady = null) {
             description: data.description,
             title: data.title,
             layout: data.layout_id,
-            data: data.components_data,
+            data: {
+                components: data.components_data,
+                comms: comms.getData(),
+            },
             id: data.id,
             date_format: data.date_format,
-            comms: comms.getData(),
+            //comms: comms.getData(),
         }, 
         result => {
             $("body").css("cursor","auto");

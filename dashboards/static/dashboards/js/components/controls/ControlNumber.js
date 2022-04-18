@@ -56,7 +56,6 @@ export class ControlNumber extends BaseComponentContent {
       //context.signals.onCommTriggered.dispatch(component.data.uuid, component.data.data_config.name, component.data.data_config.default);
   }
 
-  execute(onReady=null) {
-    if (onReady) onReady();
+  async execute() {
   }
 }

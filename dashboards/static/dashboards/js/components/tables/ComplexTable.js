@@ -18,34 +18,24 @@ export class ComplexTable extends BaseComponentContent {
         });
     }
 
-    execute(onReady=null) {
-        this.execQuery(this.query, null, (results) => {            
-            const component_data = this.prepareData(results, this.component.data);
-            const table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
-                console.log("selected row > ", row, this.component.data.uuid);
+    async execute() {
+        const results = await this.execQuery(this.query, null);
+        const component_data = this.prepareData(results, this.component.data);
+        const table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
+            console.log("selected row > ", row, this.component.data.uuid);
+            this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);
+        }).attachTo(this.container);
 
-                /*
-                row.forEach(cell => {
-                    this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, cell.outpin, cell.value, cell.index);
-                })
-                */
-                this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);
+        // no data
+        if (!table) return null;
 
-            }).attachTo(this.container);
-
-            // no data
-            if (!table) return null;
-
-            const dt = $(table.dom).DataTable({
-                "scrollX": "100%",
-                "order": [[ 1, "desc" ]],
-                "iDisplayLength": 20,//default_rows_per_page,
-                "autoWidth": false,
-            });
-            dt.draw(false);
-
-            if (onReady) onReady();
+        const dt = $(table.dom).DataTable({
+            "scrollX": "100%",
+            "order": [[ 1, "desc" ]],
+            "iDisplayLength": 20,//default_rows_per_page,
+            "autoWidth": false,
         });
+        dt.draw(false);
     }
 
 
