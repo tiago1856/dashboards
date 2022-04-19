@@ -2,6 +2,16 @@
 import { BaseComponentContent } from '../BaseComponentContent.js';
 import { BasicTable } from '../../builders/BasicTable.js';
 import { Div } from '../../builders/BuildingBlocks.js';
+import { 
+    ID_SIZES_HEIGHT_COMPONENT,
+    ID_HEADER_BACK_COLOR,
+    ID_HEADER_COLOR,
+    ID_HEADER_ALIGNMENT,
+    ID_ROWS_BACK_COLOR,
+    ID_ROWS_COLOR,
+    ID_ROWS_ALIGNMENT,
+} from '../ComponentType.js';
+
 
 export class SimpleTable extends BaseComponentContent {
     constructor(context, component, new_query=null) {
@@ -11,7 +21,34 @@ export class SimpleTable extends BaseComponentContent {
         this.container = new Div().attachTo(component.body);
 
 
-        $(component.opt_btn).on('click',function() {
+        context.signals.onOptionChanged.add((uuid, {id, value}) => {
+            if (uuid !== component.data.uuid) return;
+            console.warn(uuid, id, value);
+            switch (id) {
+                case ID_SIZES_HEIGHT_COMPONENT:
+                    component.body.setStyle("height", value + "px");
+                    break;
+                case ID_HEADER_BACK_COLOR:
+
+                    break;
+                case ID_HEADER_COLOR:
+                
+                    break;
+                case ID_HEADER_ALIGNMENT:
+                
+                    break;
+                case ID_ROWS_BACK_COLOR:
+                
+                    break;
+                case ID_ROWS_COLOR:
+                
+                    break;
+                case ID_ROWS_ALIGNMENT:
+                
+                    break;
+                default:
+            }
+            
         });
     }
 

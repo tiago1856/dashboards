@@ -14,8 +14,6 @@ export class ComplexTable extends BaseComponentContent {
         component.body.setStyle("height","300px");
         this.container = new Div().attachTo(component.body);  
 
-        $(component.opt_btn).on('click',function() {
-        });
     }
 
     async execute() {

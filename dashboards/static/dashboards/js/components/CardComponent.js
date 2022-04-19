@@ -2,7 +2,7 @@
 import { Div, AwesomeIconAndButton, Text } from '../builders/BuildingBlocks.js';
 import { NO_TITLE_DEFINED } from '../constants.js';
 import { BaseComponentContent } from './BaseComponentContent.js';
-import { getComponentClass } from './ComponentType.js';
+import { getComponentProperties } from './ComponentType.js';
 import { MasterComponent } from './MasterComponent.js';
 import { OptionsMenu } from '../options/OptionsMenu.js';
 /**
@@ -59,10 +59,18 @@ export class CardComponent extends MasterComponent {
         });
         
         $(edit_btn.dom).on('click',function() {
+          if (self.opt_menu) {
+            self.opt_menu.close();
+            self.opt_menu = null;
+          }            
           context.signals.onEditComponent.dispatch(self.spot, self.data.component_type);
         });
 
         $(open_btn.dom).on('click',function() {
+          if (self.opt_menu) {
+            self.opt_menu.close();
+            self.opt_menu = null;
+          }            
           context.signals.onLoadComponent.dispatch(self.spot);
         });
 
@@ -76,7 +84,7 @@ export class CardComponent extends MasterComponent {
               self.opt_menu.close();
               self.opt_menu = null;
             } else {
-              self.opt_menu = new OptionsMenu(self, 100,100, () => {self.opt_menu = null;}).attachTo($('#layout-tab-content').get(0));
+              self.opt_menu = new OptionsMenu(context, self, 100,100, () => {self.opt_menu = null;}).attachTo($('#layout-tab-content').get(0));
             }            
         });
       
@@ -162,7 +170,7 @@ export class CardComponent extends MasterComponent {
       }
       */
       
-      const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
+      const component = getComponentProperties(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {
             this.setSpinnerVisibility(true);
             if (this.body) $(this.body.dom).remove();

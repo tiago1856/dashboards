@@ -1,7 +1,8 @@
 
 import { Div, AwesomeIconAndButton } from '../builders/BuildingBlocks.js';
-import { getComponentClass } from './ComponentType.js';
+import { getComponentProperties } from './ComponentType.js';
 import { MasterComponent } from './MasterComponent.js';
+import { OptionsMenu } from '../options/OptionsMenu.js';
 
 /**
  * INFO component.
@@ -24,6 +25,8 @@ export class NonCardComponent extends MasterComponent {
         this.setStyle('position','relative'); 
 
         const self = this;
+
+        this.opt_menu = null;
        
         const card_tools = new Div().attachTo(this);
         card_tools.addClass('info-component-container-buttons');
@@ -36,12 +39,31 @@ export class NonCardComponent extends MasterComponent {
       
 
         $(edit_btn.dom).on('click',function() {
+          if (self.opt_menu) {
+            self.opt_menu.close();
+            self.opt_menu = null;
+          }          
           context.signals.onEditComponent.dispatch(self.spot, self.data.component_type);
         });
 
         $(open_btn.dom).on('click',function() {
+          if (self.opt_menu) {
+            self.opt_menu.close();
+            self.opt_menu = null;
+          }           
           context.signals.onLoadComponent.dispatch(self.spot);
         });
+
+
+        $(this.options_btn.dom).on('click', function() {
+          if (self.data.component_type === 'GRAPH') return;
+            if (self.opt_menu) {
+              self.opt_menu.close();
+              self.opt_menu = null;
+            } else {
+              self.opt_menu = new OptionsMenu(context, self, 100,100, () => {self.opt_menu = null;}).attachTo($('#layout-tab-content').get(0));
+            }            
+        });        
 
 
         // outpin, value, index -> array of objects[{pin, value, index}, ...]
@@ -68,6 +90,7 @@ export class NonCardComponent extends MasterComponent {
      */
      setContent(changed_query = null) {
       super.setContent(changed_query);
+
       /*
       if (this.content) {
         //if (!this.content.hasOwnProperty('getQuery')) return;
@@ -78,7 +101,7 @@ export class NonCardComponent extends MasterComponent {
         }
       }
       */
-      const component = getComponentClass(this.data.component_type, this.data.visualization.visualization_type);
+      const component = getComponentProperties(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {
           this.setSpinnerVisibility(true);
           if (this.body) $(this.body.dom).remove();
