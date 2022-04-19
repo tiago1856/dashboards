@@ -4,7 +4,7 @@ import { NO_TITLE_DEFINED } from '../constants.js';
 import { BaseComponentContent } from './BaseComponentContent.js';
 import { getComponentClass } from './ComponentType.js';
 import { MasterComponent } from './MasterComponent.js';
-
+import { OptionsMenu } from '../options/OptionsMenu.js';
 /**
  * Container for all type of components (except the INFO).
  * 
@@ -28,6 +28,8 @@ export class CardComponent extends MasterComponent {
         this.setStyle('width','100%');
 
         const self = this;
+
+        this.opt_menu = null;
 
         const header = new Div().attachTo(this);
         header.addClass('card-header py-1 px-2');       
@@ -66,6 +68,16 @@ export class CardComponent extends MasterComponent {
 
         $(save_btn.dom).on('click',function() {
           self.save();
+        });
+
+        $(this.options_btn.dom).on('click', function() {
+          if (self.data.component_type === 'GRAPH') return;
+            if (self.opt_menu) {
+              self.opt_menu.close();
+              self.opt_menu = null;
+            } else {
+              self.opt_menu = new OptionsMenu(self, 100,100, () => {self.opt_menu = null;}).attachTo($('#layout-tab-content').get(0));
+            }            
         });
       
         // restoring a saved component

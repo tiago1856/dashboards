@@ -24,6 +24,7 @@ export function Context() {
         onComponentNameChanged: new Signal(),
         onComponentUpdated: new Signal(),
         onDashboardSaved: new Signal(),
+        //onOptionsMenu: new Signal(),
         
 
         //onComponentChanged: new Signal(),
