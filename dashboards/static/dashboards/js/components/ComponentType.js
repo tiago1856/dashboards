@@ -38,7 +38,7 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Dimensões",
                         inputs: [
-                            {id: "sizes-height-component", label: "Altura do Componente:", type: "text", value: "300"}
+                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300},
                         ]                    
                     },
                     {
@@ -46,7 +46,7 @@ export const COMPONENT_TYPE = {
                         inputs: [
                             {id: "header-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
                             {id: "header-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "header-alignment", label: "Alinhamento:", type: "text", value: "#000000"},
+                            {id: "header-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
                         ]		
                     },
                     {
@@ -54,7 +54,7 @@ export const COMPONENT_TYPE = {
                         inputs: [
                             {id: "rows-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
                             {id: "rows-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "rows-alignment", label: "Alinhamento:", type: "text", value: "#000000"},
+                            {id: "rows-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
                         ]		
                     },                    
                 ]
@@ -66,7 +66,7 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Dimensões",
                         inputs: [
-                            {id: "sizes-height-component", label: "Altura do Componente:", type: "text", value: "300"}
+                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300},
                         ]                    
                     },
                     {
@@ -74,7 +74,7 @@ export const COMPONENT_TYPE = {
                         inputs: [
                             {id: "header-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
                             {id: "header-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "header-alignment", label: "Alinhamento:", type: "text", value: "#000000"},
+                            {id: "header-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
                         ]		
                     },
                     {
@@ -82,7 +82,7 @@ export const COMPONENT_TYPE = {
                         inputs: [
                             {id: "rows-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
                             {id: "rows-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "rows-alignment", label: "Alinhamento:", type: "text", value: "#000000"},
+                            {id: "rows-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
                         ]		
                     }, 
                     {

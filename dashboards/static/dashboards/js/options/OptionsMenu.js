@@ -2,6 +2,8 @@
 import { Div, Hx, Span, AwesomeIconAndButton } from '../builders/BuildingBlocks.js';
 import { OptionsInputColor } from './OptionsInputColor.js';
 import { OptionsInputText } from './OptionsInputText.js';
+import { OptionsSelect } from './OptionsSelect.js';
+import { OptionsSlider } from './OptionsSlider.js';
 import { subStr } from '../utils/jsutils.js';
 import { getComponentProperties } from '../Components/ComponentType.js';
 
@@ -11,10 +13,11 @@ import { getComponentProperties } from '../Components/ComponentType.js';
         super();
         const properties = getComponentProperties(component.data.component_type, component.data.visualization.visualization_type);
         const options_data = properties.options;
+
         const values = component ? (component.data.hasOwnProperty('options') ? component.data.options: null) : null;
         const self = this;
         this.onClose = onClose;
-        this.options = [];
+        this.inputs = [];
         
         this.addClass('m-1 text-white options-nf');
         this.setStyle('top', top + 'px');
@@ -40,17 +43,24 @@ import { getComponentProperties } from '../Components/ComponentType.js';
         ((typeof options_data === 'undefined' || !options_data)?[]:options_data).forEach(section => {
            const new_section = OptionsMenu.createSection(section.section_name, accordion_area);
            
-           section.inputs.forEach(input => {
-               switch (input.type) {
-                   case 'text': 
-                       this.options.push(new OptionsInputText(context, component.data.uuid, input).attachTo(new_section));
-                       break;
-                   case 'color': 
-                       this.options.push(new OptionsInputColor(context, component.data.uuid,input).attachTo(new_section));
-                       break;
-                   default:                       
-               }
-           });
+            section.inputs.forEach(input => {
+                switch (input.type) {
+                    case 'text': 
+                        this.inputs.push(new OptionsInputText(context, component.data.uuid, input).attachTo(new_section));
+                        break;
+                    case 'color': 
+                        this.inputs.push(new OptionsInputColor(context, component.data.uuid,input).attachTo(new_section));
+                        break;
+                    case 'select': 
+                        this.inputs.push(new OptionsSelect(context, component.data.uuid,input).attachTo(new_section));
+                        break;  
+                    case 'slider': 
+                        this.inputs.push(new OptionsSlider(context, component.data.uuid,input).attachTo(new_section));
+                        break;                          
+
+                    default:                       
+                }
+            });
         });
 
 
@@ -72,10 +82,14 @@ import { getComponentProperties } from '../Components/ComponentType.js';
         if (this.onClose) this.onClose();
         $(this.dom).remove();
     }
+
+    restore() {
+
+    }
     
     getData() {
         const data = {};
-        this.options.forEach(option => {
+        this.inputs.forEach(option => {
             const value = option.getData();
             data[value.id] = value.value;
         });
@@ -85,6 +99,7 @@ import { getComponentProperties } from '../Components/ComponentType.js';
     static createSection(name, parent) {
         const section_title = new Hx(3).attachTo(parent);
         section_title.setTextContent(name);
+        section_title.addClass('options-nf-section-title');
         const section = new Div().attachTo(parent);
         section.addClass('p-2');
         return section;

@@ -27,6 +27,7 @@ export const ComponentData = {
     // data
     data_config: {                      // visualization configuration panel [object]
     },
+    options: {},                        // options - colors, fonts, ...
     
 }
 
