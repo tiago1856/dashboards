@@ -29,6 +29,9 @@ export class MasterComponent extends Div {
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
         if (!data || !this.data.uuid) this.data.uuid = uuidv4();
 
+        // for legacy versions
+        if (!this.data.hasOwnProperty('options')) this.data.options = null;
+
         this.spot = spot;     // place in the layout
         this.content = null;  // content of the panel
 
@@ -116,6 +119,16 @@ export class MasterComponent extends Div {
               this.context.signals.onError.dispatch(error,"[Component::saveComponent]");                
             }
         )
+    }
+
+    /**
+     * Sets the options data.
+     * 
+     * ATTENTION: TO BE CALLED AFTER THE COMPONENT IS INSERTED IN DOM, 
+     * OTHERWISE OPTIONS WILL BE EMPTY STRINGS.
+     */
+    setOptions() {
+      if (this.content) this.content.setOptions();
     }
 
 

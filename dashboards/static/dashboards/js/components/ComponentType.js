@@ -17,9 +17,11 @@ export const ID_SIZES_HEIGHT_COMPONENT = "sizes-height-component";
 export const ID_HEADER_BACK_COLOR = "header-background-color";
 export const ID_HEADER_COLOR = "header-color";
 export const ID_HEADER_ALIGNMENT = "header-alignment";
+export const ID_HEADER_VERTICAL_ALIGNMENT = "header-vertical-alignment";
 export const ID_ROWS_BACK_COLOR = "rows-background-color";
 export const ID_ROWS_COLOR = "rows-color";
 export const ID_ROWS_ALIGNMENT = "rows-alignment";
+export const ID_ROWS_VERTICAL_ALIGNMENT = "rows-vertical-alignment";
 export const ID_OPERATION_PRINT = "operation-print";
 export const ID_OPERATION_PDF = "operation-pdf";
 export const ID_OPERATION_CSV = "operation-csv";
@@ -38,23 +40,25 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Dimensões",
                         inputs: [
-                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
+                            {id: ID_SIZES_HEIGHT_COMPONENT, label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
                         ]                    
                     },
                     {
                         section_name: "Cabeçalho",
                         inputs: [
-                            {id: "header-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
-                            {id: "header-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "header-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
+                            {id: ID_HEADER_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_HEADER_COLOR, label: "Cor:", type: "color", value: "#000000"},
+                            {id: ID_HEADER_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
+                            {id: ID_HEADER_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
                         ]		
                     },
                     {
                         section_name: "Linhas",
                         inputs: [
-                            {id: "rows-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
-                            {id: "rows-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "rows-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
+                            {id: ID_ROWS_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_ROWS_COLOR, label: "Cor:", type: "color", value: "#000000"},
+                            {id: ID_ROWS_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
+                            {id: ID_ROWS_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
                         ]		
                     },                    
                 ]
@@ -66,24 +70,26 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Dimensões",
                         inputs: [
-                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
+                            {id: ID_SIZES_HEIGHT_COMPONENT, label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
                         ]                    
                     },
                     {
                         section_name: "Cabeçalho",
                         inputs: [
-                            {id: "header-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
-                            {id: "header-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "header-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
+                            {id: ID_HEADER_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_HEADER_COLOR, label: "Cor:", type: "color", value: "#000000"},
+                            {id: ID_HEADER_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
+                            {id: ID_HEADER_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
                         ]		
                     },
                     {
                         section_name: "Linhas",
                         inputs: [
-                            {id: "rows-colors-background-color", label: "Cor de fundo:", type: "color", value: "#ff0000"},
-                            {id: "rows-colors-color", label: "Cor:", type: "color", value: "#000000"},
-                            {id: "rows-alignment", label: "Alinhamento:", type: "select", options:{'center':'Centro', 'right': 'Direita','left': 'Esquerda'}, value: 'center'}
-                        ]		
+                            {id: ID_ROWS_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_ROWS_COLOR, label: "Cor:", type: "color", value: "#000000"},
+                            {id: ID_ROWS_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
+                            {id: ID_ROWS_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
+                        ]			
                     }, 
                     {
                         section_name: "Operações",

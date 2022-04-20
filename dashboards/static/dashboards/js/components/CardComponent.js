@@ -80,6 +80,7 @@ export class CardComponent extends MasterComponent {
 
         $(this.options_btn.dom).on('click', function() {
           if (self.data.component_type === 'GRAPH') return;
+          if (!self.body) return;
             if (self.opt_menu) {
               self.opt_menu.close();
               self.opt_menu = null;
@@ -173,7 +174,10 @@ export class CardComponent extends MasterComponent {
       const component = getComponentProperties(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {
             this.setSpinnerVisibility(true);
-            if (this.body) $(this.body.dom).remove();
+            if (this.body) {
+              this.body.clear();
+              $(this.body.dom).remove();
+            }
             this.body = new Div().attachTo(this);
             this.body.addClass('card-body');
             this.body.setId(uuidv4());

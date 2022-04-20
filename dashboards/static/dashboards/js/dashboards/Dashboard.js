@@ -85,6 +85,7 @@ export class Dashboard extends Div {
                         self.components[component.spot] = component;
                         //self.components[component.spot].attachTo(div);
                         self.components[component.spot].setEditMode(self.context.edit_mode);
+                        component.setOptions();
                         resolve();
                     })
                 } else {
@@ -92,6 +93,7 @@ export class Dashboard extends Div {
                         self.components[component.spot] = component;
                         //self.components[component.spot].attachTo(div);
                         self.components[component.spot].setEditMode(self.context.edit_mode);
+                        component.setOptions();
                         resolve();
                     })
                 } 
@@ -160,6 +162,7 @@ export class Dashboard extends Div {
             comp = await CreateComponent(CONTAINER_TYPE.CARD, null, this.context, spot, null, 'light', data);
         }
         $(original.dom).replaceWith($(comp.dom));
+        comp.setOptions();
         comp.setEditMode(true);
         this.components[spot] = comp;
         return this.components[spot];
@@ -184,6 +187,7 @@ export class Dashboard extends Div {
                 }
                 return CreateComponent(type, null, this.context, spot, null, 'light', data).then((comp) => {
                     $(original.dom).replaceWith($(comp.dom));
+                    comp.setOptions();
                     comp.setEditMode(true);
                     this.components[spot] = comp;
                     $("body").css("cursor","auto");

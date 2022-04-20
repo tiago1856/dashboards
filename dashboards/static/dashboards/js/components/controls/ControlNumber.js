@@ -6,7 +6,6 @@ export class ControlNumber extends BaseComponentContent {
   constructor(context, component) {
     super(context, component);
 
-
     const div = new Div().attachTo(component.body);
     div.addClass("info-box info-component-content");
 

@@ -3,8 +3,8 @@ import { OptionInput } from './OptionInput.js';
 import { Label, Input, InputNumber } from '../builders/BuildingBlocks.js';
 
 export class OptionSlider extends OptionInput {
-    constructor(context, uuid, input_data) {
-        super(uuid, input_data);
+    constructor(context, component_data, input_data) {
+        super(input_data);
         
         this.addClass('form-group');
         const label = new Label().attachTo(this);
@@ -27,11 +27,11 @@ export class OptionSlider extends OptionInput {
 
         $(this.input_range.dom).on('change', () => {
             this.input.setValue(this.input_range.getValue());
-            context.signals.onOptionChanged.dispatch(uuid, this.getData());
+            context.signals.onOptionChanged.dispatch(component_data.uuid, this.getData());
         });         
         $(this.input.dom).on('change paste', () => {
             this.input_range.setValue(this.input.getValue());
-            context.signals.onOptionChanged.dispatch(uuid, this.getData());
+            context.signals.onOptionChanged.dispatch(component_data.uuid, this.getData());
         });
 
         $(this.input_range.dom).on('input', () => {

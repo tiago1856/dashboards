@@ -3,11 +3,10 @@ import { Div } from '../builders/BuildingBlocks.js';
 
 
  export class OptionInput extends Div {
-    constructor(uuid, input_data) {
+    constructor(input_data) {
         super();
         this.input_data = input_data;
         this.input = null;
-        this.uuid = uuid;        
     };
     
     getData() {

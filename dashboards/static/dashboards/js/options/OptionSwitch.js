@@ -3,8 +3,8 @@ import { OptionInput } from './OptionInput.js';
 import { Label, Input, Div } from '../builders/BuildingBlocks.js';
 
 export class OptionSwitch extends OptionInput {
-    constructor(context, uuid, input_data) {
-        super(uuid, input_data);
+    constructor(context, component_data, input_data) {
+        super(input_data);
         
        
         const cont = new Div().attachTo(this);
@@ -33,7 +33,7 @@ export class OptionSwitch extends OptionInput {
     
 
         $(this.input.dom).on('change', () => {
-            context.signals.onOptionChanged.dispatch(uuid, this.getData());
+            context.signals.onOptionChanged.dispatch(component_data.uuid, this.getData());
         });
         
 

@@ -23,8 +23,13 @@ export class BaseComponentContent {
         this.conditionals = [];
         this.ast = null;
         */
-    }
+        //if (!this.component.data.options) this.populateOptions();
 
+    }
+    /*
+    populateOptions() {        
+    }
+    */
     prepareData(_data) {
     }
 
@@ -80,6 +85,17 @@ export class BaseComponentContent {
         })        
         return SqlQueryAnalyzer.recreateSQL(this.component.ast);
     }
+
+    /**
+     * Cleanups events, usw.
+     */
+     clear() {}
+
+    /**
+     * Sets the options data.
+     * Either populates or creates it and then populates.
+     */
+    setOptions() {}
 
 }
 

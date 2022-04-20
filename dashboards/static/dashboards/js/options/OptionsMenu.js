@@ -10,12 +10,12 @@ import { getComponentProperties } from '../Components/ComponentType.js';
 
 
  export class OptionsMenu extends Div {
-    constructor(context, component = null, top=100, left=100, onClose = null) {
+    constructor(context, component, top=100, left=100, onClose = null) {
         super();
         const properties = getComponentProperties(component.data.component_type, component.data.visualization.visualization_type);
         const options_data = properties.options;
 
-        const values = component ? (component.data.hasOwnProperty('options') ? component.data.options: null) : null;
+        const values = component.data.hasOwnProperty('options') ? component.data.options: null;
         const self = this;
         this.onClose = onClose;
         this.inputs = [];
@@ -39,6 +39,11 @@ import { getComponentProperties } from '../Components/ComponentType.js';
 
 
         const accordion_area = new Div().attachTo(this);
+        accordion_area.addClass('options-nf-options-area');
+        /*
+        accordion_area.setStyle('overflow-y','auto');
+        accordion_area.setStyle('height','100%');
+        */
 
        
         ((typeof options_data === 'undefined' || !options_data)?[]:options_data).forEach(section => {
@@ -47,19 +52,19 @@ import { getComponentProperties } from '../Components/ComponentType.js';
             section.inputs.forEach(input => {
                 switch (input.type) {
                     case 'text': 
-                        this.inputs.push(new OptionInputText(context, component.data.uuid, input).attachTo(new_section));
+                        this.inputs.push(new OptionInputText(context, component.data, input).attachTo(new_section));
                         break;
                     case 'color': 
-                        this.inputs.push(new OptionInputColor(context, component.data.uuid,input).attachTo(new_section));
+                        this.inputs.push(new OptionInputColor(context, component.data, input).attachTo(new_section));
                         break;
                     case 'select': 
-                        this.inputs.push(new OptionSelect(context, component.data.uuid,input).attachTo(new_section));
+                        this.inputs.push(new OptionSelect(context, component.data, input).attachTo(new_section));
                         break;  
                     case 'slider': 
-                        this.inputs.push(new OptionSlider(context, component.data.uuid,input).attachTo(new_section));
+                        this.inputs.push(new OptionSlider(context, component.data, input).attachTo(new_section));
                         break;  
                     case 'switch':
-                        this.inputs.push(new OptionSwitch(context, component.data.uuid,input).attachTo(new_section));
+                        this.inputs.push(new OptionSwitch(context, component.data, input).attachTo(new_section));
                         break;
                     default:                       
                 }

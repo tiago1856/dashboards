@@ -1,11 +1,11 @@
 
 import { OptionInput } from './OptionInput.js';
 import { Label, InputColor } from '../builders/BuildingBlocks.js';
-
+import { RGBAtoHEX } from '../utils/jscolor.js';
 
 export class OptionInputColor extends OptionInput {
-    constructor(context, uuid, input_data) {
-        super(uuid, input_data);
+    constructor(context, component_data, input_data) {
+        super(input_data);
         
         this.addClass('form-group');
         const label = new Label().attachTo(this);
@@ -13,10 +13,12 @@ export class OptionInputColor extends OptionInput {
         
         this.input = new InputColor().attachTo(this);
         this.input.addClass("form-control");
-        this.input.setValue(input_data.value);
+        const value = component_data.options[input_data.id];
+        //console.warn(component_data.options, input_data.id, value, RGBAtoHEX(value));
+        $(this.input.dom).val(value===''?input_data.value:(value.indexOf('#')==-1?RGBAtoHEX(value):value));
 
         $(this.input.dom).on('change paste', () => {
-            context.signals.onOptionChanged.dispatch(uuid, this.getData());
+            context.signals.onOptionChanged.dispatch(component_data.uuid, this.getData());
         });
     }
          
