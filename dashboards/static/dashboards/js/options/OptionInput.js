@@ -2,7 +2,7 @@
 import { Div } from '../builders/BuildingBlocks.js';
 
 
- export class OptionsInput extends Div {
+ export class OptionInput extends Div {
     constructor(uuid, input_data) {
         super();
         this.input_data = input_data;

@@ -1,8 +1,8 @@
 
-import { OptionsInput } from './OptionsInput.js';
+import { OptionInput } from './OptionInput.js';
 import { Label, Input, InputNumber } from '../builders/BuildingBlocks.js';
 
-export class OptionsSlider extends OptionsInput {
+export class OptionSlider extends OptionInput {
     constructor(context, uuid, input_data) {
         super(uuid, input_data);
         
@@ -15,12 +15,14 @@ export class OptionsSlider extends OptionsInput {
         this.input_range.setAttribute('type','range');
         this.input_range.setAttribute('max', input_data.max);
         this.input_range.setAttribute('min', input_data.min);
+        this.input_range.setAttribute('step', input_data.step);
         this.input_range.setValue(input_data.value);
         
         this.input = new InputNumber().attachTo(this);
         this.input.addClass("form-control");
         this.input.setAttribute('max', input_data.max);
         this.input.setAttribute('min', input_data.min);
+        this.input.setAttribute('step', input_data.step);
         this.input.setValue(input_data.value);
 
         $(this.input_range.dom).on('change', () => {
@@ -31,6 +33,10 @@ export class OptionsSlider extends OptionsInput {
             this.input_range.setValue(this.input.getValue());
             context.signals.onOptionChanged.dispatch(uuid, this.getData());
         });
+
+        $(this.input_range.dom).on('input', () => {
+            this.input.setValue(this.input_range.getValue());
+        }); 
                 
     }
     

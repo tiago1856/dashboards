@@ -1,9 +1,10 @@
 
 import { Div, Hx, Span, AwesomeIconAndButton } from '../builders/BuildingBlocks.js';
-import { OptionsInputColor } from './OptionsInputColor.js';
-import { OptionsInputText } from './OptionsInputText.js';
-import { OptionsSelect } from './OptionsSelect.js';
-import { OptionsSlider } from './OptionsSlider.js';
+import { OptionInputColor } from './OptionInputColor.js';
+import { OptionInputText } from './OptionInputText.js';
+import { OptionSelect } from './OptionSelect.js';
+import { OptionSlider } from './OptionSlider.js';
+import { OptionSwitch } from './OptionSwitch.js';
 import { subStr } from '../utils/jsutils.js';
 import { getComponentProperties } from '../Components/ComponentType.js';
 
@@ -46,24 +47,24 @@ import { getComponentProperties } from '../Components/ComponentType.js';
             section.inputs.forEach(input => {
                 switch (input.type) {
                     case 'text': 
-                        this.inputs.push(new OptionsInputText(context, component.data.uuid, input).attachTo(new_section));
+                        this.inputs.push(new OptionInputText(context, component.data.uuid, input).attachTo(new_section));
                         break;
                     case 'color': 
-                        this.inputs.push(new OptionsInputColor(context, component.data.uuid,input).attachTo(new_section));
+                        this.inputs.push(new OptionInputColor(context, component.data.uuid,input).attachTo(new_section));
                         break;
                     case 'select': 
-                        this.inputs.push(new OptionsSelect(context, component.data.uuid,input).attachTo(new_section));
+                        this.inputs.push(new OptionSelect(context, component.data.uuid,input).attachTo(new_section));
                         break;  
                     case 'slider': 
-                        this.inputs.push(new OptionsSlider(context, component.data.uuid,input).attachTo(new_section));
-                        break;                          
-
+                        this.inputs.push(new OptionSlider(context, component.data.uuid,input).attachTo(new_section));
+                        break;  
+                    case 'switch':
+                        this.inputs.push(new OptionSwitch(context, component.data.uuid,input).attachTo(new_section));
+                        break;
                     default:                       
                 }
             });
         });
-
-
 
         $(this.dom).draggable();
         $(accordion_area.dom).accordion({

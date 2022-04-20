@@ -21,7 +21,9 @@ export class ControlBool extends BaseComponentContent {
     const input = new Input().attachTo(group);
     input.addClass('text-center');
     input.setAttribute('type', 'checkbox');
-    input.setAttribute('checked', component.data.data_config.default === component.data.data_config.true?'true':'false');
+    if (component.data.data_config.default === component.data.data_config.true) {
+      input.setAttribute('checked', 'true');
+    }
     input.setAttribute('data-toggle', 'toggle');
     input.setAttribute('data-on', "<i class='fa fa-thumbs-up'></i> " + component.data.data_config.true);
     input.setAttribute('data-off', "<i class='fa fa-thumbs-down'></i> " + component.data.data_config.false);

@@ -38,7 +38,7 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Dimensões",
                         inputs: [
-                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300},
+                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
                         ]                    
                     },
                     {
@@ -66,7 +66,7 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Dimensões",
                         inputs: [
-                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300},
+                            {id: "sizes-height-component", label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
                         ]                    
                     },
                     {
@@ -88,11 +88,11 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Operações",
                         inputs: [
-                            {id: "operation-print", label: "Imprimir:", type: "text", value: "#ff0000"},
-                            {id: "operation-pdf", label: "Exportar para PDF:", type: "text", value: "#000000"},
-                            {id: "operation-csv", label: "Exportar para CSV:", type: "text", value: "#000000"},
-                            {id: "operation-search", label: "Procurar:", type: "text", value: "#000000"},
-                            {id: "operation-columns", label: "Visibilidade de colunas:", type: "text", value: "#000000"},
+                            {id: "operation-print", label: "Imprimir:", type: "switch", on: "T", off: "F", value: "F"},
+                            {id: "operation-pdf", label: "Exportar para PDF:", type: "switch", on: "T", off: "F", value: "F"},
+                            {id: "operation-csv", label: "Exportar para CSV:", type: "switch", on: "T", off: "F", value: "F"},
+                            {id: "operation-search", label: "Procurar:", type: "switch", on: "T", off: "F", value: "F"},
+                            {id: "operation-columns", label: "Visibilidade de colunas:", type: "switch", on: "T", off: "F", value: "F"},
                         ]		
                     },                    
                 ]               

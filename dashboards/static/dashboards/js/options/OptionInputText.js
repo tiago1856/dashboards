@@ -1,8 +1,8 @@
 
-import { OptionsInput } from './OptionsInput.js';
+import { OptionInput } from './OptionInput.js';
 import { Label, InputText } from '../builders/BuildingBlocks.js';
 
-export class OptionsInputText extends OptionsInput {
+export class OptionInputText extends OptionInput {
     constructor(context, uuid, input_data) {
         super(uuid, input_data);
         
