@@ -1,5 +1,15 @@
 import { Table, TableTr, TableTd, TableTh, TableTbody, TableThead } from './BuildingBlocks.js';
-
+import { 
+    ID_SIZES_HEIGHT_COMPONENT,
+    ID_HEADER_BACK_COLOR,
+    ID_HEADER_COLOR,
+    ID_HEADER_ALIGNMENT,
+    ID_HEADER_VERTICAL_ALIGNMENT,
+    ID_ROWS_BACK_COLOR,
+    ID_ROWS_COLOR,
+    ID_ROWS_ALIGNMENT,
+    ID_ROWS_VERTICAL_ALIGNMENT,
+} from '../Components/ComponentType.js';
 
 /**
  * Bootstrap 4 simple table.
@@ -8,9 +18,10 @@ import { Table, TableTr, TableTd, TableTh, TableTbody, TableThead } from './Buil
  * @param {number} max_lines Maximum number of lines (<0 => ALL).
  * @param {array of strings} order Order of the columns. If none or empty, then all and default order.
  * @param {function} onSelect Called when row selected | returns {index: [column, value], ... }
+ * @param {object} options Table configuration: colors, alignments, ...
  * @returns HTML Table or null if empty.
- */
-export function BasicTable(data, max_lines = 10, order=null, onSelect=null) {
+ */ 
+export function BasicTable(data, max_lines = 10, order=null, onSelect=null, options=null) {
 
     if (data.length == 0) return null;
     const table = new Table({classes:['table','table-bordered', 'table-hover','table-sm']});
@@ -20,11 +31,25 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null) {
         order.forEach(column => {
             const col = new TableTh().attachTo(head_row);
             col.setTextContent(column.toUpperCase());
+            if (options) {
+                const col_q = $(col.dom);
+                if (options.hasOwnProperty(ID_HEADER_BACK_COLOR)) col_q.css('background-color', options[ID_HEADER_BACK_COLOR]);
+                if (options.hasOwnProperty(ID_HEADER_COLOR)) col_q.css('color', options[ID_HEADER_COLOR]);
+                if (options.hasOwnProperty(ID_HEADER_ALIGNMENT)) col_q.css('text-align', options[ID_HEADER_ALIGNMENT]);
+                if (options.hasOwnProperty(ID_HEADER_VERTICAL_ALIGNMENT)) col_q.css('vertical-align', options[ID_HEADER_VERTICAL_ALIGNMENT]);
+            }
         })        
     } else {
         Object.keys(data[0]).forEach(column => {
             const col = new TableTh().attachTo(head_row);
             col.setTextContent(column.toUpperCase());
+            if (options) {
+                const col_q = $(col.dom);
+                if (options.hasOwnProperty(ID_HEADER_BACK_COLOR)) col_q.css('background-color', options[ID_HEADER_BACK_COLOR]);
+                if (options.hasOwnProperty(ID_HEADER_COLOR)) col_q.css('color', options[ID_HEADER_COLOR]);
+                if (options.hasOwnProperty(ID_HEADER_ALIGNMENT)) col_q.css('text-align', options[ID_HEADER_ALIGNMENT]);
+                if (options.hasOwnProperty(ID_HEADER_VERTICAL_ALIGNMENT)) col_q.css('vertical-align', options[ID_HEADER_VERTICAL_ALIGNMENT]);
+            }            
         })
     }
 
@@ -41,6 +66,13 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null) {
                     td.setAttribute('data-header',order[index]);
                     td.setAttribute('data-index',index);
                 }
+                if (options) {
+                    const td_q = $(td.dom);
+                    if (options.hasOwnProperty(ID_ROWS_BACK_COLOR)) td_q.css('background-color', options[ID_ROWS_BACK_COLOR]);
+                    if (options.hasOwnProperty(ID_ROWS_COLOR)) td_q.css('color', options[ID_ROWS_COLOR]);
+                    if (options.hasOwnProperty(ID_ROWS_ALIGNMENT)) td_q.css('text-align', options[ID_ROWS_ALIGNMENT]);
+                    if (options.hasOwnProperty(ID_ROWS_VERTICAL_ALIGNMENT)) td_q.css('vertical-align', options[ID_ROWS_VERTICAL_ALIGNMENT]);
+                }
             });
         } else {
             const headers = Object.keys(data[0]);
@@ -51,6 +83,13 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null) {
                     td.setAttribute('data-header',headers[v]);
                     td.setAttribute('data-index',v);
                 }
+                if (options) {
+                    const td_q = $(td.dom);
+                    if (options.hasOwnProperty(ID_ROWS_BACK_COLOR)) td_q.css('background-color', options[ID_ROWS_BACK_COLOR]);
+                    if (options.hasOwnProperty(ID_ROWS_COLOR)) td_q.css('color', options[ID_ROWS_COLOR]);
+                    if (options.hasOwnProperty(ID_ROWS_ALIGNMENT)) td_q.css('text-align', options[ID_ROWS_ALIGNMENT]);
+                    if (options.hasOwnProperty(ID_ROWS_VERTICAL_ALIGNMENT)) td_q.css('vertical-align', options[ID_ROWS_VERTICAL_ALIGNMENT]);
+                }                
             }
         }
     })

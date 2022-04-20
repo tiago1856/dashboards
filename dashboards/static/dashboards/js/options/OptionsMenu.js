@@ -15,7 +15,7 @@ import { getComponentProperties } from '../Components/ComponentType.js';
         const properties = getComponentProperties(component.data.component_type, component.data.visualization.visualization_type);
         const options_data = properties.options;
 
-        const values = component.data.hasOwnProperty('options') ? component.data.options: null;
+        //const values = component.data.hasOwnProperty('options') ? component.data.options: null;
         const self = this;
         this.onClose = onClose;
         this.inputs = [];
@@ -38,8 +38,11 @@ import { getComponentProperties } from '../Components/ComponentType.js';
         close_btn.setAttribute('title','Remover component');
 
 
-        const accordion_area = new Div().attachTo(this);
-        accordion_area.addClass('options-nf-options-area');
+        const menu_area = new Div().attachTo(this);
+        menu_area.addClass('options-nf-options-area');
+
+        const accordion_area = new Div().attachTo(menu_area);
+        //accordion_area.addClass('options-nf-options-area');
         /*
         accordion_area.setStyle('overflow-y','auto');
         accordion_area.setStyle('height','100%');

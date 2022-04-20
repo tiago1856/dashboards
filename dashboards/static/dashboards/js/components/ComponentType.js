@@ -29,6 +29,9 @@ export const ID_OPERATION_SEARCH = "operation-search";
 export const ID_OPERATION_COLUMNS_VIS  = "operation-columns-visibility";
 
 
+export const YES = 'Sim';
+export const NO = 'Não';
+
 export const COMPONENT_TYPE = {
     TABLE: {
         name: 'TABLE',
@@ -38,7 +41,7 @@ export const COMPONENT_TYPE = {
                 class: SimpleTable,
                 options: [
                     {
-                        section_name: "Dimensões",
+                        section_name: "Quadro",
                         inputs: [
                             {id: ID_SIZES_HEIGHT_COMPONENT, label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
                         ]                    
@@ -68,7 +71,7 @@ export const COMPONENT_TYPE = {
                 class: ComplexTable,
                 options: [
                     {
-                        section_name: "Dimensões",
+                        section_name: "Quadro",
                         inputs: [
                             {id: ID_SIZES_HEIGHT_COMPONENT, label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
                         ]                    
@@ -94,14 +97,14 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Operações",
                         inputs: [
-                            {id: "operation-print", label: "Imprimir:", type: "switch", on: "T", off: "F", value: "F"},
-                            {id: "operation-pdf", label: "Exportar para PDF:", type: "switch", on: "T", off: "F", value: "F"},
-                            {id: "operation-csv", label: "Exportar para CSV:", type: "switch", on: "T", off: "F", value: "F"},
-                            {id: "operation-search", label: "Procurar:", type: "switch", on: "T", off: "F", value: "F"},
-                            {id: "operation-columns", label: "Visibilidade de colunas:", type: "switch", on: "T", off: "F", value: "F"},
+                            {id: ID_OPERATION_PRINT, label: "Imprimir:", type: "switch", on: YES, off: NO, value: NO},
+                            {id: ID_OPERATION_PDF, label: "Exportar para PDF:", type: "switch", on: YES, off: NO, value: NO},
+                            {id: ID_OPERATION_CSV, label: "Exportar para CSV:", type: "switch", on: YES, off: NO, value: NO},
+                            {id: ID_OPERATION_SEARCH, label: "Procurar:", type: "switch", on: YES, off: NO, value: YES},
+                            {id: ID_OPERATION_COLUMNS_VIS, label: "Visibilidade de colunas:", type: "switch", on: YES, off: NO, value: NO},
                         ]		
                     },                    
-                ]               
+                ]              
             },
         ]
     },

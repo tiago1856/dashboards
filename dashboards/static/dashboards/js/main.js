@@ -194,7 +194,9 @@ context.signals.onEditComponent.add((spot, original_type) => {
                 dashboard.changeComponentContainer(spot, false);
         } else {
             // only update component if something changed
-            if (changed) component.setContent();
+            if (changed) component.setContent().then(() => {
+                component.setOptions();
+            });
         }
         if (changed) {
             context.signals.onChanged.dispatch();

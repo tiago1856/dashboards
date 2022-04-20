@@ -14,13 +14,11 @@ import {
     ID_ROWS_VERTICAL_ALIGNMENT,
 } from '../ComponentType.js';
 
-const NUMBER_OF_OPTIONS = 9;
-
 export class SimpleTable extends BaseComponentContent {
     constructor(context, component, new_query=null) {
         super(context, component, new_query?new_query:component.data.query.query);     
 
-        component.body.setStyle("height","300px");
+        component.body.setStyle("height",this.component.data.options?(this.component.data.options[ID_SIZES_HEIGHT_COMPONENT] + 'px'):"300px");
         this.container = new Div().attachTo(component.body);
 
         this.onOptionChanged = context.signals.onOptionChanged.add((uuid, {id, value}) => {
@@ -93,7 +91,7 @@ export class SimpleTable extends BaseComponentContent {
         const component_data = this.prepareData(results, this.component.data);            
         this.table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
             this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);
-        }).attachTo(this.container);
+        }, this.component.data.options).attachTo(this.container);
     }
 
     prepareData(data_2_display, _data=null) {
@@ -111,23 +109,10 @@ export class SimpleTable extends BaseComponentContent {
     setOptions() {
         // options:
         // there are not defined options => populate with the current options
-        if (!this.component.data.options || 
-            (this.component.data.options && Object.keys(this.component.data.options).length < NUMBER_OF_OPTIONS)) {
+        if (!this.component.data.options/* || 
+            (this.component.data.options && Object.keys(this.component.data.options).length < NUMBER_OF_OPTIONS)*/) {
                 this.populateOptions();
                 console.warn("POPULATE ++++", this.component.data.options);                
-        } else {
-            // TODO: SEND OPTIONS DIRECTLY TO TABLE
-            console.warn("ARE DEFINED ++++", this.component.data.options);
-            // options are defined => use them
-            $(this.component.body.dom).css("height", this.component.data.options[ID_SIZES_HEIGHT_COMPONENT]);
-            $(this.container.dom).find('th').css('background-color', this.component.data.options[ID_HEADER_BACK_COLOR]);
-            $(this.container.dom).find('th').css('color', this.component.data.options[ID_HEADER_COLOR]);
-            $(this.container.dom).find('th').css('text-align', this.component.data.options[ID_HEADER_ALIGNMENT] );
-            $(this.container.dom).find('th').css('vertical-align', this.component.data.options[ID_HEADER_VERTICAL_ALIGNMENT]);
-            $(this.container.dom).find('td').css('background-color', this.component.data.options[ID_ROWS_BACK_COLOR]);
-            $(this.container.dom).find('td').css('color', this.component.data.options[ID_ROWS_COLOR]);
-            $(this.container.dom).find('td').css('text-align', this.component.data.options[ID_ROWS_ALIGNMENT]);
-            $(this.container.dom).find('td').css('vertical-align', this.component.data.options[ID_ROWS_VERTICAL_ALIGNMENT]);
         }
     }
 
