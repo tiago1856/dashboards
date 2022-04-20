@@ -17,13 +17,15 @@ export class OptionSlider extends OptionInput {
         this.input_range.setAttribute('min', input_data.min);
         this.input_range.setAttribute('step', input_data.step);
         this.input_range.setValue(input_data.value);
+        const value = component_data.options[input_data.id];
+        this.input_range.setValue(value===''?input_data.value:value);        
         
         this.input = new InputNumber().attachTo(this);
         this.input.addClass("form-control");
         this.input.setAttribute('max', input_data.max);
         this.input.setAttribute('min', input_data.min);
         this.input.setAttribute('step', input_data.step);
-        this.input.setValue(input_data.value);
+        this.input.setValue(value===''?input_data.value:value);
 
         $(this.input_range.dom).on('change', () => {
             this.input.setValue(this.input_range.getValue());

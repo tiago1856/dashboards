@@ -18,8 +18,14 @@ export class OptionSwitch extends OptionInput {
         this.input = new Input().attachTo(group);
         this.input.addClass('text-center');
         this.input.setAttribute('type', 'checkbox');
+        /*
         if (input_data.value === input_data.on)
             this.input.setAttribute('checked', true);
+        */
+        const value = component_data.options[input_data.id];
+        if ((value===''?input_data.value:value) === input_data.on)
+            this.input.setAttribute('checked', true);
+
         this.input.setAttribute('data-toggle', 'toggle');
         this.input.setAttribute('data-on', "<i class='fas fa-thumbs-up'></i> " + input_data.on);
         this.input.setAttribute('data-off', "<i class='fas fa-thumbs-down'></i> " + input_data.off);

@@ -14,7 +14,8 @@ export class OptionSelect extends OptionInput {
         this.input = new Select().attachTo(this);
         this.input.addClass("form-control");
         this.input.setOptions(input_data.options);        
-        this.input.setValue(input_data.value);
+        const value = component_data.options[input_data.id];
+        this.input.setValue(value===''?input_data.value:value);
 
         $(this.input.dom).on('change', () => {
             context.signals.onOptionChanged.dispatch(component_data.uuid, this.getData());
