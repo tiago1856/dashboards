@@ -69,7 +69,6 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 
 ## TODO
 
-* connections: calendar component
 * components: n-graph, geos, templates, ...
 
 ## Bugs to solve

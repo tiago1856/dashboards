@@ -209,22 +209,25 @@ export class CommsManager {
         
     }
 
+    /**
+     * Adds all the global components.
+     */
     addGlobalComponents() {
         // calendar
-        this.createComponent(GLOBAL_CALENDAR_NAME, GLOBAL_CALENDAR_UUID, GLOBAL_CALENDAR_INPUT_PINS, GLOBAL_CALENDAR_OUTPUT_PINS, true);
+        this.createComponent(GLOBAL_CALENDAR_NAME, GLOBAL_CALENDAR_UUID, GLOBAL_CALENDAR_INPUT_PINS, GLOBAL_CALENDAR_OUTPUT_PINS);
     }
 
     /**
-     * 
-     * @param {*} $item 
+     * Removes a component from the dom.
+     * @param {node} $item Component's node to be removed.
      */
     removeComponentFromList = ( $item ) => {
         $item.remove();
     }
   
     /**
-     * 
-     * @param {*} uuid 
+     * Removes a component from the diagram.
+     * @param {string} uuid UUID.
      */
     removeComponentFromDiagram = (uuid) => {
         this.instance.detachAllConnections(uuid);
@@ -247,7 +250,7 @@ export class CommsManager {
      * @param {*} left 
      * @returns 
      */
-    createComponent = (name, uuid=null, inputs=[], outputs=[], is_global = false, parent = COMP_LIST.get(0), in_diagram=false, top=0, left=0) => {
+    createComponent = (name, uuid=null, inputs=[], outputs=[], parent = COMP_LIST.get(0), in_diagram=false, top=0, left=0) => {
         if (!uuid) {
             console.error("[CommsManager::createComponent] Invalid uuid | Name:", name);
             return null;
@@ -257,11 +260,6 @@ export class CommsManager {
             component.setAttribute('id',uuid);
             component.setStyle('top',top + 'px');
             component.setStyle('left',left + 'px');
-        }
-        if (is_global) {
-            component.setAttribute('data-global',"true");
-        } else {
-            component.setAttribute('data-global',"false");
         }
         component.addClass('comm-component');
         const title = new Span().attachTo(component);		
