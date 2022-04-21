@@ -13,6 +13,7 @@ import { ControlString } from './controls/ControlString.js'
 import { ControlBool } from './controls/ControlBool.js'
 import { ControlNumberInterval } from './controls/ControlNumberInterval.js'
 
+
 export const ID_SIZES_HEIGHT_COMPONENT = "sizes-height-component";
 export const ID_HEADER_BACK_COLOR = "header-background-color";
 export const ID_HEADER_COLOR = "header-color";

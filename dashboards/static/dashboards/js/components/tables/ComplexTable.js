@@ -211,7 +211,6 @@ export class ComplexTable extends BaseComponentContent {
         if (!isPropOk(options, ID_OPERATION_EXCEL)) options[ID_OPERATION_EXCEL] = YES;
         if (!isPropOk(options, ID_OPERATION_COPY)) options[ID_OPERATION_COPY] = YES;
         if (!isPropOk(options, ID_OPERATION_COLUMNS_VIS)) options[ID_OPERATION_COLUMNS_VIS] = YES;
-        console.warn("POPULATE ++++", options);
         this.component.data.options = JSON.parse(JSON.stringify(options));
     }
 

@@ -119,7 +119,6 @@ export class SimpleTable extends BaseComponentContent {
         if (!isPropOk(options, ID_ROWS_COLOR)) options[ID_ROWS_COLOR] = $(this.container.dom).css("color");
         if (!isPropOk(options, ID_ROWS_ALIGNMENT)) options[ID_ROWS_ALIGNMENT] = $(this.container.dom).css("text-align");
         if (!isPropOk(options, ID_ROWS_VERTICAL_ALIGNMENT)) options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
-        console.warn("POPULATE ++++", options);
         this.component.data.options = JSON.parse(JSON.stringify(options));
     }
 

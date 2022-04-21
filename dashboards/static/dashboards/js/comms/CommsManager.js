@@ -1,6 +1,12 @@
 
 import { equalsOrderedArrays, subStr } from '../utils/jsutils.js';
 import { Div, Span } from "../builders/BuildingBlocks.js";
+import {
+    GLOBAL_CALENDAR_NAME,
+    GLOBAL_CALENDAR_UUID,
+    GLOBAL_CALENDAR_OUTPUT_PINS,
+    GLOBAL_CALENDAR_INPUT_PINS,
+} from '../temporal/DataRangePicker.js';
 
 
 const COMM_DIAGRAM_CONTAINER = 'comm-diagram';
@@ -80,6 +86,9 @@ export class CommsManager {
                     self.instance.draggable(id, {
                         containment: true,
                         scroll: true,
+                        stop: function( event, ui ) {
+                            context.signals.onChanged.dispatch();
+                        }  
                     } );
                     self.removeComponentFromList( ui.draggable );
                     self.setupComponent(clone);
@@ -177,6 +186,7 @@ export class CommsManager {
 
         // 
         context.signals.onCommTriggered.add((uuid, new_values) => {
+            console.log(uuid, new_values);
             const data_comm = {};
             new_values.forEach(data => {
                 for(const key in this.links) {
@@ -196,6 +206,12 @@ export class CommsManager {
                 context.signals.onQueryUpdated.dispatch(key, data_comm[key]);            
             }
         });
+        
+    }
+
+    addGlobalComponents() {
+        // calendar
+        this.createComponent(GLOBAL_CALENDAR_NAME, GLOBAL_CALENDAR_UUID, GLOBAL_CALENDAR_INPUT_PINS, GLOBAL_CALENDAR_OUTPUT_PINS, true);
     }
 
     /**
@@ -231,7 +247,7 @@ export class CommsManager {
      * @param {*} left 
      * @returns 
      */
-    createComponent = (name, uuid=null, inputs=[], outputs=[], parent = COMP_LIST.get(0), in_diagram=false, top=0, left=0) => {
+    createComponent = (name, uuid=null, inputs=[], outputs=[], is_global = false, parent = COMP_LIST.get(0), in_diagram=false, top=0, left=0) => {
         if (!uuid) {
             console.error("[CommsManager::createComponent] Invalid uuid | Name:", name);
             return null;
@@ -241,6 +257,11 @@ export class CommsManager {
             component.setAttribute('id',uuid);
             component.setStyle('top',top + 'px');
             component.setStyle('left',left + 'px');
+        }
+        if (is_global) {
+            component.setAttribute('data-global',"true");
+        } else {
+            component.setAttribute('data-global',"false");
         }
         component.addClass('comm-component');
         const title = new Span().attachTo(component);		
@@ -282,11 +303,11 @@ export class CommsManager {
      */
     setupComponent = (component) => {
         const uuid = component.attr('data-uuid');
+        //console.warn(uuid, component, this.ios);
         if (!this.ios.hasOwnProperty(uuid)) return;
         const {inputs, outputs, name} = this.ios[uuid]
         const n_in = inputs.length;
         const n_out = outputs.length;       
-        
         let delta = 1/(n_out + 1);
         outputs.forEach((output, index) => {
             const pin_uuid = this.restored?this.ios[uuid].indices.outputs[index]:uuidv4();
@@ -383,13 +404,20 @@ export class CommsManager {
            console.error("[CommsManager::moveComponent2Diagram] Invalid uuid!");
            return;
        }       
+       const self = this;
         const comp_2_move = COMP_LIST.find(`[data-uuid='${uuid}']`);
         const component = comp_2_move.clone(false);
         component.attr("id",uuid);
         component.css('top', top + "px");
         component.css('left', left + "px");
         component.appendTo(COMP_DIAGRAM);
-        this.instance.draggable(uuid, {containment: true, scroll: true} );
+        this.instance.draggable(uuid, {
+            containment: true, 
+            scroll: true,
+            stop: function( event, ui ) {
+                self.context.signals.onChanged.dispatch();
+            }  
+        } );
         this.removeComponentFromList( comp_2_move );
         this.setupComponent(component);	
     }
@@ -406,6 +434,7 @@ export class CommsManager {
         COMP_LIST.empty();
         COMP_DIAGRAM.empty();
         this.restored = false;
+        this.addGlobalComponents();
         //this.instance.reset();
         console.warn("RESET");
     }
@@ -443,7 +472,9 @@ export class CommsManager {
 
         this.restored = true;
         
-        this.ios = data.io;	
+        //this.ios = data.io;
+        this.ios = Object.assign(this.ios, data.io);
+        	
 
         for (const uuid in data.in_diagram) {
             const component = data.in_diagram[uuid];
@@ -483,7 +514,7 @@ export class CommsManager {
 
     /**
      * If a query changed => recreates the component and disconnects all current connections.
-     * @param {*} component_uuid 
+     * @param {Component} Component 
      */
     setIO = (component) => {
 
@@ -503,7 +534,7 @@ export class CommsManager {
             this.deleteComponent(component_data.uuid);            
         }
 
-        this.createComponent(component_data.name, component_data.uuid, inputs, outputs);        
+        this.createComponent(component_data.name, component_data.uuid, inputs, outputs);
 
     }
 

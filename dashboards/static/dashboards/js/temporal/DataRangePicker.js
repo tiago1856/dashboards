@@ -1,6 +1,11 @@
 
 import { DEFAULT_DATE_FORMAT } from '../constants.js';
 
+// REQUIRED FOR COMMS
+export const GLOBAL_CALENDAR_NAME = "Calendário Global";
+export const GLOBAL_CALENDAR_UUID = "uuid-global-calendar";
+export const GLOBAL_CALENDAR_OUTPUT_PINS = ['Data Inicio', 'Ano Inicio', 'Mês Inicio', 'Dia Inicio', 'Data Fim', 'Ano Fim', 'Mês Fim', 'Dia Fim']
+export const GLOBAL_CALENDAR_INPUT_PINS = [];
 
 const GLOBLE_DATE_CONFIG = $("#global-date-format");
 const DATARANGE_BTN_ID = '#daterange-btn';
@@ -39,6 +44,17 @@ export class DataRangePicker {
                 this.start = start;
                 this.end = end;                
                 if (onSelection) onSelection(start.format(self.selected_format), end.format(self.selected_format));
+                const parts = self.getParts();
+                context.signals.onCommTriggered.dispatch(GLOBAL_CALENDAR_UUID, [
+                    parts.start,                    
+                    parts.start_year,
+                    parts.start_month,
+                    parts.start_day,
+                    parts.end,
+                    parts.end_year,
+                    parts.end_month,
+                    parts.end_day,
+                ]);
             }
         )
         this.start = $(DATARANGE_BTN_ID).data('daterangepicker').startDate;
