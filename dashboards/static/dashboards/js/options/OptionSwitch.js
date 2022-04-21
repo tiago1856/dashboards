@@ -37,6 +37,7 @@ export class OptionSwitch extends OptionInput {
     
 
         $(this.input.dom).on('change', () => {
+            console.log(this.getData());
             context.signals.onOptionChanged.dispatch(component_data.uuid, this.getData());
         });
         

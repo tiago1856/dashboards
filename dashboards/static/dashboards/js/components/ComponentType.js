@@ -25,8 +25,9 @@ export const ID_ROWS_VERTICAL_ALIGNMENT = "rows-vertical-alignment";
 export const ID_OPERATION_PRINT = "operation-print";
 export const ID_OPERATION_PDF = "operation-pdf";
 export const ID_OPERATION_CSV = "operation-csv";
-export const ID_OPERATION_SEARCH = "operation-search";
 export const ID_OPERATION_COLUMNS_VIS  = "operation-columns-visibility";
+export const ID_OPERATION_EXCEL  = "operation-columns-excel";
+export const ID_OPERATION_COPY  = "operation-columns-copy";
 
 
 export const YES = 'Sim';
@@ -100,7 +101,8 @@ export const COMPONENT_TYPE = {
                             {id: ID_OPERATION_PRINT, label: "Imprimir:", type: "switch", on: YES, off: NO, value: NO},
                             {id: ID_OPERATION_PDF, label: "Exportar para PDF:", type: "switch", on: YES, off: NO, value: NO},
                             {id: ID_OPERATION_CSV, label: "Exportar para CSV:", type: "switch", on: YES, off: NO, value: NO},
-                            {id: ID_OPERATION_SEARCH, label: "Procurar:", type: "switch", on: YES, off: NO, value: YES},
+                            {id: ID_OPERATION_EXCEL, label: "Exportar para EXCEL:", type: "switch", on: YES, off: NO, value: NO},
+                            {id: ID_OPERATION_COPY, label: "Copiar:", type: "switch", on: YES, off: NO, value: NO},
                             {id: ID_OPERATION_COLUMNS_VIS, label: "Visibilidade de colunas:", type: "switch", on: YES, off: NO, value: NO},
                         ]		
                     },                    

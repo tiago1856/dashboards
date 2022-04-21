@@ -15,13 +15,15 @@ import {
     ID_OPERATION_PRINT,
     ID_OPERATION_PDF,
     ID_OPERATION_CSV,
-    ID_OPERATION_SEARCH,
+    ID_OPERATION_EXCEL,
+    ID_OPERATION_COPY,
     ID_OPERATION_COLUMNS_VIS,
     YES,
     NO,
 } from '../ComponentType.js';
+import { isPropOk } from '../../utils/jsutils.js';
 
-const NUMBER_OF_OPTIONS = 9;
+
 
 /**
  * Table using the js Datatable plugin.
@@ -30,6 +32,8 @@ export class ComplexTable extends BaseComponentContent {
    
     constructor(context, component, new_query=null) {
         super(context, component, new_query?new_query:component.data.query.query);
+
+        this.dt = null;
 
         component.body.setStyle("height",this.component.data.options?(this.component.data.options[ID_SIZES_HEIGHT_COMPONENT] + 'px'):"300px");
         
@@ -93,22 +97,50 @@ export class ComplexTable extends BaseComponentContent {
                     break;
                case ID_OPERATION_PRINT:
                     {
+                        if (value === YES)
+                            this.dt.button('.buttons-print').node().show()
+                        else
+                            this.dt.button('.buttons-print').node().hide()
                     }
                     break;
                 case ID_OPERATION_PDF:
                     {
+                        if (value === YES)
+                            this.dt.button('.buttons-pdf').node().show()
+                        else
+                            this.dt.button('.buttons-pdf').node().hide()
                     }
                     break;
                 case ID_OPERATION_CSV:
                     {
+                        if (value === YES)
+                            this.dt.button('.buttons-csv').node().show()
+                        else
+                            this.dt.button('.buttons-csv').node().hide()
                     }
                     break;
-                case ID_OPERATION_SEARCH:
+                case ID_OPERATION_EXCEL:
                     {
+                        if (value === YES)
+                            this.dt.button('.buttons-excel').node().show()
+                        else
+                            this.dt.button('.buttons-excel').node().hide()
                     }
                     break;
+                case ID_OPERATION_COPY:
+                    {
+                        if (value === YES)
+                            this.dt.button('.buttons-copy').node().show()
+                        else
+                            this.dt.button('.buttons-copy').node().hide()
+                    }
+                    break;                    
                 case ID_OPERATION_COLUMNS_VIS:
                     {
+                        if (value === YES)
+                            this.dt.button('.buttons-colvis').node().show()
+                        else
+                            this.dt.button('.buttons-colvis').node().hide()
                     }
                     break;
                 default:
@@ -129,13 +161,28 @@ export class ComplexTable extends BaseComponentContent {
         // no data
         if (!table) return null;
 
-        const dt = $(table.dom).DataTable({
+        this.dt = $(table.dom).DataTable({
             "scrollX": "100%",
             "order": [[ 1, "desc" ]],
             "iDisplayLength": 20,//default_rows_per_page,
             "autoWidth": false,
+            dom: 'Bfrtip',
+            buttons: [
+                'copy', 'excel', 'pdf', 'csv', 'print','colvis'
+            ]
         });
-        dt.draw(false);
+
+        if (this.component.data.options) {
+            const options = this.component.data.options;
+            if (options.hasOwnProperty(ID_OPERATION_PRINT) && options[ID_OPERATION_PRINT] === NO) this.dt.button('.buttons-print').node().hide();
+            if (options.hasOwnProperty(ID_OPERATION_PDF) && options[ID_OPERATION_PDF] === NO) this.dt.button('.buttons-pdf').node().hide();
+            if (options.hasOwnProperty(ID_OPERATION_CSV) && options[ID_OPERATION_CSV] === NO) this.dt.button('.buttons-csv').node().hide();
+            if (options.hasOwnProperty(ID_OPERATION_EXCEL) && options[ID_OPERATION_EXCEL] === NO) this.dt.button('.buttons-excel').node().hide();
+            if (options.hasOwnProperty(ID_OPERATION_COPY) && options[ID_OPERATION_COPY] === NO) this.dt.button('.buttons-copy').node().hide();
+            if (options.hasOwnProperty(ID_OPERATION_COLUMNS_VIS) && options[ID_OPERATION_COLUMNS_VIS] === NO) this.dt.button('.buttons-colvis').node().hide();
+        }
+
+        this.dt.draw(false);
     }
 
 
@@ -147,33 +194,28 @@ export class ComplexTable extends BaseComponentContent {
 
 
     setOptions() {
-        // options:
-        // there are not defined options => populate with the current options
-        if (!this.component.data.options/* || 
-            (this.component.data.options && Object.keys(this.component.data.options).length < NUMBER_OF_OPTIONS)*/) {
-                this.populateOptions();
-                console.warn("POPULATE ++++", this.component.data.options);                
-        }
+        let options = this.component.data.options;
+        if (!options) options = {};
+        if (!isPropOk(options, ID_SIZES_HEIGHT_COMPONENT)) options[ID_SIZES_HEIGHT_COMPONENT] = parseFloat($(this.component.body.dom).css("height"));
+        if (!isPropOk(options, ID_HEADER_BACK_COLOR)) options[ID_HEADER_BACK_COLOR] = $(this.container.dom).css("background-color");
+        if (!isPropOk(options, ID_HEADER_COLOR)) options[ID_HEADER_COLOR] = $(this.container.dom).css("color");
+        if (!isPropOk(options, ID_HEADER_ALIGNMENT)) options[ID_HEADER_ALIGNMENT] = $(this.container.dom).css("text-align");
+        if (!isPropOk(options, ID_HEADER_VERTICAL_ALIGNMENT)) options[ID_HEADER_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
+        if (!isPropOk(options, ID_ROWS_BACK_COLOR)) options[ID_ROWS_BACK_COLOR] = $(this.container.dom).css("background-color");
+        if (!isPropOk(options, ID_ROWS_COLOR)) options[ID_ROWS_COLOR] = $(this.container.dom).css("color");
+        if (!isPropOk(options, ID_ROWS_ALIGNMENT)) options[ID_ROWS_ALIGNMENT] = $(this.container.dom).css("text-align");
+        if (!isPropOk(options, ID_ROWS_VERTICAL_ALIGNMENT)) options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
+        if (!isPropOk(options, ID_OPERATION_PRINT)) options[ID_OPERATION_PRINT] = YES;
+        if (!isPropOk(options, ID_OPERATION_PDF)) options[ID_OPERATION_PDF] = YES;
+        if (!isPropOk(options, ID_OPERATION_CSV)) options[ID_OPERATION_CSV] = YES;
+        if (!isPropOk(options, ID_OPERATION_EXCEL)) options[ID_OPERATION_EXCEL] = YES;
+        if (!isPropOk(options, ID_OPERATION_COPY)) options[ID_OPERATION_COPY] = YES;
+        if (!isPropOk(options, ID_OPERATION_COLUMNS_VIS)) options[ID_OPERATION_COLUMNS_VIS] = YES;
+        console.warn("POPULATE ++++", options);
+        this.component.data.options = JSON.parse(JSON.stringify(options));
     }
 
-    populateOptions() {
-        this.component.data.options = {};
-        
-        this.component.data.options[ID_SIZES_HEIGHT_COMPONENT] = parseFloat($(this.component.body.dom).css("height"));
-        this.component.data.options[ID_HEADER_BACK_COLOR] = $(this.container.dom).find('th').css('background-color');
-        this.component.data.options[ID_HEADER_COLOR] = $(this.container.dom).find('th').css('color');
-        this.component.data.options[ID_HEADER_ALIGNMENT] = $(this.container.dom).find('th').css('text-align');
-        this.component.data.options[ID_HEADER_VERTICAL_ALIGNMENT] = $(this.container.dom).find('th').css('vertical-align');
-        this.component.data.options[ID_ROWS_BACK_COLOR] = $(this.container.dom).find('td').css('background-color');
-        this.component.data.options[ID_ROWS_COLOR] = $(this.container.dom).find('td').css('color');
-        this.component.data.options[ID_ROWS_ALIGNMENT] = $(this.container.dom).find('td').css('text-align');
-        this.component.data.options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).find('td').css('vertical-align');
-        this.component.data.options[ID_OPERATION_PRINT] = NO;
-        this.component.data.options[ID_OPERATION_PDF] = NO;
-        this.component.data.options[ID_OPERATION_CSV] = NO;
-        this.component.data.options[ID_OPERATION_SEARCH] = YES;
-        this.component.data.options[ID_OPERATION_COLUMNS_VIS] = NO;
-    }    
+   
 
     clear() {
         super.clear();

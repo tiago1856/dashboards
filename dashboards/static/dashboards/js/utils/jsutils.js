@@ -162,3 +162,15 @@ export const equalsOrderedArrays = (a,b) => {
     }    
     return true;
 }
+
+
+/**
+ * Checks if an object contains a valid key.
+ * @param {object} obj Object to be check.
+ * @param {any} key Key to search for.
+ * @returns True if object contains key, false otherwise.
+ */
+export const isPropOk = (obj, key) => {
+    if (!obj.hasOwnProperty(key) || typeof obj[key] === 'undefined') return false;
+    return true;
+}

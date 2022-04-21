@@ -29,7 +29,8 @@ import { getComponentProperties } from '../Components/ComponentType.js';
         const title = new Hx(4).attachTo(title_area);
         title.addClass("p-0 m-0");
         const title_text = new Span().attachTo(title);
-        title_text.setTextContent(subStr(component.data.title,16,16));               
+        const title_str = (component.data.title && component.data.title !== '')? component.data.title : "Sem titulo!"
+        title_text.setTextContent(subStr(title_str,16,16));               
 
         const close_btn = new AwesomeIconAndButton('','fas fa-times').attachTo(title_area);
         close_btn.addClass('btn btn-danger btn-sm options-nf-close-button');

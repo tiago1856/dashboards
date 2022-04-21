@@ -96,6 +96,6 @@ export class BaseComponentContent {
      * Either populates or creates it and then populates.
      */
     setOptions() {}
-
+    
 }
 
