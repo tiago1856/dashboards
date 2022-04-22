@@ -173,7 +173,7 @@ export class Dashboard extends Div {
      * @param {number} spot Spot in the Dashboard.
      * @param {number} component_id Component ID in the database.
      */
-    async loadComponent(spot, component_id) {
+    async loadComponent(spot, component_id, new_uuid = false) {
         $("body").css("cursor","progress");        
         return fetchGET(URL_GET_COMPONENT + component_id, 
             (result) => {
@@ -185,7 +185,7 @@ export class Dashboard extends Div {
                     data.component_type === COMPONENT_TYPE.CONTROL.name) {
                         type = CONTAINER_TYPE.NONCARD;                
                 }
-                return CreateComponent(type, null, this.context, spot, null, 'light', data).then((comp) => {                    
+                return CreateComponent(type, null, this.context, spot, null, 'light', data, new_uuid).then((comp) => {                    
                     $(original.dom).replaceWith($(comp.dom));
                     comp.setOptions();
                     comp.setEditMode(true);

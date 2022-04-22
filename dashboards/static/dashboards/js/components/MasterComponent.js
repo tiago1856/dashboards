@@ -21,13 +21,13 @@ export class MasterComponent extends Div {
    * @param {string} data Data to retore the component.
    * 
    */
-    constructor(context, spot, data=null) {
+    constructor(context, spot, data=null, new_uuid) {
         super();
         this.addClass('Component');
 
         this.changed = false;   // something changed and it's not saved        
         this.data = data?data:JSON.parse(JSON.stringify(ComponentData));
-        if (!data || !this.data.uuid) this.data.uuid = uuidv4();
+        if (!data || !this.data.uuid || new_uuid) this.data.uuid = uuidv4();
 
         // for legacy versions
         if (!this.data.hasOwnProperty('options')) this.data.options = null;

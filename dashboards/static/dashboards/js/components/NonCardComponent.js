@@ -19,8 +19,8 @@ export class NonCardComponent extends MasterComponent {
    * @param {string} color_scheme light/dark.
    * @param {string} data Data to retore the component.
    */
-    constructor(context, spot, _title=null, color_scheme = 'light', data=null) {
-        super(context, spot, data);
+    constructor(context, spot, _title=null, color_scheme = 'light', data=null, new_uuid=false) {
+        super(context, spot, data, new_uuid);
         this.addClass('info-component-container');
         this.setStyle('position','relative'); 
 
