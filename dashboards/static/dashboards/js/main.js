@@ -206,8 +206,13 @@ context.signals.onEditComponent.add((spot, original_type) => {
 });
 
 context.signals.onLoadComponent.add((spot) => {
+    const current_component_uuid = dashboard.getComponentAt(spot).data.uuid;
     select_component_modal.show((component_id => {
-        dashboard.loadComponent(spot, component_id);
+        dashboard.loadComponent(spot, component_id).then(() => {
+            // consider loading a new component as a complete new one => remove the old one
+            // from comms
+            context.signals.onComponentReplaced.dispatch(current_component_uuid);
+        });
     }));
 });
 

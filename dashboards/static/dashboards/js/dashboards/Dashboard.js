@@ -185,7 +185,7 @@ export class Dashboard extends Div {
                     data.component_type === COMPONENT_TYPE.CONTROL.name) {
                         type = CONTAINER_TYPE.NONCARD;                
                 }
-                return CreateComponent(type, null, this.context, spot, null, 'light', data).then((comp) => {
+                return CreateComponent(type, null, this.context, spot, null, 'light', data).then((comp) => {                    
                     $(original.dom).replaceWith($(comp.dom));
                     comp.setOptions();
                     comp.setEditMode(true);

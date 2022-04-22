@@ -75,6 +75,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 
 | Bug        | Priority        | Solution | Status |
 | ------------- |:-------------:|:-------------:|:-------------:|
+| loading component on an existing one => old component remains in comms | `HIGH` | delete old after the loading the new one | *SOLVED* |
 | loading multiple identical components => appear as single comp in comms | `HIGH` | loading => new uuid | |
 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` | loading => new uuid | |
 
