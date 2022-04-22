@@ -206,11 +206,6 @@ export class CommsManager {
                 context.signals.onQueryUpdated.dispatch(key, data_comm[key]);            
             }
         });
-
-        
-        context.signals.onComponentReplaced.add(uuid => {
-            this.deleteComponent(uuid);
-        })
         
     }
 

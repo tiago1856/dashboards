@@ -211,7 +211,7 @@ context.signals.onLoadComponent.add((spot) => {
         dashboard.loadComponent(spot, component_id).then(() => {
             // consider loading a new component as a complete new one => remove the old one
             // from comms
-            context.signals.onComponentReplaced.dispatch(current_component_uuid);
+            comms.deleteComponent(current_component_uuid);
         });
     }));
 });
