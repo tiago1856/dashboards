@@ -89,7 +89,7 @@ export class NonCardComponent extends MasterComponent {
      * Called when something fundamental change, like the component's type.
      * Body recreated because the graph framework does something weird to the container.
      */
-     setContent(changed_query = null) {
+     async setContent(changed_query = null) {
       super.setContent(changed_query);
 
       /*
@@ -115,7 +115,7 @@ export class NonCardComponent extends MasterComponent {
           this.body.setId(uuidv4());          
           this.content = null;
           this.content = new component.class(this.context, this, changed_query);
-          this.content.execute();
+          await this.content.execute();
           this.setSpinnerVisibility(false);
           if (this.data.component_type === 'CONTROL') {
             this.context.signals.onComponentUpdated.dispatch(this, true);

@@ -14,13 +14,11 @@ export class InfoSimpleLeft extends BaseComponentContent {
         const div = new Div().attachTo(component.body);
         div.addClass("info-box info-component-content");
 
-        //div.setStyle('height','100%');
         const span = new Span().attachTo(div);
         span.addClass('info-box-icon bg-danger');
         this.icon = new I().attachTo(span);
         this.icon.addClass("icon ion-md-alert");
         this.icon.setStyle("font-size","56px");
-
 
         const content = new Div().attachTo(div);
         content.addClass('info-box-content');
@@ -30,7 +28,12 @@ export class InfoSimpleLeft extends BaseComponentContent {
         this.value = new Span().attachTo(content);
         this.value.addClass("info-box-number");
         this.value.setTextContent('SEM VALOR');
-     
+        this.value.setStyle("font-size","90px");
+        /*
+        span.setStyle("height", $(div.dom).css('height'));
+        span.setStyle("width", $(div.dom).css('height'));
+        */
+
         $(component.opt_btn).on('click',function() {
         });
     }

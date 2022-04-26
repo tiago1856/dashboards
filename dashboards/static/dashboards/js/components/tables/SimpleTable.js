@@ -127,3 +127,20 @@ export class SimpleTable extends BaseComponentContent {
         this.onOptionChanged.detach();
     }
 }
+
+
+/*
+const body = $('#body');
+
+body.closest('div.card').addClass('bg-primary');
+body.closest('div.card').addClass('bg-danger');
+const classes = body.closest('div.card').attr("class").split(/\s+/);
+
+const classes = [ "card", "bg-primary", "bg-danger" ]
+for (let i=classes.length-1; i>=0; i--) {
+  if (classes[i].indexOf('bg-') > -1)
+    console.log (classes[i])
+}
+
+
+*/
