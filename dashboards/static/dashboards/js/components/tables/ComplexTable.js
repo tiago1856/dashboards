@@ -22,6 +22,7 @@ import {
     NO,
 } from '../ComponentType.js';
 import { isPropOk } from '../../utils/jsutils.js';
+import { getInputData } from '../../Components/ComponentType.js';
 
 
 
@@ -35,7 +36,7 @@ export class ComplexTable extends BaseComponentContent {
 
         this.dt = null;
 
-        component.body.setStyle("height",this.component.data.options?(this.component.data.options[ID_SIZES_HEIGHT_COMPONENT] + 'px'):"300px");
+        component.body.setStyle("height",(this.component.data.options?this.component.data.options[ID_SIZES_HEIGHT_COMPONENT]:getInputData(this.options_data,ID_SIZES_HEIGHT_COMPONENT)) + 'px');
         
         this.container = new Div().attachTo(component.body);  
 
@@ -205,12 +206,12 @@ export class ComplexTable extends BaseComponentContent {
         if (!isPropOk(options, ID_ROWS_COLOR)) options[ID_ROWS_COLOR] = $(this.container.dom).css("color");
         if (!isPropOk(options, ID_ROWS_ALIGNMENT)) options[ID_ROWS_ALIGNMENT] = $(this.container.dom).css("text-align");
         if (!isPropOk(options, ID_ROWS_VERTICAL_ALIGNMENT)) options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
-        if (!isPropOk(options, ID_OPERATION_PRINT)) options[ID_OPERATION_PRINT] = YES;
-        if (!isPropOk(options, ID_OPERATION_PDF)) options[ID_OPERATION_PDF] = YES;
-        if (!isPropOk(options, ID_OPERATION_CSV)) options[ID_OPERATION_CSV] = YES;
-        if (!isPropOk(options, ID_OPERATION_EXCEL)) options[ID_OPERATION_EXCEL] = YES;
-        if (!isPropOk(options, ID_OPERATION_COPY)) options[ID_OPERATION_COPY] = YES;
-        if (!isPropOk(options, ID_OPERATION_COLUMNS_VIS)) options[ID_OPERATION_COLUMNS_VIS] = YES;
+        if (!isPropOk(options, ID_OPERATION_PRINT)) options[ID_OPERATION_PRINT] = getInputData(this.options_data,ID_OPERATION_PRINT);
+        if (!isPropOk(options, ID_OPERATION_PDF)) options[ID_OPERATION_PDF] = getInputData(this.options_data,ID_OPERATION_PDF);
+        if (!isPropOk(options, ID_OPERATION_CSV)) options[ID_OPERATION_CSV] = getInputData(this.options_data,ID_OPERATION_CSV);
+        if (!isPropOk(options, ID_OPERATION_EXCEL)) options[ID_OPERATION_EXCEL] = getInputData(this.options_data,ID_OPERATION_EXCEL);
+        if (!isPropOk(options, ID_OPERATION_COPY)) options[ID_OPERATION_COPY] = getInputData(this.options_data,ID_OPERATION_COPY);
+        if (!isPropOk(options, ID_OPERATION_COLUMNS_VIS)) options[ID_OPERATION_COLUMNS_VIS] = getInputData(this.options_data,ID_OPERATION_COLUMNS_VIS);
         this.component.data.options = JSON.parse(JSON.stringify(options));
     }
 

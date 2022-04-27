@@ -26,6 +26,8 @@ import {
     URL_SAVE_DASHBOARD
 } from "./urls.js";
 import { CommsManager } from './comms/CommsManager.js';
+import { IconsModal } from './modals/IconsModal.js';
+
 
 // -----------------
 // --- CONSTANTS ---
@@ -141,6 +143,12 @@ const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
  */
  const comms = new CommsManager(context);
 
+
+/**
+ * ICON SELECTION MODAL
+ */
+const icons_modal = new IconsModal(context);
+
 /**
  * GLOBAL DATE INTERVAL PICKER
  */
@@ -223,6 +231,11 @@ context.signals.onLayoutEditor.add((spot) => {
         dashboard = new Dashboard(context, new_layout_id, null);
         dashboard.init();
     });
+});
+
+
+context.signals.onIconSelectionModal.add((current, onSelection = null) => {
+    icons_modal.show(current, onSelection);
 });
 
 

@@ -5,6 +5,7 @@ import { OptionInputText } from './OptionInputText.js';
 import { OptionSelect } from './OptionSelect.js';
 import { OptionSlider } from './OptionSlider.js';
 import { OptionSwitch } from './OptionSwitch.js';
+import { OptionIcon } from './OptionIcon.js';
 import { subStr } from '../utils/jsutils.js';
 import { getComponentProperties } from '../Components/ComponentType.js';
 
@@ -70,6 +71,9 @@ import { getComponentProperties } from '../Components/ComponentType.js';
                     case 'switch':
                         this.inputs.push(new OptionSwitch(context, component.data, input).attachTo(new_section));
                         break;
+                    case 'icon':
+                        this.inputs.push(new OptionIcon(context, component.data, input).attachTo(new_section));
+                        break;                        
                     default:                       
                 }
             });

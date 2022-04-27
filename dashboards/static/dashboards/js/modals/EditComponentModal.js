@@ -19,7 +19,6 @@ import { ExportTable2Excel } from '../export/ExportTable2Excel.js';
 import { MSG_DELETE_QUERY } from '../messages.js';
 import { getAllNumbers } from '../utils/jsutils.js';
 import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
-import { IconsModal } from './IconsModal.js';
 
 const EDIT_COMPONENT_MODAL = $('#edit-component-modal');
 
@@ -69,8 +68,6 @@ const GDN_X_AXIS = $('#cdc-graph-double-num-x-axis');
 const GDN_SERIES_1 = $('#cdc-graph-double-num-series-1');
 const GDN_SERIES_2 = $('#cdc-graph-double-num-series-2');
 // INFO SIMPLE LEFT
-const ISL_SELECT_ICON = $(".icon-preview");
-const ISL_ICON_PREVIEW_AREA = $("#cdc-info-simple-left-icon-preview");
 const ISL_TEXT_1 = $("#cdc-info-simple-left-text-1");
 const ISL_VALUE = $("#cdc-info-simple-left-value");
 const ISL_TEXT_2 = $("#cdc-info-simple-left-text-2");
@@ -114,7 +111,7 @@ export function EditComponentModal(context) {
 
     this.old_name = null;
 
-    this.icons_modal = new IconsModal(context);
+    
     
     SELECTED_FIELDS.multiselect({enableFiltering: true,
         includeSelectAllOption: true,
@@ -316,20 +313,6 @@ export function EditComponentModal(context) {
         //self.context.signals.onChanged.dispatch();
     });
 
-
-
-    // -------------------
-    // INFO SIMPLE LEFT
-    // -------------------   
-
-    // SELECT INFO ICON
-    ISL_SELECT_ICON.on('click', function() {
-        self.icons_modal.show(self.state.data_config.icon, (icon) => {
-            ISL_ICON_PREVIEW_AREA.removeClass();
-            ISL_ICON_PREVIEW_AREA.addClass(icon);
-            //self.context.signals.onChanged.dispatch();
-        });
-    });
 
 
     // -------------------------------
@@ -600,23 +583,19 @@ EditComponentModal.prototype = {
                         ISL_VALUE.append(option); 
                         ISL_TEXT_1.val(this.state.data_config.text_1);
                     } else {
-                        ISL_ICON_PREVIEW_AREA.removeClass();
-                        ISL_ICON_PREVIEW_AREA.addClass(this.state.data_config.icon);
                         ISL_TEXT_1.val(this.state.data_config.text_1);
                         ISL_TEXT_2.val(this.state.data_config.text_2);
                         ISL_VALUE.val(this.state.data_config.value);
                     }
                 } else {
                     this.state.data_config = {};
-                    //ISL_ICON_PREVIEW_AREA.removeClass();                    
                     ISL_TEXT_1.val("");
                     ISL_TEXT_2.val("");
                     ISL_VALUE.val($("#cdc-info-simple-left-value option:first").val());
                     this.state.data_config.value = ISL_VALUE.val();
                     this.state.data_config.text_1 = "";
                     this.state.data_config.text_2 = "";
-                    this.state.data_config.icon = "icon ion-md-alert";
-                    console.log("222222 > ", fields);
+                    //console.log("222222 > ", fields);
                 }
                 break;
             }
@@ -738,7 +717,6 @@ EditComponentModal.prototype = {
             }
             case VISUALIZATION_TYPE.ISL:
             {
-                self.state.data_config.icon = ISL_ICON_PREVIEW_AREA.attr('class');
                 self.state.data_config.text_1 = ISL_TEXT_1.val();
                 self.state.data_config.text_2 = ISL_TEXT_2.val();
                 self.state.data_config.value = ISL_VALUE.val();

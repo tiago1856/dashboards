@@ -26,6 +26,7 @@ export function Context() {
         onDashboardSaved: new Signal(),
 
         onOptionChanged: new Signal(),
+        onIconSelectionModal: new Signal(),
         
 
         //onComponentChanged: new Signal(),

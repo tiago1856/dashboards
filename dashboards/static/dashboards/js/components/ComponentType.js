@@ -29,10 +29,15 @@ export const ID_OPERATION_CSV = "operation-csv";
 export const ID_OPERATION_COLUMNS_VIS  = "operation-columns-visibility";
 export const ID_OPERATION_EXCEL  = "operation-columns-excel";
 export const ID_OPERATION_COPY  = "operation-columns-copy";
-
+export const ID_ICON = "icon";
 
 export const YES = 'Sim';
 export const NO = 'Não';
+
+/**
+ * the default values for the common options for tables are not used ... for now --- TODO
+ * the default values will be whatever the browser considers.
+ */
 
 export const COMPONENT_TYPE = {
     TABLE: {
@@ -51,7 +56,7 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Cabeçalho",
                         inputs: [
-                            {id: ID_HEADER_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_HEADER_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ffffff"},
                             {id: ID_HEADER_COLOR, label: "Cor:", type: "color", value: "#000000"},
                             {id: ID_HEADER_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
                             {id: ID_HEADER_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
@@ -60,12 +65,12 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Linhas",
                         inputs: [
-                            {id: ID_ROWS_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_ROWS_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ffffff"},
                             {id: ID_ROWS_COLOR, label: "Cor:", type: "color", value: "#000000"},
                             {id: ID_ROWS_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
                             {id: ID_ROWS_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
                         ]		
-                    },                    
+                    },
                 ]
             },
             {
@@ -76,12 +81,12 @@ export const COMPONENT_TYPE = {
                         section_name: "Quadro",
                         inputs: [
                             {id: ID_SIZES_HEIGHT_COMPONENT, label: "Altura do Componente:", type: "slider", max: 1000, min: 50, value: 300, step: 5},
-                        ]                    
+                        ]
                     },
                     {
                         section_name: "Cabeçalho",
                         inputs: [
-                            {id: ID_HEADER_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_HEADER_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ffffff"},
                             {id: ID_HEADER_COLOR, label: "Cor:", type: "color", value: "#000000"},
                             {id: ID_HEADER_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
                             {id: ID_HEADER_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
@@ -90,24 +95,24 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Linhas",
                         inputs: [
-                            {id: ID_ROWS_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_ROWS_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ffffff"},
                             {id: ID_ROWS_COLOR, label: "Cor:", type: "color", value: "#000000"},
                             {id: ID_ROWS_ALIGNMENT, label: "Alinhamento:", type: "select", options:{'center':'Centro', 'end': 'Direita','start': 'Esquerda'}, value: 'center'},
                             {id: ID_ROWS_VERTICAL_ALIGNMENT, label: "Alinhamento vertical:", type: "select", options:{'middle':'Centro', 'top': 'Cima','bottom': 'Baixo'}, value: 'middle'}
-                        ]			
+                        ]
                     }, 
                     {
                         section_name: "Operações",
                         inputs: [
-                            {id: ID_OPERATION_PRINT, label: "Imprimir:", type: "switch", on: YES, off: NO, value: NO},
-                            {id: ID_OPERATION_PDF, label: "Exportar para PDF:", type: "switch", on: YES, off: NO, value: NO},
-                            {id: ID_OPERATION_CSV, label: "Exportar para CSV:", type: "switch", on: YES, off: NO, value: NO},
-                            {id: ID_OPERATION_EXCEL, label: "Exportar para EXCEL:", type: "switch", on: YES, off: NO, value: NO},
-                            {id: ID_OPERATION_COPY, label: "Copiar:", type: "switch", on: YES, off: NO, value: NO},
-                            {id: ID_OPERATION_COLUMNS_VIS, label: "Visibilidade de colunas:", type: "switch", on: YES, off: NO, value: NO},
-                        ]		
-                    },                    
-                ]              
+                            {id: ID_OPERATION_PRINT, label: "Imprimir:", type: "switch", on: YES, off: NO, value: YES},
+                            {id: ID_OPERATION_PDF, label: "Exportar para PDF:", type: "switch", on: YES, off: NO, value: YES},
+                            {id: ID_OPERATION_CSV, label: "Exportar para CSV:", type: "switch", on: YES, off: NO, value: YES},
+                            {id: ID_OPERATION_EXCEL, label: "Exportar para EXCEL:", type: "switch", on: YES, off: NO, value: YES},
+                            {id: ID_OPERATION_COPY, label: "Copiar:", type: "switch", on: YES, off: NO, value: YES},
+                            {id: ID_OPERATION_COLUMNS_VIS, label: "Visibilidade de colunas:", type: "switch", on: YES, off: NO, value: YES},
+                        ]
+                    },
+                ]
             },
         ]
     },
@@ -121,8 +126,19 @@ export const COMPONENT_TYPE = {
     INFO: {
         name: 'INFO',
         properties: [
+            {
+                id: VISUALIZATION_TYPE.ISL,
+                class:InfoSimpleLeft,
+                options: [
+                    {
+                        section_name: "Icon",
+                        inputs: [
+                            {id: ID_ICON, label: "Clique para selecionar o Icon:", type: "icon", value: 'ion ion-md-alert'},
+                        ]
+                    },
+                ]                
+            },
             {id: VISUALIZATION_TYPE.ISR, class:InfoSimpleRight},
-            {id: VISUALIZATION_TYPE.ISL, class:InfoSimpleLeft},
             {id: VISUALIZATION_TYPE.ICP, class:InfoComplexPercentage},
         ]
     },
@@ -155,3 +171,13 @@ export function getComponentProperties(type, id) {
         }
     }     
 }
+
+export function getInputData(options, key, what = 'value') {
+    for (let i=0; i<options.length; i++) {
+        for (let k=0; k<options[i].inputs.length; k++) {
+           if (options[i].inputs[k].id === key) return options[i].inputs[k][what];
+        }
+    }
+}
+
+

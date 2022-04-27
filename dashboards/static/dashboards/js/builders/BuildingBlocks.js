@@ -106,8 +106,11 @@ class BasicBlock {
 		});
 	}
 
-	removeClass(name) {
-		this.dom.classList.remove(name);
+	removeClass(name = null) {
+		if (name)
+			this.dom.classList.remove(name);
+		else
+			this.dom.className = '';	// remove all classes
 		return this;
 	}
 

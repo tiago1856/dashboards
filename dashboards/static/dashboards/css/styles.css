@@ -576,9 +576,9 @@ img.img-zoom {
 
 .icon-preview {
 	background-color: cyan;
-	width: 256px;
-	height: 256px;
-	font-size: 216px;
+	width: 128px;
+	height: 128px;
+	font-size: 128px;
 	color: #373737
 	display: -ms-inline-flexbox;
 	display: inline-flex;

@@ -3,6 +3,7 @@ import { URL_EXEC_QUERY } from "../urls.js";
 import { SqlQueryAnalyzer } from '../query/SqlQueryAnalyzer.js';
 import { MSG_QUERY_ANALYSIS_ERROR, MSG_QUERY_ERROR } from '../messages.js';
 import { getAllNumbers } from "../utils/jsutils.js";
+import { getComponentProperties } from '../Components/ComponentType.js';
 
 
 
@@ -18,6 +19,10 @@ export class BaseComponentContent {
         this.component = component;
 
         this.query = query;
+
+        const properties = getComponentProperties(component.data.component_type, component.data.visualization.visualization_type);
+        this.options_data = properties.options;
+
         //this.component_analysis = null;  
         /*
         this.conditionals = [];

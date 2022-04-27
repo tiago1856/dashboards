@@ -14,12 +14,13 @@ import {
     ID_ROWS_VERTICAL_ALIGNMENT,
 } from '../ComponentType.js';
 import { isPropOk } from '../../utils/jsutils.js';
+import { getInputData } from '../../Components/ComponentType.js';
 
 export class SimpleTable extends BaseComponentContent {
     constructor(context, component, new_query=null) {
         super(context, component, new_query?new_query:component.data.query.query);     
 
-        component.body.setStyle("height",this.component.data.options?(this.component.data.options[ID_SIZES_HEIGHT_COMPONENT] + 'px'):"300px");
+        component.body.setStyle("height",(this.component.data.options?this.component.data.options[ID_SIZES_HEIGHT_COMPONENT]:getInputData(this.options_data,ID_SIZES_HEIGHT_COMPONENT)) + 'px');
         this.container = new Div().attachTo(component.body);
 
         this.onOptionChanged = context.signals.onOptionChanged.add((uuid, {id, value}) => {

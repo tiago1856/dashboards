@@ -2,7 +2,11 @@
 import { BaseComponentContent } from '../BaseComponentContent.js';
 import { Div, I, Span } from '../../builders/BuildingBlocks.js';
 import { getNumberField, getStringField, isNumber } from '../Discovery.js';
-
+import { 
+    ID_ICON,
+} from '../ComponentType.js';
+import { isPropOk } from '../../utils/jsutils.js';
+import { getInputData } from '../../Components/ComponentType.js';
 
 /**
  * 
@@ -11,13 +15,14 @@ export class InfoSimpleLeft extends BaseComponentContent {
     constructor(context, component, new_query=null) {
         super(context, component, new_query?new_query:component.data.query.query);
 
+
         const div = new Div().attachTo(component.body);
         div.addClass("info-box info-component-content");
 
         const span = new Span().attachTo(div);
         span.addClass('info-box-icon bg-danger');
         this.icon = new I().attachTo(span);
-        this.icon.addClass("icon ion-md-alert");
+        this.icon.addClass(this.component.data.options?this.component.data.options[ID_ICON]:getInputData(this.options_data,ID_ICON));
         this.icon.setStyle("font-size","56px");
 
         const content = new Div().attachTo(div);
@@ -28,23 +33,42 @@ export class InfoSimpleLeft extends BaseComponentContent {
         this.value = new Span().attachTo(content);
         this.value.addClass("info-box-number");
         this.value.setTextContent('SEM VALOR');
-        this.value.setStyle("font-size","90px");
+
         /*
+        this.value.setStyle("font-size","90px");
+        
         span.setStyle("height", $(div.dom).css('height'));
         span.setStyle("width", $(div.dom).css('height'));
         */
 
-        $(component.opt_btn).on('click',function() {
+        
+
+        this.onOptionChanged = context.signals.onOptionChanged.add((uuid, {id, value}) => {
+            if (uuid !== component.data.uuid) return;
+            component.data.options[id] = value;
+            context.signals.onChanged.dispatch();
+            switch (id) {
+                case ID_ICON:
+                    this.icon.removeClass();
+                    //this.icon.dom.className = '';
+                    this.icon.addClass(value);
+                    console.warn(value);
+                    break;
+                default:
+            }            
         });
+
     }
 
     async execute() {
         const results = await this.execQuery(this.query, null);
         const [comp_text_1, comp_value] = this.prepareData(results, this.component.data);
+        /*
         if (this.component.data.data_config.icon !== '') {
             $(this.icon.dom).removeClass();
             $(this.icon.dom).addClass(this.component.data.data_config.icon);
         }
+        */
         if (comp_text_1 !== '') this.text.setTextContent(comp_text_1,);   
         if (comp_value) {
             const _value = comp_value + (this.component.data.data_config.text_2!==''?this.component.data.data_config.text_2:"");
@@ -94,7 +118,20 @@ export class InfoSimpleLeft extends BaseComponentContent {
         } 
 
         return [text_1, value];
-    }    
+    }
+
+    setOptions() {
+        let options = this.component.data.options;
+        if (!options) options = {};
+        if (!isPropOk(options, ID_ICON)) options[ID_ICON] = 'ion-md-alert';
+        this.component.data.options = JSON.parse(JSON.stringify(options));
+    }
+
+    clear() {
+        super.clear();
+        this.onOptionChanged.detach();
+    }
+
 }
 
 /*

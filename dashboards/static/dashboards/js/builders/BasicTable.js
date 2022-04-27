@@ -54,7 +54,6 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null, opti
     }
 
     const body = new TableTbody().attachTo(table);
-    
     data.forEach((row, index) => {
         if (max_lines >= 0 && index >= max_lines) return false;
         const _row = new TableTr().attachTo(body);
