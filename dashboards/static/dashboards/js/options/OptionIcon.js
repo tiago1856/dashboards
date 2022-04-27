@@ -13,7 +13,7 @@ import { Div, Label, I } from '../builders/BuildingBlocks.js';
         const xxx = new Div().attachTo(this);
         xxx.addClass("w-50 mx-auto");		
         const icon_preview = new Div().attachTo(xxx);
-        icon_preview.addClass("icon-preview");
+        icon_preview.addClass("icon-preview mb-2");
         const icon = new I().attachTo(icon_preview);
         const value = component_data.options[input_data.id];
         icon.addClass((typeof value === 'undefined' || value===null||value==='')?input_data.value:value);

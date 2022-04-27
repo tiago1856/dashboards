@@ -30,6 +30,11 @@ export const ID_OPERATION_COLUMNS_VIS  = "operation-columns-visibility";
 export const ID_OPERATION_EXCEL  = "operation-columns-excel";
 export const ID_OPERATION_COPY  = "operation-columns-copy";
 export const ID_ICON = "icon";
+export const ID_ICON_BACK_COLOR = "icon-background-color";
+export const ID_ICON_COLOR = "icon-color"; 
+export const ID_ICON_SIZE = "icon-size";
+export const ID_TEXT_SIZE = "text-size";
+export const ID_VALUE_SIZE = "value-size";
 
 export const YES = 'Sim';
 export const NO = 'Não';
@@ -133,9 +138,19 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Icon",
                         inputs: [
-                            {id: ID_ICON, label: "Clique para selecionar o Icon:", type: "icon", value: 'ion ion-md-alert'},
+                            {id: ID_ICON_SIZE, label: "Dimensão:", type: "slider", max: 256, min: 56, value: 92, step: 2},
+                            {id: ID_ICON_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ff0000"},
+                            {id: ID_ICON_COLOR, label: "Cor:", type: "color", value: "#ffffff"},                            
+                            {id: ID_ICON, label: "Clique para selecionar o Icon:", type: "icon", value: 'ion ion-md-alert'},                            
                         ]
                     },
+                    {
+                        section_name: "Text",
+                        inputs: [
+                            {id: ID_TEXT_SIZE, label: "Dimensão:", type: "slider", max: 256, min: 16, value: 24, step: 1},
+                            {id: ID_VALUE_SIZE, label: "Dimensão:", type: "slider", max: 256, min: 16, value: 32, step: 1},
+                        ]
+                    },                    
                 ]                
             },
             {id: VISUALIZATION_TYPE.ISR, class:InfoSimpleRight},

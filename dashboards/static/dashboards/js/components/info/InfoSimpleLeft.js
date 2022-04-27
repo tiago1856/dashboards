@@ -1,9 +1,14 @@
 
 import { BaseComponentContent } from '../BaseComponentContent.js';
 import { Div, I, Span } from '../../builders/BuildingBlocks.js';
-import { getNumberField, getStringField, isNumber } from '../Discovery.js';
+import { getNumberField } from '../Discovery.js';
 import { 
     ID_ICON,
+    ID_ICON_BACK_COLOR,
+    ID_ICON_COLOR,
+    ID_ICON_SIZE,
+    ID_TEXT_SIZE,
+    ID_VALUE_SIZE
 } from '../ComponentType.js';
 import { isPropOk } from '../../utils/jsutils.js';
 import { getInputData } from '../../Components/ComponentType.js';
@@ -20,10 +25,20 @@ export class InfoSimpleLeft extends BaseComponentContent {
         div.addClass("info-box info-component-content");
 
         const span = new Span().attachTo(div);
-        span.addClass('info-box-icon bg-danger');
-        this.icon = new I().attachTo(span);
-        this.icon.addClass(this.component.data.options?this.component.data.options[ID_ICON]:getInputData(this.options_data,ID_ICON));
-        this.icon.setStyle("font-size","56px");
+        span.addClass('info-box-icon');// bg-danger');
+        const back_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON_BACK_COLOR))?this.component.data.options[ID_ICON_BACK_COLOR]:getInputData(this.options_data,ID_ICON_BACK_COLOR);
+        const color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON_COLOR))?this.component.data.options[ID_ICON_COLOR]:getInputData(this.options_data,ID_ICON_COLOR);
+        span.setStyle('background-color', back_color);
+        span.setStyle('color', color);
+ 
+
+        const icon = new I().attachTo(span);
+        icon.addClass((this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON))?this.component.data.options[ID_ICON]:getInputData(this.options_data,ID_ICON));
+        
+        const icon_size = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON_SIZE))?this.component.data.options[ID_ICON_SIZE]:getInputData(this.options_data,ID_ICON_SIZE);
+        icon.setStyle("font-size", icon_size + 'px');
+        span.setStyle("height", icon_size + "px");
+        span.setStyle("width", icon_size + "px");
 
         const content = new Div().attachTo(div);
         content.addClass('info-box-content');
@@ -34,14 +49,23 @@ export class InfoSimpleLeft extends BaseComponentContent {
         this.value.addClass("info-box-number");
         this.value.setTextContent('SEM VALOR');
 
+        //this.text.setStyle("font-size",'100px');
+
         /*
         this.value.setStyle("font-size","90px");
-        
-        span.setStyle("height", $(div.dom).css('height'));
-        span.setStyle("width", $(div.dom).css('height'));
         */
 
+
+        const text_size = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_TEXT_SIZE))?this.component.data.options[ID_TEXT_SIZE]:getInputData(this.options_data,ID_TEXT_SIZE);
+        this.text.setStyle("font-size", text_size + 'px');
+
+        const value_size = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_VALUE_SIZE))?this.component.data.options[ID_VALUE_SIZE]:getInputData(this.options_data,ID_VALUE_SIZE);
+        this.value.setStyle("font-size", value_size + 'px');
         
+        //span.setStyle("height", $(div.dom).css('height'));
+        //span.setStyle("width", $(div.dom).css('height')); 
+                
+        content.setStyle('max-height', icon_size + "px"); 
 
         this.onOptionChanged = context.signals.onOptionChanged.add((uuid, {id, value}) => {
             if (uuid !== component.data.uuid) return;
@@ -49,11 +73,26 @@ export class InfoSimpleLeft extends BaseComponentContent {
             context.signals.onChanged.dispatch();
             switch (id) {
                 case ID_ICON:
-                    this.icon.removeClass();
-                    //this.icon.dom.className = '';
-                    this.icon.addClass(value);
-                    console.warn(value);
+                    icon.removeClass();
+                    icon.addClass(value);
                     break;
+                case ID_ICON_BACK_COLOR:
+                    span.setStyle("background-color",value);
+                    break;
+                case ID_ICON_COLOR:
+                    span.setStyle("color",value);
+                    break;
+                case ID_ICON_SIZE:
+                    icon.setStyle("font-size",value + 'px');
+                    span.setStyle("height", value + "px");
+                    span.setStyle("width", value + "px");
+                    content.setStyle('max-height',value + "px"); 
+                    break;
+                case ID_TEXT_SIZE:
+                    this.text.setStyle("font-size", value + 'px');
+                    break;
+                case ID_VALUE_SIZE:
+                    this.value.setStyle("font-size", value + 'px');
                 default:
             }            
         });
@@ -63,18 +102,11 @@ export class InfoSimpleLeft extends BaseComponentContent {
     async execute() {
         const results = await this.execQuery(this.query, null);
         const [comp_text_1, comp_value] = this.prepareData(results, this.component.data);
-        /*
-        if (this.component.data.data_config.icon !== '') {
-            $(this.icon.dom).removeClass();
-            $(this.icon.dom).addClass(this.component.data.data_config.icon);
-        }
-        */
         if (comp_text_1 !== '') this.text.setTextContent(comp_text_1,);   
         if (comp_value) {
             const _value = comp_value + (this.component.data.data_config.text_2!==''?this.component.data.data_config.text_2:"");
             this.value.setTextContent(_value);
         }
-        //if (onReady) onReady();
     }
 
 
@@ -123,7 +155,14 @@ export class InfoSimpleLeft extends BaseComponentContent {
     setOptions() {
         let options = this.component.data.options;
         if (!options) options = {};
-        if (!isPropOk(options, ID_ICON)) options[ID_ICON] = 'ion-md-alert';
+        if (!isPropOk(options, ID_ICON)) options[ID_ICON] = getInputData(this.options_data,ID_ICON);
+        if (!isPropOk(options, ID_ICON_BACK_COLOR)) options[ID_ICON_BACK_COLOR] = getInputData(this.options_data,ID_ICON_BACK_COLOR);
+        if (!isPropOk(options, ID_ICON_COLOR)) options[ID_ICON_COLOR] = getInputData(this.options_data,ID_ICON_COLOR);
+        if (!isPropOk(options, ID_ICON_SIZE)) options[ID_ICON_SIZE] = getInputData(this.options_data,ID_ICON_SIZE);
+        if (!isPropOk(options, ID_TEXT_SIZE)) options[ID_TEXT_SIZE] = getInputData(this.options_data,ID_TEXT_SIZE);
+        if (!isPropOk(options, ID_VALUE_SIZE)) options[ID_VALUE_SIZE] = getInputData(this.options_data,ID_VALUE_SIZE);
+
+        
         this.component.data.options = JSON.parse(JSON.stringify(options));
     }
 
