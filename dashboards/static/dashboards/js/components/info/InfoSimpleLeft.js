@@ -8,7 +8,10 @@ import {
     ID_ICON_COLOR,
     ID_ICON_SIZE,
     ID_TEXT_SIZE,
-    ID_VALUE_SIZE
+    ID_VALUE_SIZE,
+    ID_CARD_BACK_COLOR,
+    ID_TEXT_COLOR,
+    ID_VALUE_COLOR,
 } from '../ComponentType.js';
 import { isPropOk } from '../../utils/jsutils.js';
 import { getInputData } from '../../Components/ComponentType.js';
@@ -23,6 +26,10 @@ export class InfoSimpleLeft extends BaseComponentContent {
 
         const div = new Div().attachTo(component.body);
         div.addClass("info-box info-component-content");
+
+        const card_back_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_CARD_BACK_COLOR))?this.component.data.options[ID_CARD_BACK_COLOR]:getInputData(this.options_data,ID_CARD_BACK_COLOR);
+        div.setStyle('background-color', card_back_color);
+
 
         const span = new Span().attachTo(div);
         span.addClass('info-box-icon');// bg-danger');
@@ -48,6 +55,12 @@ export class InfoSimpleLeft extends BaseComponentContent {
         this.value = new Span().attachTo(content);
         this.value.addClass("info-box-number");
         this.value.setTextContent('SEM VALOR');
+
+        const text_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_TEXT_COLOR))?this.component.data.options[ID_TEXT_COLOR]:getInputData(this.options_data,ID_TEXT_COLOR);
+        const value_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_VALUE_COLOR))?this.component.data.options[ID_VALUE_COLOR]:getInputData(this.options_data,ID_VALUE_COLOR);
+        this.text.setStyle('color', text_color);
+        this.value.setStyle('color', value_color);
+
 
         //this.text.setStyle("font-size",'100px');
 
@@ -93,6 +106,16 @@ export class InfoSimpleLeft extends BaseComponentContent {
                     break;
                 case ID_VALUE_SIZE:
                     this.value.setStyle("font-size", value + 'px');
+                    break;
+                case ID_CARD_BACK_COLOR:
+                    div.setStyle('background-color', value);
+                    break;
+                case ID_TEXT_COLOR:
+                    this.text.setStyle('color', value);
+                    break;
+                case ID_VALUE_COLOR:
+                    this.value.setStyle('color', value);
+                    break;
                 default:
             }            
         });
@@ -161,8 +184,10 @@ export class InfoSimpleLeft extends BaseComponentContent {
         if (!isPropOk(options, ID_ICON_SIZE)) options[ID_ICON_SIZE] = getInputData(this.options_data,ID_ICON_SIZE);
         if (!isPropOk(options, ID_TEXT_SIZE)) options[ID_TEXT_SIZE] = getInputData(this.options_data,ID_TEXT_SIZE);
         if (!isPropOk(options, ID_VALUE_SIZE)) options[ID_VALUE_SIZE] = getInputData(this.options_data,ID_VALUE_SIZE);
+        if (!isPropOk(options, ID_CARD_BACK_COLOR)) options[ID_CARD_BACK_COLOR] = getInputData(this.options_data,ID_CARD_BACK_COLOR);
+        if (!isPropOk(options, ID_TEXT_COLOR)) options[ID_TEXT_COLOR] = getInputData(this.options_data,ID_TEXT_COLOR);
+        if (!isPropOk(options, ID_VALUE_COLOR)) options[ID_VALUE_COLOR] = getInputData(this.options_data,ID_VALUE_COLOR);
 
-        
         this.component.data.options = JSON.parse(JSON.stringify(options));
     }
 

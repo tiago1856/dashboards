@@ -70,11 +70,12 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 ## TODO
 
 * components: n-graph, geos, templates, ...
+* refresh content only if query changes
 
 ## Bugs to solve
 
 | Nº        | Bug        | Priority        | Solution | Status |
-| ------------- |:-------------:|:-------------:|:-------------:|
+| ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
 | 1 | loading component on an existing one => old component remains in comms | `HIGH` | delete old after the loading the new one | *SOLVED* |
 | 2 | loading multiple identical components => appears as single comp in comms | `HIGH` | loading => new uuid | *SOLVED* |
 | 3 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` | loading => new uuid | |

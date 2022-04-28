@@ -35,6 +35,9 @@ export const ID_ICON_COLOR = "icon-color";
 export const ID_ICON_SIZE = "icon-size";
 export const ID_TEXT_SIZE = "text-size";
 export const ID_VALUE_SIZE = "value-size";
+export const ID_CARD_BACK_COLOR = "card-back-color";
+export const ID_TEXT_COLOR = "text-color";
+export const ID_VALUE_COLOR = "value-color";
 
 export const YES = 'Sim';
 export const NO = 'Não';
@@ -136,6 +139,12 @@ export const COMPONENT_TYPE = {
                 class:InfoSimpleLeft,
                 options: [
                     {
+                        section_name: "Quadro",
+                        inputs: [
+                            {id: ID_CARD_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#ffffff"},
+                        ]
+                    },                    
+                    {
                         section_name: "Icon",
                         inputs: [
                             {id: ID_ICON_SIZE, label: "Dimensão:", type: "slider", max: 256, min: 56, value: 92, step: 2},
@@ -147,8 +156,10 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Text",
                         inputs: [
-                            {id: ID_TEXT_SIZE, label: "Dimensão:", type: "slider", max: 256, min: 16, value: 24, step: 1},
-                            {id: ID_VALUE_SIZE, label: "Dimensão:", type: "slider", max: 256, min: 16, value: 32, step: 1},
+                            {id: ID_TEXT_SIZE, label: "Dimensão descrição:", type: "slider", max: 256, min: 16, value: 24, step: 1},
+                            {id: ID_TEXT_COLOR, label: "Cor da descrição:", type: "color", value: "#000000"},
+                            {id: ID_VALUE_SIZE, label: "Dimensão valor:", type: "slider", max: 256, min: 16, value: 32, step: 1},
+                            {id: ID_VALUE_COLOR, label: "Cor do valor:", type: "color", value: "#000000"},
                         ]
                     },                    
                 ]                
