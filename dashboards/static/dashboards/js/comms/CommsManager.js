@@ -427,7 +427,7 @@ export class CommsManager {
 
 
     /**
-     * Resets the manager.
+     * Resets the manager. Diagrams only
      */
     reset = () => {
         this.ios = {};	
@@ -439,6 +439,9 @@ export class CommsManager {
         console.warn("RESET");
     }
 
+    /**
+     * Clears the manager, signals and the plugin. 
+     */
     clear = () => {
         this.reset();
         this.instance.reset();

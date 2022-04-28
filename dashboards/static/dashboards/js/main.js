@@ -1,6 +1,3 @@
-/**
- * TODO: COMMS IN DASHBOARD
- */
 
 import { Context } from './Context.js';
 import { ErrorModal } from './modals/ErrorModal.js';
@@ -27,7 +24,6 @@ import {
     URL_GET_CONFIG,
     URL_SAVE_DASHBOARD
 } from "./urls.js";
-import { CommsManager } from './comms/CommsManager.js';
 import { IconsModal } from './modals/IconsModal.js';
 
 
@@ -139,11 +135,6 @@ const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
  const layout_editor_modal = new LayoutEditorModal(context);
 
 
-/**
- * COMMUNICATIONS MANAGER
- */
- let comms = null;//new CommsManager(context);
-
 
 /**
  * ICON SELECTION MODAL
@@ -220,7 +211,7 @@ context.signals.onLoadComponent.add((spot) => {
         dashboard.loadComponent(spot, component_id, true).then(() => {
             // consider loading a new component as a complete new one => remove the old one
             // from comms
-            comms.deleteComponent(current_component_uuid);
+            dashboard.comms.deleteComponent(current_component_uuid);
         });
     }));
 });
@@ -228,8 +219,6 @@ context.signals.onLoadComponent.add((spot) => {
 
 context.signals.onLayoutEditor.add((spot) => {
     layout_editor_modal.show((new_layout_id) => {
-        if (comms) { comms.clear(); comms = null; }
-        comms = new CommsManager(context);
         if (dashboard) dashboard.clear();
         dashboard = new Dashboard(context, new_layout_id, null);
         dashboard.init();
@@ -258,7 +247,7 @@ COMMS_BTN.on('click', function() {
     COMMS_SCREEN.removeClass('d-none').addClass('d-block');
 
     setTimeout(() => {
-        comms.repaint();
+        dashboard.comms.repaint();
     }, 50);
     
 })
@@ -290,14 +279,9 @@ DASHBOARD_OPEN_BTN.on('click',function() {
 
         getDashboard(dash_id, (result) => {
             changeSaveStatus(false);
-            if (comms) { comms.clear(); comms = null; }
-            comms = new CommsManager(context);
             if (dashboard) dashboard.clear();
             dashboard = new Dashboard(context, result.layout, result);
             dashboard.init().then(() => {
-                if (result.hasOwnProperty('data') && result.data.hasOwnProperty('comms')) {
-                    comms.restore(result.data.comms);
-                }
                 date_interval.setFormat(result.date_format, false);
             });
         });
@@ -355,9 +339,7 @@ DASHBOARD_NEW_BTN.on('click',function() {
 DASHBOARD_DELETE_BTN.on('click',function() {
     if (!dashboard.id) return;
     context.signals.onAYS.dispatch(MSG_DELETE_DASHBOARD, () => {
-        dashboard.delete(() => {            
-            //comms.reset();
-            //dashboard = new Dashboard(context, 2, null/*, true*/);            
+        dashboard.delete(() => {       
             window.location.replace(PAGE_URL);
         });
     });
@@ -399,22 +381,15 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
     loadConfig((config) => {
         if (config.config !== null) {
             getDashboard(config.dashboard, (result) => {
-                if (comms) { comms.clear(); comms = null; }
-                comms = new CommsManager(context);
                 if (dashboard) dashboard.clear();
                 dashboard = new Dashboard(context, result.layout, result);
                 dashboard.init().then(() => {
-                    date_interval.setFormat(result.date_format, false);
-                    if (result.hasOwnProperty('data') && result.data.hasOwnProperty('comms')) {
-                        comms.restore(result.data.comms);
-                    }              
+                    date_interval.setFormat(result.date_format, false);          
                     new_dash = false;
                     changeSaveStatus(false);
                 });
             });        
         } else {
-            if (comms) { comms.clear(); comms = null; }
-            comms = new CommsManager(context);
             if (dashboard) dashboard.clear();
             dashboard = new Dashboard(context, DEFAULT_LAYOUT, null);
             dashboard.init().then(() => {
@@ -424,8 +399,6 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
         }
     })
 } else {
-    if (comms) { comms.clear(); comms = null; }
-    comms = new CommsManager(context);
     if (dashboard) dashboard.clear();
     dashboard = new Dashboard(context, DEFAULT_LAYOUT, null);
     dashboard.init().then(() => {
@@ -484,8 +457,6 @@ function enterEditMode(enter=true) {
  * @param {boolean} edit_mode Edit mode?
  */
 function newDashboard(layout_id/*, edit_mode = false*/) {
-    if (comms) { comms.clear(); comms = null; }
-    comms = new CommsManager(context);
     if (dashboard) dashboard.clear();
     dashboard = new Dashboard(context, layout_id, null);
     dashboard.init().then(() => {
@@ -572,11 +543,10 @@ function saveDashboard(onReady = null) {
             layout: data.layout_id,
             data: {
                 components: data.components_data,
-                comms: comms.getData(),
+                comms: data.comms,
             },
             id: data.id,
             date_format: data.date_format,
-            //comms: comms.getData(),
         }, 
         result => {
             $("body").css("cursor","auto");

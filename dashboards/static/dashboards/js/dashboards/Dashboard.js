@@ -10,6 +10,7 @@ import { fetchGET } from "../Fetch.js";
 import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 import { DEFAULT_DATE_FORMAT } from '../constants.js';
 import { CONTAINER_TYPE, CreateComponent } from '../Components/CreateComponent.js';
+import { CommsManager } from '../comms/CommsManager.js';
 
 const DASHBOARD_CONTAINER = $('#layout-container');
 
@@ -41,6 +42,8 @@ export class Dashboard extends Div {
         this.components = {};
         this.changed = false;   // something changed and it's not saved
         this.data = data;
+
+        this.comms = new CommsManager(context);
 
         this.dash_title = new DashboardTitle(
             context, 
@@ -102,6 +105,11 @@ export class Dashboard extends Div {
 
         
         await Promise.all(promises);
+
+        if (this.data.hasOwnProperty('data') && this.data.data.hasOwnProperty('comms')) {
+            this.comms.restore(this.data.data.comms);
+        } 
+
     }
 
 
@@ -229,6 +237,7 @@ export class Dashboard extends Div {
             components_data: components_data,
             id: this.id,
             date_format: this.date_format,
+            comms: this.comms.getData(),
         }
     };
 
@@ -268,6 +277,9 @@ export class Dashboard extends Div {
                 this.components[key].content.clear();
             }
         }
+
+        this.comms.clear(); 
+        this.comms = null;
     }
 
 
