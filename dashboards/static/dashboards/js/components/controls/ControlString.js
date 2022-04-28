@@ -1,5 +1,5 @@
 import { BaseComponentContent } from '../BaseComponentContent.js';
-import { Div, Input, Label, Button } from '../../builders/BuildingBlocks.js';
+import { Div, Input, Label, Button, AwesomeIconAndButton } from '../../builders/BuildingBlocks.js';
 
 
 export class ControlString extends BaseComponentContent {
@@ -13,7 +13,9 @@ export class ControlString extends BaseComponentContent {
     const cont = new Div().attachTo(div);
     cont.dom.style.width = '100%';
 
-    new Label(component.data.data_config.name).attachTo(cont);
+    new Label(component.data.data_config.name + ":").attachTo(cont);
+    const sync_btn = new AwesomeIconAndButton('','fa fa-sync').attachTo(cont);
+    sync_btn.addClass('btn btn-outline-secondary btn-sm ml-2');
 
     const group = new Div().attachTo(cont);
     group.addClass('input-group mx-auto')
@@ -34,6 +36,11 @@ export class ControlString extends BaseComponentContent {
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
     })
+
+    $(sync_btn.dom).on('click', function(e) {
+      const _value = input.getValue();
+      context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
+    });    
 
 
   }

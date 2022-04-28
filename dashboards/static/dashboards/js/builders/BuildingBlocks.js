@@ -428,7 +428,7 @@ class Hx extends BasicBlock {
 }
 
 class I extends BasicBlock {
-	constructor(x, settings) {
+	constructor(settings) {
 		super(document.createElement('i'), settings);
 	}
 }

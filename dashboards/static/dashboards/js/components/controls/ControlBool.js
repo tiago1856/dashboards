@@ -1,5 +1,5 @@
 import { BaseComponentContent } from '../BaseComponentContent.js';
-import { Div, Label, Input, Br } from '../../builders/BuildingBlocks.js';
+import { Div, Label, Input, AwesomeIconAndButton } from '../../builders/BuildingBlocks.js';
 
 
 export class ControlBool extends BaseComponentContent {
@@ -13,7 +13,19 @@ export class ControlBool extends BaseComponentContent {
     const cont = new Div().attachTo(div);
     cont.dom.style.width = '100%';
 
-    new Label(component.data.data_config.name).attachTo(cont);
+    new Label(component.data.data_config.name + ":").attachTo(cont);
+    
+    const sync_btn = new AwesomeIconAndButton('','fa fa-sync').attachTo(cont);
+    sync_btn.addClass('btn btn-outline-secondary btn-sm ml-2');
+    
+   /*
+   const link = new L
+    const sync_btn = new I().attachTo(cont);
+    sync_btn.addClass('fa fa-sync ml-2');
+    sync_btn.setStyle('color', 'blue');
+    sync_btn.setStyle('background-color', 'yellow');
+    sync_btn.setStyle('cursor', 'default');
+    */
 
     const group = new Div().attachTo(cont);
     group.addClass('mx-auto');
@@ -35,12 +47,19 @@ export class ControlBool extends BaseComponentContent {
       off: component.data.data_config.false
     });
 
+
+  
+
     $(input.dom).on('change', function(e) {
       const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;//$(this).val();
-     // context.signals.onCommTriggered.dispatch(component.data.uuid, component.data.data_config.name, _value);
      context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
     })
+
+    $(sync_btn.dom).on('click', function(e) {
+      const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;
+      context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
+    });    
 
   }
 
