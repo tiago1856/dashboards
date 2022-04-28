@@ -50,11 +50,11 @@ export class Dashboard extends Div {
             }
         ).attachTo(this);        
      
-        context.signals.onGlobalDateFormatChanged.add(selected_format => {
+        this.onGlobalDateFormatChanged = context.signals.onGlobalDateFormatChanged.add(selected_format => {
             this.date_format = selected_format;
         });
 
-        context.signals.onDashboardSaved.add(result => {
+        this.onDashboardSaved = context.signals.onDashboardSaved.add(result => {
             this.id = result.id;
             this.changed = false;
             this.context.signals.onLayoutsChanged.dispatch(this.layout_id);
@@ -257,6 +257,17 @@ export class Dashboard extends Div {
                 
             }
         );
+    }
+
+    clear() {
+        this.onGlobalDateFormatChanged.detach();
+        this.onDashboardSaved.detach();
+
+        for (const key in this.components) {
+            if (this.components[key].content) {
+                this.components[key].content.clear();
+            }
+        }
     }
 
 

@@ -152,7 +152,7 @@ export class CommsManager {
                 };
                 self.links[connection_id] = conn_data;
                 console.log(self.links);
-                context.signals.onChanged.dispatch();
+                if (!self.restored) context.signals.onChanged.dispatch();
             });
             
             // on desconnection
@@ -167,7 +167,7 @@ export class CommsManager {
 
 
         // the name of a component changed
-        context.signals.onComponentNameChanged.add((uuid, old_name, new_name) => {
+        this.onComponentNameChanged = context.signals.onComponentNameChanged.add((uuid, old_name, new_name) => {
             if (this.ios.hasOwnProperty(uuid)) {   
                 //this.ios[uuid].name = new_name;
                 this.changeComponentName(uuid, new_name)
@@ -177,15 +177,14 @@ export class CommsManager {
 
         // component was updated, either the query structure or some other thing
         //context.signals.onComponentUpdated.add((component_uuid, update_comms = true) => {
-            context.signals.onComponentUpdated.add((component, update_comms = true) => {
+        this.onComponentUpdated = context.signals.onComponentUpdated.add((component, update_comms = true) => {
             if (update_comms) {
                 this.updateComponentComms(component);
             }
         });
 
-
         // 
-        context.signals.onCommTriggered.add((uuid, new_values) => {
+        this.onCommTriggered = context.signals.onCommTriggered.add((uuid, new_values) => {
             console.log(uuid, new_values);
             const data_comm = {};
             new_values.forEach(data => {
@@ -206,6 +205,9 @@ export class CommsManager {
                 context.signals.onQueryUpdated.dispatch(key, data_comm[key]);            
             }
         });
+
+        this.addGlobalComponents();
+
         
     }
 
@@ -345,6 +347,7 @@ export class CommsManager {
             //io[uuid].uuids[pin_uuid] = input;
             this.ios[uuid].indices.inputs.push(pin_uuid);            
         }); 
+
     }
 
     /**
@@ -432,15 +435,18 @@ export class CommsManager {
         COMP_LIST.empty();
         COMP_DIAGRAM.empty();
         this.restored = false;
-        this.addGlobalComponents();
-        //this.instance.reset();
+        //this.addGlobalComponents();        
         console.warn("RESET");
     }
 
-    /**
-     * Creates a data structure containing all data related with the comms.
-     * @returns Data to save.
-     */
+    clear = () => {
+        this.reset();
+        this.instance.reset();
+        this.onComponentNameChanged.detach();
+        this.onComponentUpdated.detach();
+        this.onCommTriggered.detach();
+    }
+
     
     /**
      * Get the comms state.

@@ -1,4 +1,6 @@
-
+/**
+ * TODO: COMMS IN DASHBOARD
+ */
 
 import { Context } from './Context.js';
 import { ErrorModal } from './modals/ErrorModal.js';
@@ -140,7 +142,7 @@ const ays_modal = new AreYouSureModal().attachTo(MODALS_CONTAINER[0]);
 /**
  * COMMUNICATIONS MANAGER
  */
- const comms = new CommsManager(context);
+ let comms = null;//new CommsManager(context);
 
 
 /**
@@ -226,7 +228,9 @@ context.signals.onLoadComponent.add((spot) => {
 
 context.signals.onLayoutEditor.add((spot) => {
     layout_editor_modal.show((new_layout_id) => {
-        comms.reset();
+        if (comms) { comms.clear(); comms = null; }
+        comms = new CommsManager(context);
+        if (dashboard) dashboard.clear();
         dashboard = new Dashboard(context, new_layout_id, null);
         dashboard.init();
     });
@@ -279,19 +283,23 @@ EDIT_APPLY_BTN.on('click',function() {
 // OPENS DASHBOARD
 DASHBOARD_OPEN_BTN.on('click',function() {
     select_dashboard_modal.show((dash_id) => {
+        // already opened?
+        //if (dash_id == dashboard.id) return;
+
         console.log("load dash > ", dash_id);
 
         getDashboard(dash_id, (result) => {
-            comms.reset();
+            changeSaveStatus(false);
+            if (comms) { comms.clear(); comms = null; }
+            comms = new CommsManager(context);
+            if (dashboard) dashboard.clear();
             dashboard = new Dashboard(context, result.layout, result);
             dashboard.init().then(() => {
-                //console.warn("1111111111111111");
                 if (result.hasOwnProperty('data') && result.data.hasOwnProperty('comms')) {
                     comms.restore(result.data.comms);
                 }
                 date_interval.setFormat(result.date_format, false);
             });
-            //console.warn("222222222222");
         });
     });
 })
@@ -391,7 +399,9 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
     loadConfig((config) => {
         if (config.config !== null) {
             getDashboard(config.dashboard, (result) => {
-                comms.reset();
+                if (comms) { comms.clear(); comms = null; }
+                comms = new CommsManager(context);
+                if (dashboard) dashboard.clear();
                 dashboard = new Dashboard(context, result.layout, result);
                 dashboard.init().then(() => {
                     date_interval.setFormat(result.date_format, false);
@@ -403,7 +413,9 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
                 });
             });        
         } else {
-            comms.reset();
+            if (comms) { comms.clear(); comms = null; }
+            comms = new CommsManager(context);
+            if (dashboard) dashboard.clear();
             dashboard = new Dashboard(context, DEFAULT_LAYOUT, null);
             dashboard.init().then(() => {
                 new_dash = true;
@@ -412,7 +424,9 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
         }
     })
 } else {
-    comms.reset();
+    if (comms) { comms.clear(); comms = null; }
+    comms = new CommsManager(context);
+    if (dashboard) dashboard.clear();
     dashboard = new Dashboard(context, DEFAULT_LAYOUT, null);
     dashboard.init().then(() => {
         new_dash = true;
@@ -470,7 +484,9 @@ function enterEditMode(enter=true) {
  * @param {boolean} edit_mode Edit mode?
  */
 function newDashboard(layout_id/*, edit_mode = false*/) {
-    comms.reset();
+    if (comms) { comms.clear(); comms = null; }
+    comms = new CommsManager(context);
+    if (dashboard) dashboard.clear();
     dashboard = new Dashboard(context, layout_id, null);
     dashboard.init().then(() => {
         $(SELECTABLE_COMPONENTS).show();
