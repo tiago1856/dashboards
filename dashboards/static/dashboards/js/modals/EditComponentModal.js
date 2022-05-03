@@ -104,6 +104,7 @@ export function EditComponentModal(context) {
     let original_query = null;
     this.new_query = false;
     this.table_id = null;
+    this.old_title = null;
 
     // ALL THE DATA REQUIRED TO RESTORE THE MODAL TO A SPECIFIC STATE
     this.state = null;
@@ -765,22 +766,32 @@ EditComponentModal.prototype = {
 
         console.warn("SAVE > ", this.state);
 
-        // did something changed?
-        const changed = (JSON.stringify(this.component.data) !== JSON.stringify(this.state));
-        //if (changed) this.context.signals.onChanged.dispatch();
+        // did something relevant changed? => something that can affect the display contents
+        //const changed = (JSON.stringify(this.component.data) !== JSON.stringify(this.state));
+        const relevant_changed = JSON.stringify(this.component.data.query) !== JSON.stringify(this.state.query) 
+                        || JSON.stringify(this.component.data.visualization) !== JSON.stringify(this.state.visualization) 
+                        || JSON.stringify(this.component.data.data_config) !== JSON.stringify(this.state.data_config)
+                        || this.component.data.component_type !== this.state.component_type;
+        // did something non relevant changed? => something that doesn't affect the display contents
+        const non_relevant_changed = this.component.data.name !== this.state.name 
+                                    || this.component.data.description !== this.state.description 
+                                    || this.component.data.title !== this.state.title;
+
         // ------------------ TO PREVENT CANCEL BUG -------------        
         this.component.data = JSON.parse(JSON.stringify(this.state));
         // ------------------        
-        //if (changed) this.component.setChanged(true);
 
         // CLOSE MODAL
         if (close) {
             if (this.old_name && this.old_name !== this.state.name) {
                 this.context.signals.onComponentNameChanged.dispatch(this.state.uuid, this.old_name, this.state.name);
+            } 
+            if (this.old_title !== this.state.title) {
+                this.context.signals.onComponentTitleChanged.dispatch(this.component.spot, this.state.title);
             }
             EDIT_COMPONENT_MODAL.modal('hide');
             // UPDATE COMPONENT
-            if (this.onReady) this.onReady(changed);
+            if (this.onReady) this.onReady(relevant_changed, non_relevant_changed);
         }        
 
         return this.state;
@@ -805,6 +816,8 @@ EditComponentModal.prototype = {
         SAVE_BTN.attr('disabled',true);
 
         GLOBAL_NAME_ALERT.hide();
+
+        this.old_title = this.component.data.title;
 
         this.fetchQueries(() => {
             /*

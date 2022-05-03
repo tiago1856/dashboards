@@ -111,6 +111,10 @@ export class CardComponent extends MasterComponent {
           }
         });
 
+        context.signals.onComponentTitleChanged.add((spot, title) => {
+          if (spot == this.spot) this.setTitle(title);
+        });
+
     }
 
 
@@ -158,7 +162,7 @@ export class CardComponent extends MasterComponent {
      */
     async setContent(changed_query = null) {
       super.setContent(changed_query);
-      this.setTitle(this.data.title);
+      //this.setTitle(this.data.title);
       
       /*
       if (this.content) {

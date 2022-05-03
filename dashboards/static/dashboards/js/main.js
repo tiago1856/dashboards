@@ -185,7 +185,7 @@ context.signals.onZoomComponent.add((msg, body) => {
 
 context.signals.onEditComponent.add((spot, original_type) => {
     const component = dashboard.getComponentAt(spot);
-    edit_component_modal.show(component, (changed) => {
+    edit_component_modal.show(component, (relevant_changed, non_relevant_changed) => {
         if ((component.data.component_type === 'INFO' ||  component.data.component_type === 'CONTROL')
             && (original_type !== 'INFO' && original_type !== 'CONTROL')) {
                 dashboard.changeComponentContainer(spot, true);
@@ -194,11 +194,11 @@ context.signals.onEditComponent.add((spot, original_type) => {
                 dashboard.changeComponentContainer(spot, false);
         } else {
             // only update component if something changed
-            if (changed) component.setContent().then(() => {
+            if (relevant_changed) component.setContent().then(() => {
                 component.setOptions();
             });
         }
-        if (changed) {
+        if (relevant_changed || non_relevant_changed) {
             context.signals.onChanged.dispatch();
             component.setChanged(true);
         }
