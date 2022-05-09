@@ -35,8 +35,8 @@ export class InfoSimpleRight extends BaseComponentContent {
     const icon_div = new Div().attachTo(div);
     icon_div.addClass('icon');
     const icon = new I().attachTo(icon_div);
-    icon.addClass("icon ion-md-alert");
-
+    const ion_icon = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON))?this.component.data.options[ID_ICON]:getInputData(this.options_data,ID_ICON);
+    icon.addClass(ion_icon.replace('ion ',''));
 
     const text_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_TEXT_COLOR))?this.component.data.options[ID_TEXT_COLOR]:getInputData(this.options_data,ID_TEXT_COLOR);
     const value_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_VALUE_COLOR))?this.component.data.options[ID_VALUE_COLOR]:getInputData(this.options_data,ID_VALUE_COLOR);
@@ -61,7 +61,7 @@ export class InfoSimpleRight extends BaseComponentContent {
       switch (id) {
           case ID_ICON:
               icon.removeClass();
-              icon.addClass(value);
+              icon.addClass('icon ' + value.replace('ion ',''));
               break;
           case ID_ICON_SIZE:
                 //icon.setStyle("font-size", $(inner.dom).css('height'))

@@ -40,8 +40,9 @@ export class InfoSimpleLeft extends BaseComponentContent {
  
 
         const icon = new I().attachTo(span);
-        icon.addClass((this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON))?this.component.data.options[ID_ICON]:getInputData(this.options_data,ID_ICON));
-        
+        const ion_icon = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON))?this.component.data.options[ID_ICON]:getInputData(this.options_data,ID_ICON);
+        icon.addClass('icon ' + ion_icon.replace('ion ',''));
+
         const icon_size = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON_SIZE))?this.component.data.options[ID_ICON_SIZE]:getInputData(this.options_data,ID_ICON_SIZE);
         icon.setStyle("font-size", icon_size + 'px');
         span.setStyle("height", icon_size + "px");
@@ -87,7 +88,7 @@ export class InfoSimpleLeft extends BaseComponentContent {
             switch (id) {
                 case ID_ICON:
                     icon.removeClass();
-                    icon.addClass(value);
+                    icon.addClass('icon ' + value.replace('ion ',''));
                     break;
                 case ID_ICON_BACK_COLOR:
                     span.setStyle("background-color",value);
