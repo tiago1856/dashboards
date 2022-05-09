@@ -21,6 +21,7 @@ export const URL_CHECK_NAME_COMPONENT = "/dashboards/api/check_name_component/";
 export const URL_SAVE_COMPONENT = "/dashboards/api/save_component/";
 export const URL_LIST_COMPONENTS = "/dashboards/api/list_components/";
 export const URL_GET_COMPONENT = "/dashboards/api/get_component/";
+export const URL_DELETE_COMPONENT = "/dashboards/api/delete_component/";
 
 export const URL_CHECK_NAME_DASHBOARD = "/dashboards/api/check_name_dashboard/";
 export const URL_SAVE_DASHBOARD = "/dashboards/api/save_dashboard/";

@@ -29,6 +29,9 @@ export function Context() {
         onIconSelectionModal: new Signal(),
         onComponentTitleChanged: new Signal(),
         
+        onComponentDeleted: new Signal(),
+        onComponentRemoved: new Signal(),
+
 
         //onComponentChanged: new Signal(),
 

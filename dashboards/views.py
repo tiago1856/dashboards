@@ -294,6 +294,29 @@ def get_component(request, pk):
       return Response(status=status.HTTP_400_BAD_REQUEST)
 
 
+#@login_required
+@api_view(["POST"])
+def delete_component(request):
+   """Deletes a component."""
+   if request.method == 'POST' or 'component_id' not in request.data:
+      try:
+         id = request.data.get('id')
+         name = request.data.get('name')
+         if id:
+            Component.objects.filter(pk=id).delete()
+         else:
+            Response(data={'message':'No component deleted!'}, status=status.HTTP_304_NOT_MODIFIED)
+         return Response(data={'message':'ok'}, status=status.HTTP_200_OK)
+      except Component.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
 #############
 # DASHBOARD #
 #############

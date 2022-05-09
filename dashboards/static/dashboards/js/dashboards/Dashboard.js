@@ -61,7 +61,18 @@ export class Dashboard extends Div {
             this.id = result.id;
             this.changed = false;
             this.context.signals.onLayoutsChanged.dispatch(this.layout_id);
-        })   
+        })
+
+        this.onComponentRemoved = context.signals.onComponentRemoved.add(component => {
+            const spot = component.spot;            
+            return CreateComponent(CONTAINER_TYPE.CARD, null, context, spot, null, 'light', null, true).then((comp) => {                    
+                $(component.dom).replaceWith($(comp.dom));
+                comp.setOptions();
+                comp.setEditMode(true);
+                this.components[spot] = comp;
+            })
+        });
+        
     }
 
     /**
@@ -271,6 +282,7 @@ export class Dashboard extends Div {
     clear() {
         this.onGlobalDateFormatChanged.detach();
         this.onDashboardSaved.detach();
+        this.onComponentRemoved.detach();
 
         for (const key in this.components) {
             if (this.components[key].content) {
@@ -283,74 +295,6 @@ export class Dashboard extends Div {
     }
 
 
+
+
 }
-
-
-    /*
-    async init() {
-        const display = new Div().attachTo(this);
-        display.addClass('dashboard-grid');
-        const self = this;        
-        const grid = await this.getLayout(this.data?this.data.layout:this.layout_id);
-
-        await grid.forEach(async (grid_block, spot) => {
-            const div = new Div().attachTo(display);
-            // check for legacy (old => only components data)
-            const component_data = this.data?(this.data.data.hasOwnProperty("components")?this.data.data.components[spot]:this.data.data[spot]):null;
-            div.addClass("span-col-" + grid_block[0] + (grid_block[1]>1?(" span-row-" + grid_block[1]):""));
-            div.setStyle('width','100%');
-            if (this.data && (component_data.component_type === 'INFO' || component_data.component_type === 'CONTROL')) {
-                return CreateComponent(CONTAINER_TYPE.NONCARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
-                    self.components[component.spot] = component;
-                    //self.components[component.spot].attachTo(div);
-                    self.components[component.spot].setEditMode(self.context.edit_mode);
-                })
-            } else {
-                return CreateComponent(CONTAINER_TYPE.CARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
-                    self.components[component.spot] = component;
-                    //self.components[component.spot].attachTo(div);
-                    self.components[component.spot].setEditMode(self.context.edit_mode);
-                })
-            } 
-        });
-    }
-    */
-
-
-    /*
-    async init() {
-        const display = new Div().attachTo(this);
-        display.addClass('dashboard-grid');
-        let spot = 0;
-        const self = this;        
-        const grid = await this.getLayout(this.data?this.data.layout:this.layout_id);
-
-        await [...Array(grid.length)].reduce( (p, _, i) => 
-        p.then(
-            () => {
-                const div = new Div().attachTo(display);
-                div.addClass("span-col-" + grid[spot][0] + (grid[spot][1]>1?(" span-row-" + grid[spot][1]):""));
-                div.setStyle('width','100%');
-                if (this.data && (this.data.data[spot].component_type === 'INFO' || this.data.data[spot].component_type === 'CONTROL')) {
-                    //this.components[spot] = new NonCardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
-                    return CreateComponent(CONTAINER_TYPE.NONCARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
-                        self.components[spot] = component;
-                        self.components[spot].attachTo(div);
-                        self.components[spot].setEditMode(self.context.edit_mode);
-                        spot++;
-                    })
-                } else {
-                    //this.components[spot] = new CardComponent(this.context, spot, null, 'light', data?data.data[spot]:null).attachTo(div);
-                    return CreateComponent(CONTAINER_TYPE.CARD, this.context, spot, null, 'light', this.data?this.data.data[spot]:null).then(component => {
-                        self.components[spot] = component;
-                        self.components[spot].attachTo(div);
-                        self.components[spot].setEditMode(self.context.edit_mode);
-                        spot++;
-                    })
-                }                   
-                
-            })
-        , Promise.resolve()); 
-    }
-
-    */

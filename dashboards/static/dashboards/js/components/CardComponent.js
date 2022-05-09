@@ -44,7 +44,7 @@ export class CardComponent extends MasterComponent {
         const open_btn = toolButton('fas fa-folder-open', 'text-danger editable-component', 'Abrir component').attachTo(card_tools);
         const save_btn = toolButton('fas fa-save', 'text-danger editable-component', 'Guardar component').attachTo(card_tools);
         const edit_btn = toolButton('fas fa-pencil-alt', 'text-danger editable-component', 'Novo/Editar Component').attachTo(card_tools);
-        const delete_btn = toolButton('fas fa-trash', 'text-danger editable-component', 'Apagar component').attachTo(card_tools);
+        const remove_btn = toolButton('fas fa-times', 'text-danger editable-component', 'Remover component').attachTo(card_tools);
         this.options_btn = toolButton('fas fa-cog', 'non-editable-component', 'Configuração').attachTo(card_tools);
         const print_btn = toolButton('fas fa-print', 'non-editable-component', 'Imprimir component').attachTo(card_tools);
         const zoom_btn = toolButton('fas fa-expand-arrows-alt', 'non-editable-component', 'Ampliar component').attachTo(card_tools);
@@ -52,7 +52,6 @@ export class CardComponent extends MasterComponent {
         const close_btn = toolButton('fas fa-times', 'non-editable-component', 'Remover component').attachTo(card_tools);
         
         collapse_btn.setAttribute('data-card-widget','collapse');
-
 
         $(zoom_btn.dom).on('click',function() {
           context.signals.onZoomComponent.dispatch(self.spot, self.body);
@@ -75,8 +74,13 @@ export class CardComponent extends MasterComponent {
         });
 
         $(save_btn.dom).on('click',function() {
+          console.warn(self.data.id);
           self.save();
         });
+
+        $(remove_btn.dom).on('click',function() {
+          context.signals.onComponentRemoved.dispatch(self);
+        });        
 
         $(this.options_btn.dom).on('click', function() {
           if (self.data.component_type === 'GRAPH') return;

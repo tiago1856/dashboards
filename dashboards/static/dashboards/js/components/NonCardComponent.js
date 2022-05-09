@@ -34,7 +34,7 @@ export class NonCardComponent extends MasterComponent {
         const open_btn = toolButton('fas fa-folder-open', 'text-danger editable-component info-component-button', 'Abrir component').attachTo(card_tools);
         const save_btn = toolButton('fas fa-save', 'text-danger editable-component info-component-button', 'Guardar component').attachTo(card_tools);
         const edit_btn = toolButton('fas fa-pencil-alt', 'text-danger editable-component info-component-button', 'Novo/Editar Component').attachTo(card_tools);
-        const delete_btn = toolButton('fas fa-trash', 'text-danger editable-component info-component-button', 'Apagar component').attachTo(card_tools);
+        const remove_btn = toolButton('fas fa-times', 'text-danger editable-component info-component-button', 'Remover component').attachTo(card_tools);
         this.options_btn = toolButton('fas fa-cog', 'non-editable-component info-component-button', 'Configuração').attachTo(card_tools);
       
 
@@ -53,6 +53,15 @@ export class NonCardComponent extends MasterComponent {
           }           
           context.signals.onLoadComponent.dispatch(self.spot);
         });
+
+        $(save_btn.dom).on('click',function() {
+          console.warn(self.data.id);
+          self.save();
+        });    
+        
+        $(remove_btn.dom).on('click',function() {
+          context.signals.onComponentRemoved.dispatch(self);
+        });   
 
 
         $(this.options_btn.dom).on('click', function() {

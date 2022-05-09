@@ -17,6 +17,7 @@ urlpatterns = [
     path('api/save_component/', views.save_component, name="save_component"),
     path('api/list_components/', views.list_components, name="list_components"),
     path('api/get_component/<int:pk>/', views.get_component, name="get_component"),
+    path('api/delete_component/', views.delete_component, name="delete_component"),
 
     # dashboard
     path('api/check_name_dashboard/', views.check_name_dashboard, name="check_name_dashboard"),

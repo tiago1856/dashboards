@@ -119,7 +119,10 @@ export class CommsManager {
                 const restore = self.ios[window.selectedControl];
                 self.removeComponentFromDiagram(window.selectedControl);
                 $('div.comm-custom-menu').remove();
-                self.createComponent(restore.name, window.selectedControl, restore.inputs, restore.outputs);
+                if (window.selectedControl === GLOBAL_CALENDAR_NAME)
+                    this.createComponent(GLOBAL_CALENDAR_NAME, GLOBAL_CALENDAR_UUID, GLOBAL_CALENDAR_INPUT_PINS, GLOBAL_CALENDAR_OUTPUT_PINS);
+                else
+                    self.createComponent(restore.name, window.selectedControl, restore.inputs, restore.outputs);
                 context.signals.onChanged.dispatch();
             });
             
@@ -206,8 +209,11 @@ export class CommsManager {
             }
         });
 
-        this.addGlobalComponents();
+        this.onComponentRemoved = context.signals.onComponentRemoved.add(component => {
+            this.deleteComponent(component.data.uuid);
+        });        
 
+        this.addGlobalComponents();
         
     }
 
