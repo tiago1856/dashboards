@@ -17,9 +17,9 @@ export const VISUALIZATION_TYPE = {
     ISR: 'ISR', // info-simple-right
     ICP: 'ICP', // info-complex-percentage
 
-    GD: 'GD',
-    GP: 'GP',
-    GQ: 'GQ',
+    GD: 'GD',       // geo
+    GP: 'GP',       // geo
+    GQ: 'GQ',       // geo
 
     TEC: 'TEC',     // template calendar
 

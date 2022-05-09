@@ -12,7 +12,6 @@ import {
     URL_DELETE_QUERY,
     URL_UPDATE_QUERY,
     URL_CHECK_NAME_COMPONENT,
-    URL_SAVE_COMPONENT
 } from "../urls.js";
 import { BasicTable } from '../builders/BasicTable.js';
 import { ExportTable2Excel } from '../export/ExportTable2Excel.js';
@@ -71,6 +70,10 @@ const GDN_SERIES_2 = $('#cdc-graph-double-num-series-2');
 const ISL_TEXT_1 = $("#cdc-info-simple-left-text-1");
 const ISL_VALUE = $("#cdc-info-simple-left-value");
 const ISL_TEXT_2 = $("#cdc-info-simple-left-text-2");
+// INFO SIMPLE RIGHT
+const ISR_TEXT_1 = $("#cdc-info-simple-right-text-1");
+const ISR_VALUE = $("#cdc-info-simple-right-value");
+const ISR_TEXT_2 = $("#cdc-info-simple-right-text-2");
 // CONTROL NUMBER
 const CN_NAME = $("#cdc-controls-number-name");
 const CN_DEFAULT= $("#cdc-controls-number-default-value");
@@ -353,6 +356,11 @@ EditComponentModal.prototype = {
                 ISL_TEXT_2.val("");   
                 ISL_VALUE.empty();  
                 break;
+            case VISUALIZATION_TYPE.ISR:
+                ISR_TEXT_1.val("");
+                ISR_TEXT_2.val("");   
+                ISR_VALUE.empty();  
+                break;                
             case VISUALIZATION_TYPE.TEC:
                 console.log("CALENDAR [clearVisualizationConfigPanel]");
                 break;
@@ -573,8 +581,6 @@ EditComponentModal.prototype = {
                     const option = createFieldItem(field, false);
                     ISL_VALUE.append(option);
                 });
-                console.log("1111111 > ", fields);
-
                 if (restore) {
                     if (SELECTED_FIELDS.children().length == 0 && this.state.data_config.text_1 && this.state.data_config.text_1!== '') {
                         SELECTED_FIELDS.append(createFieldItem(this.state.data_config.text_1, true));
@@ -597,6 +603,39 @@ EditComponentModal.prototype = {
                     this.state.data_config.text_1 = "";
                     this.state.data_config.text_2 = "";
                     //console.log("222222 > ", fields);
+                }
+                break;
+            }
+
+            case VISUALIZATION_TYPE.ISR:
+            {
+                ISR_VALUE.empty();
+                const fields = SELECTED_FIELDS.val();
+                fields.forEach(field => {
+                    const option = createFieldItem(field, false);
+                    ISR_VALUE.append(option);
+                });
+                if (restore) {
+                    if (SELECTED_FIELDS.children().length == 0 && this.state.data_config.text_1 && this.state.data_config.text_1!== '') {
+                        SELECTED_FIELDS.append(createFieldItem(this.state.data_config.text_1, true));
+                        SELECTED_FIELDS.multiselect('rebuild');
+                        SELECTED_FIELDS.multiselect('selectAll', true);
+                        const option = createFieldItem(this.state.data_config.text_1, false);
+                        ISR_VALUE.append(option); 
+                        ISR_TEXT_1.val(this.state.data_config.text_1);
+                    } else {
+                        ISR_TEXT_1.val(this.state.data_config.text_1);
+                        ISR_TEXT_2.val(this.state.data_config.text_2);
+                        ISR_VALUE.val(this.state.data_config.value);
+                    }
+                } else {
+                    this.state.data_config = {};
+                    ISR_TEXT_1.val("");
+                    ISR_TEXT_2.val("");
+                    ISR_VALUE.val($("#cdc-info-simple-right-value option:first").val());
+                    this.state.data_config.value = ISR_VALUE.val();
+                    this.state.data_config.text_1 = "";
+                    this.state.data_config.text_2 = "";
                 }
                 break;
             }
@@ -723,6 +762,13 @@ EditComponentModal.prototype = {
                 self.state.data_config.value = ISL_VALUE.val();
                 break;
             }
+            case VISUALIZATION_TYPE.ISR:
+            {
+                self.state.data_config.text_1 = ISR_TEXT_1.val();
+                self.state.data_config.text_2 = ISR_TEXT_2.val();
+                self.state.data_config.value = ISR_VALUE.val();
+                break;
+            }            
             case VISUALIZATION_TYPE.CN:
             {
                 self.state.data_config.name = CN_NAME.val();
@@ -777,6 +823,10 @@ EditComponentModal.prototype = {
                                     || this.component.data.description !== this.state.description 
                                     || this.component.data.title !== this.state.title;
 
+        // if old type != new type => reset options
+        if (this.state.visualization.visualization_type !== this.component.data.visualization.visualization_type) {
+            this.state.options = null;
+        }
         // ------------------ TO PREVENT CANCEL BUG -------------        
         this.component.data = JSON.parse(JSON.stringify(this.state));
         // ------------------        
@@ -1084,30 +1134,6 @@ EditComponentModal.prototype = {
             }
         )
     },
-    /*
-    saveComponent: function() {
-        console.log("saving");
-        fetchPOST(
-            URL_SAVE_COMPONENT, 
-            {
-                id: this.state.id,
-                name: this.state.name,
-                description: this.state.description,
-                title: this.state.title,
-                data: this.state,
-            }, 
-            result => {
-                //console.log(result);
-                this.state.id = result.id;
-            },
-            (error) => {
-                    this.context.signals.onError.dispatch(error,"[EditComponentModal::saveComponent]");                
-            }
-        )
-    },   
-    */ 
-
-
       
 }
 

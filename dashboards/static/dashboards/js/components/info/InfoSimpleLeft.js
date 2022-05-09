@@ -125,7 +125,7 @@ export class InfoSimpleLeft extends BaseComponentContent {
     async execute() {
         const results = await this.execQuery(this.query, null);
         const [comp_text_1, comp_value] = this.prepareData(results, this.component.data);
-        if (comp_text_1 !== '') this.text.setTextContent(comp_text_1,);   
+        if (comp_text_1 !== '') this.text.setTextContent(comp_text_1);   
         if (comp_value) {
             const _value = comp_value + (this.component.data.data_config.text_2!==''?this.component.data.data_config.text_2:"");
             this.value.setTextContent(_value);

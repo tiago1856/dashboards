@@ -163,8 +163,35 @@ export const COMPONENT_TYPE = {
                         ]
                     },                    
                 ]                
-            },
-            {id: VISUALIZATION_TYPE.ISR, class:InfoSimpleRight},
+            },            
+            {
+                id: VISUALIZATION_TYPE.ISR,
+                class:InfoSimpleRight,
+                options: [
+                    {
+                        section_name: "Quadro",
+                        inputs: [
+                            {id: ID_CARD_BACK_COLOR, label: "Cor de fundo:", type: "color", value: "#5bc0de"},
+                        ]
+                    },                    
+                    {
+                        section_name: "Icon",
+                        inputs: [
+                            {id: ID_ICON_SIZE, label: "Dimensão:", type: "slider", max: 256, min: 56, value: 96, step: 2},
+                            {id: ID_ICON, label: "Clique para selecionar o Icon:", type: "icon", value: 'ion ion-md-alert'},                            
+                        ]
+                    },
+                    {
+                        section_name: "Text",
+                        inputs: [
+                            {id: ID_TEXT_SIZE, label: "Dimensão descrição:", type: "slider", max: 256, min: 16, value: 16, step: 1},
+                            {id: ID_TEXT_COLOR, label: "Cor da descrição:", type: "color", value: "#ffffff"},
+                            {id: ID_VALUE_SIZE, label: "Dimensão valor:", type: "slider", max: 256, min: 16, value: 36, step: 1},
+                            {id: ID_VALUE_COLOR, label: "Cor do valor:", type: "color", value: "#ffffff"},
+                        ]
+                    },                    
+                ]                
+            },            
             {id: VISUALIZATION_TYPE.ICP, class:InfoComplexPercentage},
         ]
     },
