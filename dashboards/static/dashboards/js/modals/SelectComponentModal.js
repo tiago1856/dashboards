@@ -1,6 +1,11 @@
-import { fetchGET } from "../Fetch.js";
-import { URL_LIST_COMPONENTS } from "../urls.js";
+import { fetchGET, fetchPOST } from "../Fetch.js";
+import { 
+    URL_LIST_COMPONENTS,
+    URL_DELETE_COMPONENT,
+} from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
+import { AwesomeIconAndButton } from '../builders/BuildingBlocks.js';
+import { MSG_DELETE_COMPONENT } from '../messages.js';
 
 const SELECT_COMPONENT_MODAL = $('#select-component-modal');
 const TABLE_BODY = $("#scm-table-components");
@@ -29,6 +34,7 @@ SelectComponentModal.prototype = {
 
     fetchComponents: function(onReady=null) {
         $("body").css("cursor","progress");
+        const self = this;
         fetchGET(URL_LIST_COMPONENTS, 
             (result) => {
                 TABLE_BODY.empty();
@@ -39,6 +45,29 @@ SelectComponentModal.prototype = {
                     result.forEach(component => {
                         TABLE_BODY.append(createRow(component));
                     })
+
+                    // add operations - delete component
+                    TABLE_BODY.find('tr').each(function(){
+                        const td = $('<td>');
+                        td.addClass('text-center');
+                        const btn = new AwesomeIconAndButton('','fas fa-trash');
+                        btn.addClass('btn btn-sm btn-danger');
+                        btn.setAttribute('type','button');
+                        btn.setAttribute('data-toggle','tooltip');
+                        btn.setAttribute('title','Apagar componente');
+                        td.append(btn.dom);
+                        $(this).find('td').eq(3).after(td);
+                        $(btn.dom).on('click',function(e) {
+                            e.stopPropagation();
+                            const row = $(this).closest('tr');
+                            self.context.signals.onAYS.dispatch(MSG_DELETE_COMPONENT, () => {
+                                self.deleteComponent(row.attr('data-id'), () => {
+                                    row.remove();
+                                });                                
+                            });                            
+                        });
+                    });
+
                     if (onReady) onReady();
                 }
                 $("body").css("cursor","auto");
@@ -53,7 +82,30 @@ SelectComponentModal.prototype = {
                 
             }
         );
-    } 
+    },
+
+    /**
+     * Deletes a component.
+     * @param {Component} component Component 2 delete.
+     * @param {function} onReady Called when ready.
+     */
+    deleteComponent: function(id, onReady = null) {
+        $("body").css("cursor","progress");
+        fetchPOST(URL_DELETE_COMPONENT,
+            {
+                id: id,
+            },  
+            (result) => {                
+                $("body").css("cursor","auto");
+                if (onReady) onReady(result);
+            },
+            (error) => {
+                $("body").css("cursor","auto");
+                context.signals.onError.dispatch(error,"[SelectComponentModal::deleteComponent]");                
+            }
+        );
+    }
+
 }
 
 const createRow = (data) => {
@@ -62,15 +114,15 @@ const createRow = (data) => {
     tr.addClass('scm-component-row');
     const id = $('<td/>');
     id.text(data.id);
-    tr.append(id)
+    tr.append(id);
     const name = $('<td/>');
     name.text(data.name);
-    tr.append(name)
+    tr.append(name);
     const description = $('<td/>');
     description.text(data.description);
-    tr.append(description)
+    tr.append(description);
     const title = $('<td/>');
     title.text(data.title);
-    tr.append(title)
+    tr.append(title); 
     return tr;
  }

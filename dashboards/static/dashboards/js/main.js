@@ -22,8 +22,7 @@ import {
     URL_GET_DASHBOARD,
     URL_SAVE_CONFIG,
     URL_GET_CONFIG,
-    URL_SAVE_DASHBOARD,
-    URL_DELETE_COMPONENT
+    URL_SAVE_DASHBOARD,    
 } from "./urls.js";
 import { IconsModal } from './modals/IconsModal.js';
 
@@ -559,27 +558,4 @@ function saveDashboard(onReady = null) {
             context.signals.onError.dispatch(error,"[main::saveDashboard]");                
         }
     )
-}
-
-/**
- * Deletes a component.
- * @param {Component} component Component 2 delete.
- * @param {function} onReady Called when ready.
- */
- function deleteComponent(component, onReady = null) {
-    $("body").css("cursor","progress");
-    fetchPOST(URL_DELETE_COMPONENT,
-        {
-            id: component.data.id,
-        },  
-        (result) => {                
-            $("body").css("cursor","auto");
-            console.log(result);
-            if (onReady) onReady(result);
-        },
-        (error) => {
-            $("body").css("cursor","auto");
-            context.signals.onError.dispatch(error,"[main::deleteComponent]");                
-        }
-    );
 }

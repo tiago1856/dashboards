@@ -71,6 +71,10 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 
 * components: n-graph, geos, templates, ...
 * refresh content only if query changes
+* save component logic (tool btn)
+* save component (edit modal) --- id vs name
+* on remove comp => disable tool save btn
+* component - clear signals before destruction
 
 ## Bugs to solve
 
@@ -78,6 +82,6 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | ------------- |:-------------:|:-------------:|:-------------:|:-------------:|
 | 1 | loading component on an existing one => old component remains in comms | `HIGH` | delete old after the loading the new one | *SOLVED* |
 | 2 | loading multiple identical components => appears as single comp in comms | `HIGH` | loading => new uuid | *SOLVED* |
-| 3 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` | loading => new uuid | |
+| 3 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` | loading => new uuid | *SOLVED* |
 
 

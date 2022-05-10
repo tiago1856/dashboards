@@ -301,7 +301,6 @@ def delete_component(request):
    if request.method == 'POST' or 'component_id' not in request.data:
       try:
          id = request.data.get('id')
-         name = request.data.get('name')
          if id:
             Component.objects.filter(pk=id).delete()
          else:
