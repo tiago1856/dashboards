@@ -47,6 +47,7 @@ const NEW_QUERY_DESCRIPTION = $('#data-source-new-query-description');
 const NEW_QUERY_SAVE_BTN = $("#data-source-new-query-save");
 const NEW_QUERY_CANCEL_BTN = $('#data-source-new-query-cancel');
 const APPLY_BTN = $('#edit-component-modal-ok-btn');
+const DATABASE_SELECTION = $('#data-source-database');
 
 const DEFAULT_MAX_LINE = 10;
 
@@ -281,6 +282,11 @@ export function EditComponentModal(context) {
 
     // query edited
     QUERY_AREA.on('change keyup', function(e) {
+        if (QUERY_AREA.val() !== '') {
+            EXEC_QUERY.removeAttr('disabled');
+        } else {
+            EXEC_QUERY.attr('disabled','true');
+        }
         if (original_query !== QUERY_AREA.val()) {
             self.changeSaveStatus(true);
             //self.context.signals.onChanged.dispatch();
@@ -723,6 +729,7 @@ EditComponentModal.prototype = {
         this.state.query.query_fields = $.map($('#data-source-selected-fields option') ,function(option) {
             return option.value;
         });
+        this.state.query.query_database = DATABASE_SELECTION.val();
 
         // visuzalization
         switch(this.state.visualization.visualization_type) {
@@ -897,6 +904,11 @@ EditComponentModal.prototype = {
                 QUERY_SELECTION.val(this.state.query.query_selection);
                 QUERY_SELECTION.trigger('change');
                 QUERY_AREA.val(this.state.query.query);
+                if (this.state.query.query_database) {
+                    DATABASE_SELECTION.val(this.state.query.query_database)
+                } else {
+                    DATABASE_SELECTION.prop("selectedIndex",0)
+                };                
                 this.state.query.query_fields.forEach(field => {
                     SELECTED_FIELDS.append(createFieldItem(field, this.state.query.query_selected_fields.includes(field)));
                 });
@@ -1075,6 +1087,7 @@ EditComponentModal.prototype = {
             {
                 query: QUERY_AREA.val(),
                 rows: NUMBER_LINES.val(),
+                database: DATABASE_SELECTION.val(),
             },
             (result) => {
                 $("body").css("cursor","auto");

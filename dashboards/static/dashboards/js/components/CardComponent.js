@@ -101,7 +101,7 @@ export class CardComponent extends MasterComponent {
         */
 
         // outpin, value, index -> array of objects[{pin, value, index}, ...]
-        context.signals.onQueryUpdated.add((destination_component, comm_data)/*outpin = null, value = null, index = 0)*/ => {
+        this.signal_onQueryUpdated = context.signals.onQueryUpdated.add((destination_component, comm_data)/*outpin = null, value = null, index = 0)*/ => {
           if (destination_component === data.uuid /*&& outpin && value*/) {
             console.warn("---- UPDATE QUERY CARD >>> ", data.uuid);
             if (!this.content) {
@@ -115,10 +115,16 @@ export class CardComponent extends MasterComponent {
           }
         });
 
-        context.signals.onComponentTitleChanged.add((spot, title) => {
+        this.signal_onComponentTitleChanged = context.signals.onComponentTitleChanged.add((spot, title) => {
           if (spot == this.spot) this.setTitle(title);
         });
 
+    }
+
+    clear() {
+      super.clear();
+      this.signal_onQueryUpdated.detach();
+      this.signal_onComponentTitleChanged.detach();
     }
 
 

@@ -117,7 +117,7 @@ export class Dashboard extends Div {
         
         await Promise.all(promises);
 
-        if (this.data.hasOwnProperty('data') && this.data.data.hasOwnProperty('comms')) {
+        if (this.data && this.data.hasOwnProperty('data') && this.data.data.hasOwnProperty('comms')) {
             this.comms.restore(this.data.data.comms);
         } 
 
@@ -180,6 +180,7 @@ export class Dashboard extends Div {
         } else {
             comp = await CreateComponent(CONTAINER_TYPE.CARD, null, this.context, spot, null, 'light', data);
         }
+        original.clear();
         $(original.dom).replaceWith($(comp.dom));
         comp.setOptions();
         comp.setEditMode(true);
@@ -205,6 +206,7 @@ export class Dashboard extends Div {
                         type = CONTAINER_TYPE.NONCARD;                
                 }
                 return CreateComponent(type, null, this.context, spot, null, 'light', data, new_uuid).then((comp) => {                    
+                    original.clear();
                     $(original.dom).replaceWith($(comp.dom));
                     comp.setOptions();
                     comp.setEditMode(true);
@@ -286,6 +288,7 @@ export class Dashboard extends Div {
 
         for (const key in this.components) {
             if (this.components[key].content) {
+                this.components[key].clear();
                 this.components[key].content.clear();
             }
         }

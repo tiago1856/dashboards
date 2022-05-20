@@ -131,6 +131,12 @@ export class MasterComponent extends Div {
       if (this.content) this.content.setOptions();
     }
 
+    /**
+     * Cleanup operations.
+     */
+    clear() {
+    }
+
 
 }
 

@@ -1,3 +1,8 @@
+/**
+ * TODO: CHECK PERFORMANCE IF EVERYTIME ON SHOW = FETCH + CHECK + CREATE ICONS
+ *      INSTEAD OF POPULATING ONCE AND KEEPING TRACK.
+ */
+
 
 import { 
     URL_LIST_LAYOUTS, 
@@ -42,7 +47,7 @@ export function LayoutSelectionModal(context) {
         self.populate();
     });
 
-    // CREATE A NEW LAYOUT ... WILL SIGNAL TO 
+    // CREATES A NEW LAYOUT ... WILL SIGNAL TO 
     // OPEN THE LAYOUT EDITOR MODAL
     LSM_ADD_LAYOUT_BTN.on('click', function(e) {
         LSM_MODAL.modal('hide');
@@ -104,7 +109,7 @@ LayoutSelectionModal.prototype = {
     },
 
     /**
-     * Gets the data os all layouts in the database and create an icon
+     * Gets the data os all layouts in the database and creates an icon
      * for each one of them
      * If a layout is currently being used by a dashboard, it will not
      * have a button that allows the user to delete it.

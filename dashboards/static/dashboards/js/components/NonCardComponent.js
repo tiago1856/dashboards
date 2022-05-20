@@ -77,7 +77,7 @@ export class NonCardComponent extends MasterComponent {
 
 
         // outpin, value, index -> array of objects[{pin, value, index}, ...]
-        context.signals.onQueryUpdated.add((destination_component, comm_data)/*outpin = null, value = null, index = 0)*/ => {
+        this.signal_onQueryUpdated = context.signals.onQueryUpdated.add((destination_component, comm_data)/*outpin = null, value = null, index = 0)*/ => {
           if (destination_component === data.uuid /*&& outpin && value*/) {
             console.warn("---- UPDATE QUERY CARD >>> ", data.uuid);
             if (!this.content) {
@@ -92,6 +92,11 @@ export class NonCardComponent extends MasterComponent {
         });
     
     }
+
+    clear() {
+      super.clear();
+      this.signal_onQueryUpdated.detach();
+    }    
 
     /**
      * Updates the component's content.

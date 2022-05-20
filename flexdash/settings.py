@@ -90,6 +90,15 @@ WSGI_APPLICATION = 'flexdash.wsgi.application'
 DATABASES = {
     'default': env.db('FLEXDASH_URL'),
     #'world': env.db('WORLD_URL'),
+    'ers': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'ia_ers',
+        'USER': env('ERS_USER'),
+        'PASSWORD': env('ERS_PASSWORD'),
+        'HOST': '127.0.0.1',
+        'PORT': '3333',
+        'OPTIONS': {'ssl': True},
+    }    
 }
 
 

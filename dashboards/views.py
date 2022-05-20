@@ -3,6 +3,7 @@ import re
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.db import connection
+from django.db import connections
 from django.db.models import Q
 
 from rest_framework.decorators import api_view
@@ -16,6 +17,10 @@ from dashboards.serializers import LayoutSerializer
 from dashboards.serializers import ConfigSerializer
 from dashboards.models import Query, Component, Dashboard, Layout, Config
 
+from django.conf import settings
+
+
+DEFAULT_DATABASE = 'default'
 
 # required for the raw queries
 def dictfetchall(cursor):
@@ -29,7 +34,11 @@ def dictfetchall(cursor):
 # Create your views here.
 
 def dashboards(request):
-   return render(request,'dashboards/dashboards.html')
+	databases = []
+	for key in settings.DATABASES.keys():
+		databases.append({'id': key, 'name': settings.DATABASES[key]['NAME']})
+
+	return render(request,'dashboards/dashboards.html', {"databases":databases})
 
 #########
 # QUERY #
@@ -72,7 +81,12 @@ def exec_query(request):
             #for i in values:
             #   rep = i.replace('#','')               
             #   query = query.replace(i, rep)
-            with connection.cursor() as cursor:
+            #with connection.cursor() as cursor:
+            database = request.data.get('database')
+            print(database, query)     
+            if not database:
+               database = DEFAULT_DATABASE            
+            with connections[database].cursor() as cursor:
                if 'rows' in request.data:
                   # TODO: LIMIT ONLY APPLIES TO MYSQL, MARIASB, POSTGRESQL, MSSQL
                   cursor.execute(query + " limit " + str(request.data.get('rows')))

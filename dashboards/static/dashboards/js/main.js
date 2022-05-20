@@ -9,6 +9,8 @@ import {
     MSG_OVERRIDE_LAYOUT, 
     MSG_NO_SAVE,
     MSG_DELETE_DASHBOARD,
+    MSG_SAVE_DASH,
+    MSG_PIN_DASH,
     //MSG_OVERRIDE_DASHBOARD
 } from './messages.js';
 import { EditComponentModal } from './modals/EditComponentModal.js';
@@ -356,8 +358,12 @@ SWAP_BTN.on('click',function() {
 PIN_DASH_BTN.on('click',function() {
     // only save if dashboard exists in db
     if (dashboard.id) {
-        saveConfig(() => {})
-    }    
+        context.signals.onAYS.dispatch(MSG_PIN_DASH, () => {
+            saveConfig(() => {})
+        })        
+    } else {
+        context.signals.onWarning.dispatch(MSG_SAVE_DASH);
+    }
 });
 
 

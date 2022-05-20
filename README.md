@@ -17,6 +17,11 @@ You can also use the file [flexdash.sql](https://github.com/tiago1856/dashboards
 
 The file [world.sql](https://github.com/tiago1856/dashboards/blob/master/world.sql) contains the world database required for some queries and components already present in *flexdash.sql*.
 
+There are 2 databases connections set in *settings.py*:
+* default|flexdash: for flexdash/django operations.
+* ers|ia_ers: for the ERS database. Make sure to to set both the ERS_USER and the ERS_PASSWORD in the .env file.
+
+
 
 ## Installation
 
@@ -70,11 +75,11 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 ## TODO
 
 * components: n-graph, geos, templates, ...
-* refresh content only if query changes
 * save component logic (tool btn)
 * save component (edit modal) --- id vs name
 * on remove comp => disable tool save btn
-* component - clear signals before destruction
+* component - clear signals before destruction ---- DONE
+* multiple databases - selection
 
 ## Bugs to solve
 

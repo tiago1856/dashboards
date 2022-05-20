@@ -50,6 +50,16 @@
 		</div>
 	</div>
 	<div class="row">
+		<div class="form-group">
+			<label for="data-source-database">Selecione base de dados:</label>
+			<select class="form-control" id="data-source-database" name="data-source-database">
+				{% for database in databases  %}
+			  		<option value="{{database.id}}">{{database.name}}</option>
+			  	{% endfor %}
+			</select>
+		</div> 
+	</div>
+	<div class="row">
 		<div class="col-4 ml-2">
 			<div class="form-group row">
 				<label for="data-source-lines" class="col-form-label">Numero de linhas: </label>
