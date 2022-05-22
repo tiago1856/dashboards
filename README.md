@@ -79,7 +79,11 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 * save component (edit modal) --- id vs name
 * on remove comp => disable tool save btn
 * component - clear signals before destruction ---- DONE
-* multiple databases - selection
+* multiple databases - selection ---- DONE
+* query analysis - queries inside queries
+* query analysis - multiple queries?????
+* copy/paste formatting options
+
 
 ## Bugs to solve
 

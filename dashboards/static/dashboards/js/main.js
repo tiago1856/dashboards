@@ -53,6 +53,7 @@ const COMMS_BTN = $('#comms-btn');
 const EXIT_COMMS_BTN = $('#exit-comms-btn');
 const COMMS_SCREEN = $('#comms-tab-content');
 const LAYOUT_SCREEN = $('#layout-tab-content');
+const BRUSH_BTN = $('#brush-btn');
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -366,6 +367,10 @@ PIN_DASH_BTN.on('click',function() {
     }
 });
 
+BRUSH_BTN.on('click',function() {
+    BRUSH_BTN.addClass('btn-outline-danger pulsate-opacity-scale');
+});
+
 
 // -------------
 // INIT
@@ -565,3 +570,6 @@ function saveDashboard(onReady = null) {
         }
     )
 }
+
+
+

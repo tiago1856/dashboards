@@ -45,9 +45,9 @@ export class BaseComponentContent {
         if (!query) return null;
         let options = null;
         if (rows) 
-            options = { query: query, rows: rows };
+            options = { query: query, rows: rows, database: this.component.data.query.query_database };
         else
-            options = { query: query };
+            options = { query: query, database: this.component.data.query.query_database  };
         return fetchPOST(URL_EXEC_QUERY,
             options,
             (result) => {
@@ -101,6 +101,13 @@ export class BaseComponentContent {
      * Either populates or creates it and then populates.
      */
     setOptions() {}
+
+    /**
+     * Sets a specific option.
+     * @param {*} option_id 
+     * @param {*} value 
+     */
+    setOption(option_id, value) {};
     
 }
 

@@ -25,11 +25,55 @@ export class SimpleTable extends BaseComponentContent {
 
         this.onOptionChanged = context.signals.onOptionChanged.add((uuid, {id, value}) => {
             if (uuid !== component.data.uuid) return;
-            component.data.options[id] = value;
-            context.signals.onChanged.dispatch();
-            switch (id) {
+            this.setOption(id, value);
+        });
+        
+    }
+
+
+
+    async execute() {
+        const results = await this.execQuery(this.query, null);
+        const component_data = this.prepareData(results, this.component.data);            
+        this.table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
+            this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);
+        }, this.component.data.options).attachTo(this.container);
+    }
+
+    prepareData(data_2_display, _data=null) {
+        super.prepareData(data_2_display);
+        // no config was provided => all fields selected
+        if (_data.data_config.fields.length == 0 &&
+            data_2_display.length > 0) {
+                _data.data_config.fields = Object.keys(data_2_display[0]);
+                _data.query.query_selected_fields =  Object.keys(data_2_display[0]);
+                _data.query.query_fields =  Object.keys(data_2_display[0]);
+        }
+        return data_2_display;
+    }
+
+    setOptions() {
+        let options = this.component.data.options;
+        if (!options) options = {};
+        if (!isPropOk(options, ID_SIZES_HEIGHT_COMPONENT)) options[ID_SIZES_HEIGHT_COMPONENT] = parseFloat($(this.component.body.dom).css("height"));
+        if (!isPropOk(options, ID_HEADER_BACK_COLOR)) options[ID_HEADER_BACK_COLOR] = $(this.container.dom).css("background-color");
+        if (!isPropOk(options, ID_HEADER_COLOR)) options[ID_HEADER_COLOR] = $(this.container.dom).css("color");
+        if (!isPropOk(options, ID_HEADER_ALIGNMENT)) options[ID_HEADER_ALIGNMENT] = $(this.container.dom).css("text-align");
+        if (!isPropOk(options, ID_HEADER_VERTICAL_ALIGNMENT)) options[ID_HEADER_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
+        if (!isPropOk(options, ID_ROWS_BACK_COLOR)) options[ID_ROWS_BACK_COLOR] = $(this.container.dom).css("background-color");
+        if (!isPropOk(options, ID_ROWS_COLOR)) options[ID_ROWS_COLOR] = $(this.container.dom).css("color");
+        if (!isPropOk(options, ID_ROWS_ALIGNMENT)) options[ID_ROWS_ALIGNMENT] = $(this.container.dom).css("text-align");
+        if (!isPropOk(options, ID_ROWS_VERTICAL_ALIGNMENT)) options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
+        this.component.data.options = JSON.parse(JSON.stringify(options));
+    }
+
+    setOption(id, value) {
+        super.setOption(id, value);
+        this.component.data.options[id] = value;
+        this.context.signals.onChanged.dispatch();
+        switch (id) {
                 case ID_SIZES_HEIGHT_COMPONENT:
-                    component.body.setStyle("height", value + "px");
+                    this.component.body.setStyle("height", value + "px");
                     break;
                 case ID_HEADER_BACK_COLOR:
                     {
@@ -80,47 +124,7 @@ export class SimpleTable extends BaseComponentContent {
                     }
                     break;                     
                 default:
-            }
-            
-        });
-        
-    }
-
-
-
-    async execute() {
-        const results = await this.execQuery(this.query, null);
-        const component_data = this.prepareData(results, this.component.data);            
-        this.table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
-            this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);
-        }, this.component.data.options).attachTo(this.container);
-    }
-
-    prepareData(data_2_display, _data=null) {
-        super.prepareData(data_2_display);
-        // no config was provided => all fields selected
-        if (_data.data_config.fields.length == 0 &&
-            data_2_display.length > 0) {
-                _data.data_config.fields = Object.keys(data_2_display[0]);
-                _data.query.query_selected_fields =  Object.keys(data_2_display[0]);
-                _data.query.query_fields =  Object.keys(data_2_display[0]);
         }
-        return data_2_display;
-    }
-
-    setOptions() {
-        let options = this.component.data.options;
-        if (!options) options = {};
-        if (!isPropOk(options, ID_SIZES_HEIGHT_COMPONENT)) options[ID_SIZES_HEIGHT_COMPONENT] = parseFloat($(this.component.body.dom).css("height"));
-        if (!isPropOk(options, ID_HEADER_BACK_COLOR)) options[ID_HEADER_BACK_COLOR] = $(this.container.dom).css("background-color");
-        if (!isPropOk(options, ID_HEADER_COLOR)) options[ID_HEADER_COLOR] = $(this.container.dom).css("color");
-        if (!isPropOk(options, ID_HEADER_ALIGNMENT)) options[ID_HEADER_ALIGNMENT] = $(this.container.dom).css("text-align");
-        if (!isPropOk(options, ID_HEADER_VERTICAL_ALIGNMENT)) options[ID_HEADER_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
-        if (!isPropOk(options, ID_ROWS_BACK_COLOR)) options[ID_ROWS_BACK_COLOR] = $(this.container.dom).css("background-color");
-        if (!isPropOk(options, ID_ROWS_COLOR)) options[ID_ROWS_COLOR] = $(this.container.dom).css("color");
-        if (!isPropOk(options, ID_ROWS_ALIGNMENT)) options[ID_ROWS_ALIGNMENT] = $(this.container.dom).css("text-align");
-        if (!isPropOk(options, ID_ROWS_VERTICAL_ALIGNMENT)) options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
-        this.component.data.options = JSON.parse(JSON.stringify(options));
     }
 
     clear() {

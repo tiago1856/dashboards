@@ -604,3 +604,36 @@ li.date-format-selected:hover {
     background-color: blue !important;
     color: red !important;    
 }
+
+
+
+
+
+
+/********************/
+
+/* -------------- */
+/* ANIMATIONS     */
+/* -------------- */
+
+.pulsate-opacity-scale {
+    -webkit-animation: pulsate-opacity 2s ease-out;
+    -webkit-animation-iteration-count: infinite; 
+    opacity: 0.5;
+  }
+  @-webkit-keyframes pulsate-opacity {
+    0% { 
+        opacity: 0.5;
+        scale: 0.8;
+    }
+    50% { 
+        opacity: 1.0;
+        scale: 1.2;
+    }
+    100% { 
+        opacity: 0.5;
+        scale: 0.8;
+    }
+  }
+  
+

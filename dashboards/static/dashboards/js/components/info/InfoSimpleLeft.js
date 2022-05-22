@@ -24,36 +24,36 @@ export class InfoSimpleLeft extends BaseComponentContent {
         super(context, component, new_query?new_query:component.data.query.query);
 
 
-        const div = new Div().attachTo(component.body);
-        div.addClass("info-box info-component-content");
+        this.div = new Div().attachTo(component.body);
+        this.div.addClass("info-box info-component-content");
 
         const card_back_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_CARD_BACK_COLOR))?this.component.data.options[ID_CARD_BACK_COLOR]:getInputData(this.options_data,ID_CARD_BACK_COLOR);
-        div.setStyle('background-color', card_back_color);
+        this.div.setStyle('background-color', card_back_color);
 
 
-        const span = new Span().attachTo(div);
-        span.addClass('info-box-icon');// bg-danger');
+        this.span = new Span().attachTo(this.div);
+        this.span.addClass('info-box-icon');// bg-danger');
         const back_color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON_BACK_COLOR))?this.component.data.options[ID_ICON_BACK_COLOR]:getInputData(this.options_data,ID_ICON_BACK_COLOR);
         const color = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON_COLOR))?this.component.data.options[ID_ICON_COLOR]:getInputData(this.options_data,ID_ICON_COLOR);
-        span.setStyle('background-color', back_color);
-        span.setStyle('color', color);
+        this.span.setStyle('background-color', back_color);
+        this.span.setStyle('color', color);
  
 
-        const icon = new I().attachTo(span);
+        this.icon = new I().attachTo(this.span);
         const ion_icon = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON))?this.component.data.options[ID_ICON]:getInputData(this.options_data,ID_ICON);
-        icon.addClass('icon ' + ion_icon.replace('ion ',''));
+        this.icon.addClass('icon ' + ion_icon.replace('ion ',''));
 
         const icon_size = (this.component.data.options && this.component.data.options.hasOwnProperty(ID_ICON_SIZE))?this.component.data.options[ID_ICON_SIZE]:getInputData(this.options_data,ID_ICON_SIZE);
-        icon.setStyle("font-size", icon_size + 'px');
-        span.setStyle("height", icon_size + "px");
-        span.setStyle("width", icon_size + "px");
+        this.icon.setStyle("font-size", icon_size + 'px');
+        this.span.setStyle("height", icon_size + "px");
+        this.span.setStyle("width", icon_size + "px");
 
-        const content = new Div().attachTo(div);
-        content.addClass('info-box-content');
-        this.text = new Span().attachTo(content);
+        this.content = new Div().attachTo(this.div);
+        this.content.addClass('info-box-content');
+        this.text = new Span().attachTo(this.content);
         this.text.addClass("info-box-text lead");
         this.text.setTextContent('SEM TEXTO');
-        this.value = new Span().attachTo(content);
+        this.value = new Span().attachTo(this.content);
         this.value.addClass("info-box-number");
         this.value.setTextContent('SEM VALOR');
 
@@ -79,46 +79,11 @@ export class InfoSimpleLeft extends BaseComponentContent {
         //span.setStyle("height", $(div.dom).css('height'));
         //span.setStyle("width", $(div.dom).css('height')); 
                 
-        content.setStyle('max-height', icon_size + "px"); 
+        this.content.setStyle('max-height', icon_size + "px"); 
 
         this.onOptionChanged = context.signals.onOptionChanged.add((uuid, {id, value}) => {
             if (uuid !== component.data.uuid) return;
-            component.data.options[id] = value;
-            context.signals.onChanged.dispatch();
-            switch (id) {
-                case ID_ICON:
-                    icon.removeClass();
-                    icon.addClass('icon ' + value.replace('ion ',''));
-                    break;
-                case ID_ICON_BACK_COLOR:
-                    span.setStyle("background-color",value);
-                    break;
-                case ID_ICON_COLOR:
-                    span.setStyle("color",value);
-                    break;
-                case ID_ICON_SIZE:
-                    icon.setStyle("font-size",value + 'px');
-                    span.setStyle("height", value + "px");
-                    span.setStyle("width", value + "px");
-                    content.setStyle('max-height',value + "px"); 
-                    break;
-                case ID_TEXT_SIZE:
-                    this.text.setStyle("font-size", value + 'px');
-                    break;
-                case ID_VALUE_SIZE:
-                    this.value.setStyle("font-size", value + 'px');
-                    break;
-                case ID_CARD_BACK_COLOR:
-                    div.setStyle('background-color', value);
-                    break;
-                case ID_TEXT_COLOR:
-                    this.text.setStyle('color', value);
-                    break;
-                case ID_VALUE_COLOR:
-                    this.value.setStyle('color', value);
-                    break;
-                default:
-            }            
+            this.setOption(id, value);
         });
 
     }
@@ -190,6 +155,47 @@ export class InfoSimpleLeft extends BaseComponentContent {
         if (!isPropOk(options, ID_VALUE_COLOR)) options[ID_VALUE_COLOR] = getInputData(this.options_data,ID_VALUE_COLOR);
 
         this.component.data.options = JSON.parse(JSON.stringify(options));
+    }
+
+
+    setOption(id, value) {
+        super.setOption(id, value);
+        this.component.data.options[id] = value;
+        this.context.signals.onChanged.dispatch();
+        switch (id) {
+            case ID_ICON:
+                this.icon.removeClass();
+                this.icon.addClass('icon ' + value.replace('ion ',''));
+                break;
+            case ID_ICON_BACK_COLOR:
+                this.span.setStyle("background-color",value);
+                break;
+            case ID_ICON_COLOR:
+                this.span.setStyle("color",value);
+                break;
+            case ID_ICON_SIZE:
+                this.icon.setStyle("font-size",value + 'px');
+                this.span.setStyle("height", value + "px");
+                this.span.setStyle("width", value + "px");
+                this.content.setStyle('max-height',value + "px"); 
+                break;
+            case ID_TEXT_SIZE:
+                this.text.setStyle("font-size", value + 'px');
+                break;
+            case ID_VALUE_SIZE:
+                this.value.setStyle("font-size", value + 'px');
+                break;
+            case ID_CARD_BACK_COLOR:
+                this.div.setStyle('background-color', value);
+                break;
+            case ID_TEXT_COLOR:
+                this.text.setStyle('color', value);
+                break;
+            case ID_VALUE_COLOR:
+                this.value.setStyle('color', value);
+                break;
+            default:
+        }           
     }
 
     clear() {

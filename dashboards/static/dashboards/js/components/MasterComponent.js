@@ -44,6 +44,12 @@ export class MasterComponent extends Div {
         this.spinner = new Div().attachTo(this);
         this.spinner.addClass('d-none spinner-overlay');
         new AwesomeIcon('fa fa-sync-alt fa-spin').attachTo(this.spinner);
+
+        /*
+        $(this.dom).on('click', function() {
+          console.warn("111111111111111");
+        });
+        */
     }
 
     setSpinnerVisibility(show = true) {
@@ -131,11 +137,11 @@ export class MasterComponent extends Div {
       if (this.content) this.content.setOptions();
     }
 
+
     /**
      * Cleanup operations.
      */
-    clear() {
-    }
+    clear() {}
 
 
 }

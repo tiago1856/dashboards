@@ -904,6 +904,9 @@ EditComponentModal.prototype = {
                 QUERY_SELECTION.val(this.state.query.query_selection);
                 QUERY_SELECTION.trigger('change');
                 QUERY_AREA.val(this.state.query.query);
+                if (QUERY_AREA.val() !== '') {
+                    EXEC_QUERY.removeAttr('disabled');
+                }
                 if (this.state.query.query_database) {
                     DATABASE_SELECTION.val(this.state.query.query_database)
                 } else {

@@ -156,9 +156,9 @@ export const COMPONENT_TYPE = {
                     {
                         section_name: "Text",
                         inputs: [
-                            {id: ID_TEXT_SIZE, label: "Dimensão descrição:", type: "slider", max: 256, min: 16, value: 24, step: 1},
+                            {id: ID_TEXT_SIZE, label: "Dimensão descrição:", type: "slider", max: 256, min: 16, value: 20, step: 1},
                             {id: ID_TEXT_COLOR, label: "Cor da descrição:", type: "color", value: "#000000"},
-                            {id: ID_VALUE_SIZE, label: "Dimensão valor:", type: "slider", max: 256, min: 16, value: 32, step: 1},
+                            {id: ID_VALUE_SIZE, label: "Dimensão valor:", type: "slider", max: 256, min: 16, value: 28, step: 1},
                             {id: ID_VALUE_COLOR, label: "Cor do valor:", type: "color", value: "#000000"},
                         ]
                     },                    
