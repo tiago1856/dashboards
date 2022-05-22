@@ -82,8 +82,9 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 * multiple databases - selection ---- DONE
 * query analysis - queries inside queries
 * query analysis - multiple queries?????
+* query anayslys - ast array sometimes ???? why???? --- affects comm pins????
 * copy/paste formatting options
-
+* open dash => reload window + open dash
 
 ## Bugs to solve
 

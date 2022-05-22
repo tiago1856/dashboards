@@ -96,6 +96,7 @@ export class CommsManager {
                 }
             });
             
+
             // on remove connection through menu
             $('body').on('click','.delete-connection',function(event) {
                 self.instance.detach(window.selectedConnection);
@@ -111,11 +112,12 @@ export class CommsManager {
                 $('<div class="comm-custom-menu"><button class="delete-control btn btn-danger">Remover componente</button></div>')
                 .appendTo('body')
                 .css({top: event.pageY + 'px', left: event.pageX + 'px'});
+                console.error(self.ios);
             });
             
             // on remove component through menu
             $('body').on('click','.delete-control',function(event) {
-                console.warn(window.selectedControl);
+                console.warn(window.selectedControl, self.ios);
                 const restore = self.ios[window.selectedControl];
                 self.removeComponentFromDiagram(window.selectedControl);
                 $('div.comm-custom-menu').remove();
@@ -141,6 +143,8 @@ export class CommsManager {
                 const target_pin_index = self.ios[info.targetId].indices.inputs.indexOf(target_pin_uuid);
                 const source_pin_name = self.ios[info.sourceId].outputs[source_pin_index];
                 const target_pin_name = self.ios[info.targetId].inputs[target_pin_index];
+                //console.warn("SOURCE > ", self.ios[info.sourceId]);
+                //console.warn("TARGET > ", self.ios[info.targetId]);
                 const conn_data = {
                     source: {
                         component:info.sourceId, 
@@ -263,6 +267,7 @@ export class CommsManager {
             console.error("[CommsManager::createComponent] Invalid uuid | Name:", name);
             return null;
         }
+        //console.warn(">>>>>>>>>", name, inputs, outputs);
         const component = new Div().attachTo(parent);
         if (in_diagram) {
             component.setAttribute('id',uuid);
@@ -329,7 +334,7 @@ export class CommsManager {
                     [ "Label", { label:subStr(output,16,16), id:'label', location:[0, 1.1 + delta + delta * index - 0.05 * index] } ]
                 ],
             });	
-            //io[uuid].uuids[pin_uuid] = output;
+
             this.ios[uuid].indices.outputs.push(pin_uuid);
             
         });	
@@ -352,6 +357,7 @@ export class CommsManager {
             });	
             //io[uuid].uuids[pin_uuid] = input;
             this.ios[uuid].indices.inputs.push(pin_uuid);            
+
         }); 
 
     }
@@ -454,6 +460,13 @@ export class CommsManager {
         this.onComponentNameChanged.detach();
         this.onComponentUpdated.detach();
         this.onCommTriggered.detach();
+
+        // required otherwise accumulative
+        $('body').off('click','.delete-connection');
+        $('body').off('contextmenu','#comm-diagram .comm-component');
+        $('body').off('click','.delete-control');
+        $('body').off('click');
+
     }
 
     
@@ -482,18 +495,20 @@ export class CommsManager {
             console.warn("[CommsManager::restore] No comms data to restore!");
             return null;
         }
+        
 
         this.restored = true;
         
         //this.ios = data.io;
         this.ios = Object.assign(this.ios, data.io);
         	
+        //console.error("RESOTRE", this.ios);
 
         for (const uuid in data.in_diagram) {
             const component = data.in_diagram[uuid];
             const top = component.top;
             const left = component.left;
-            this.moveComponent2Diagram(uuid, top, left);
+            this.moveComponent2Diagram(uuid, top, left);            
         }
         
         for (const key in data.links) {

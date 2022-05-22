@@ -293,7 +293,7 @@ export class Dashboard extends Div {
             }
         }
 
-        this.comms.clear(); 
+        this.comms.clear();
         this.comms = null;
     }
 

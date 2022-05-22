@@ -561,6 +561,7 @@ function saveDashboard(onReady = null) {
         }, 
         result => {
             $("body").css("cursor","auto");
+            dashboard.id = result.id;
             context.signals.onDashboardSaved.dispatch(result);
             if (onReady) onReady(result);
         },

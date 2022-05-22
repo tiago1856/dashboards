@@ -40,7 +40,8 @@ export class SqlQueryAnalyzer {
    * @returns Recursive function.
    */
   static parseConditionals = (obj, conditionals) => {
-        if (!obj) return null
+        //console.warn(obj, conditionals);
+        if (!obj || typeof obj === 'undefined') return null
         if (SqlQueryAnalyzer.isLeaf(obj)) {
             conditionals.push(obj)
             return;
@@ -60,8 +61,15 @@ export class SqlQueryAnalyzer {
 
     static getASTConditionals = (query) => {
         const conditionals = [];
-        const ast = SqlQueryAnalyzer.getAST(query);		
+        const ast = SqlQueryAnalyzer.getAST(query);
+        //console.warn(">>>>>", ast.where);
+        
+        if (Array.isArray(ast))
+            SqlQueryAnalyzer.parseConditionals(ast[0].where, conditionals);
+        else
+        
 		SqlQueryAnalyzer.parseConditionals(ast.where, conditionals);
+        console.warn(query, ast, conditionals);
         return [ast, conditionals];
     }
 

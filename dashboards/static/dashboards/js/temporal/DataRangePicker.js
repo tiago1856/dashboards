@@ -44,8 +44,9 @@ export class DataRangePicker {
                 this.start = start;
                 this.end = end;                
                 if (onSelection) onSelection(start.format(self.selected_format), end.format(self.selected_format));
-                const parts = self.getParts();
+                const parts = self.getParts(start, end);
                 context.signals.onCommTriggered.dispatch(GLOBAL_CALENDAR_UUID, [
+                    /*
                     parts.start,                    
                     parts.start_year,
                     parts.start_month,
@@ -54,8 +55,17 @@ export class DataRangePicker {
                     parts.end_year,
                     parts.end_month,
                     parts.end_day,
+                    */
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[0], value: parts.start, index: 0},
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[1], value: parts.start_year, index: 1},
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[2], value: parts.start_month, index: 2},
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[3], value: parts.start_day, index: 3},
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[4], value: parts.end, index: 4},
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[5], value: parts.end_year, index: 5},
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[6], value: parts.end_month, index: 6},
+                   {outpin: GLOBAL_CALENDAR_OUTPUT_PINS[7], value: parts.end_day, index: 7},
                 ]);
-            }
+            }//{outpin: column, value: value, index: index}
         )
         this.start = $(DATARANGE_BTN_ID).data('daterangepicker').startDate;
         this.end = $(DATARANGE_BTN_ID).data('daterangepicker').endDate;      
@@ -74,16 +84,16 @@ export class DataRangePicker {
         return this.selected_format;
     }
 
-    getParts() {
+    getParts(_start, _end) {
         return {
-            start : this.start.format(this.selected_format),
-            end : this.end.format(this.selected_format),
-            start_year : this.start.format('YYYY'),
-            start_month : this.start.format('MM'),
-            start_day : this.start.format('DD'),
-            end_year : this.end.format('YYYY'),
-            end_month : this.end.format('MM'),
-            end_day : this.end.format('DD')
+            start : _start.format(this.selected_format),
+            end : _end.format(this.selected_format),
+            start_year : _start.format('YYYY'),
+            start_month : _start.format('MM'),
+            start_day : _start.format('DD'),
+            end_year : _end.format('YYYY'),
+            end_month : _end.format('MM'),
+            end_day : _end.format('DD')
         }
     }
 
