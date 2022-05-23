@@ -23,6 +23,7 @@ import {
 } from '../ComponentType.js';
 import { isPropOk } from '../../utils/jsutils.js';
 import { getInputData } from '../../Components/ComponentType.js';
+import { RGBAtoHEX } from '../../utils/jscolor.js';
 
 
 
@@ -94,14 +95,14 @@ export class ComplexTable extends BaseComponentContent {
         let options = this.component.data.options;
         if (!options) options = {};
         if (!isPropOk(options, ID_SIZES_HEIGHT_COMPONENT)) options[ID_SIZES_HEIGHT_COMPONENT] = parseFloat($(this.component.body.dom).css("height"));
-        if (!isPropOk(options, ID_HEADER_BACK_COLOR)) options[ID_HEADER_BACK_COLOR] = $(this.container.dom).css("background-color");
-        if (!isPropOk(options, ID_HEADER_COLOR)) options[ID_HEADER_COLOR] = $(this.container.dom).css("color");
-        if (!isPropOk(options, ID_HEADER_ALIGNMENT)) options[ID_HEADER_ALIGNMENT] = $(this.container.dom).css("text-align");
-        if (!isPropOk(options, ID_HEADER_VERTICAL_ALIGNMENT)) options[ID_HEADER_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
-        if (!isPropOk(options, ID_ROWS_BACK_COLOR)) options[ID_ROWS_BACK_COLOR] = $(this.container.dom).css("background-color");
-        if (!isPropOk(options, ID_ROWS_COLOR)) options[ID_ROWS_COLOR] = $(this.container.dom).css("color");
-        if (!isPropOk(options, ID_ROWS_ALIGNMENT)) options[ID_ROWS_ALIGNMENT] = $(this.container.dom).css("text-align");
-        if (!isPropOk(options, ID_ROWS_VERTICAL_ALIGNMENT)) options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).css("vertical-align");
+        if (!isPropOk(options, ID_HEADER_BACK_COLOR)) options[ID_HEADER_BACK_COLOR] = RGBAtoHEX($(this.container.dom).find('th').css("background-color"));
+        if (!isPropOk(options, ID_HEADER_COLOR)) options[ID_HEADER_COLOR] = RGBAtoHEX($(this.container.dom).find('th').css("color"));
+        if (!isPropOk(options, ID_HEADER_ALIGNMENT)) options[ID_HEADER_ALIGNMENT] = $(this.container.dom).find('th').css("text-align");
+        if (!isPropOk(options, ID_HEADER_VERTICAL_ALIGNMENT)) options[ID_HEADER_VERTICAL_ALIGNMENT] = $(this.container.dom).find('th').css("vertical-align");
+        if (!isPropOk(options, ID_ROWS_BACK_COLOR)) options[ID_ROWS_BACK_COLOR] = RGBAtoHEX($(this.container.dom).find('td').css("background-color"));
+        if (!isPropOk(options, ID_ROWS_COLOR)) options[ID_ROWS_COLOR] = RGBAtoHEX($(this.container.dom).find('td').css("color"));
+        if (!isPropOk(options, ID_ROWS_ALIGNMENT)) options[ID_ROWS_ALIGNMENT] = $(this.container.dom).find('td').css("text-align");
+        if (!isPropOk(options, ID_ROWS_VERTICAL_ALIGNMENT)) options[ID_ROWS_VERTICAL_ALIGNMENT] = $(this.container.dom).find('td').css("vertical-align");
         if (!isPropOk(options, ID_OPERATION_PRINT)) options[ID_OPERATION_PRINT] = getInputData(this.options_data,ID_OPERATION_PRINT);
         if (!isPropOk(options, ID_OPERATION_PDF)) options[ID_OPERATION_PDF] = getInputData(this.options_data,ID_OPERATION_PDF);
         if (!isPropOk(options, ID_OPERATION_CSV)) options[ID_OPERATION_CSV] = getInputData(this.options_data,ID_OPERATION_CSV);

@@ -111,8 +111,7 @@ export class CommsManager {
                 window.selectedControl = $(this).attr('id');
                 $('<div class="comm-custom-menu"><button class="delete-control btn btn-danger">Remover componente</button></div>')
                 .appendTo('body')
-                .css({top: event.pageY + 'px', left: event.pageX + 'px'});
-                console.error(self.ios);
+                .css({top: event.pageY + 'px', left: event.pageX + 'px'});                
             });
             
             // on remove component through menu
