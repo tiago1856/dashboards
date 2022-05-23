@@ -222,7 +222,8 @@ export function getComponentProperties(type, id) {
         if (COMPONENT_TYPE[type].properties[k].id === id) {
             return COMPONENT_TYPE[type].properties[k];
         }
-    }     
+    }
+    return null;
 }
 
 export function getInputData(options, key, what = 'value') {
@@ -231,6 +232,22 @@ export function getInputData(options, key, what = 'value') {
            if (options[i].inputs[k].id === key) return options[i].inputs[k][what];
         }
     }
+    return null;
+}
+
+export function getInputDataFromType(type, id = null, key = null, what = 'value') {
+    if (!type || !id || !key || !COMPONENT_TYPE[type].hasOwnProperty('properties')) return null;
+    for (let k=0; k<COMPONENT_TYPE[type].properties.length; k++) {
+        if (COMPONENT_TYPE[type].properties[k].id === id) {
+            const options = COMPONENT_TYPE[type].properties[k].options;
+            for (let i=0; i<options.length; i++) {
+                for (let j=0; j<options[i].inputs.length; j++) {
+                   if (options[i].inputs[j].id === key) return options[i].inputs[j][what];
+                }
+            }
+        }
+    }
+    return null;
 }
 
 

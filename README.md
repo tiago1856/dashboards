@@ -85,7 +85,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 * query anayslys - ast array sometimes ???? why???? --- affects comm pins????
 * copy/paste formatting options
 * open dash => reload window + open dash
-* options tables => whenc reating if options null => get default values from simple table
+* options tables => whenc reating if options null => get default values from simple table ---- DONE
 
 ## Bugs to solve
 

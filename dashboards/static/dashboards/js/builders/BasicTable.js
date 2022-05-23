@@ -1,6 +1,5 @@
 import { Table, TableTr, TableTd, TableTh, TableTbody, TableThead } from './BuildingBlocks.js';
 import { 
-    ID_SIZES_HEIGHT_COMPONENT,
     ID_HEADER_BACK_COLOR,
     ID_HEADER_COLOR,
     ID_HEADER_ALIGNMENT,
@@ -9,7 +8,10 @@ import {
     ID_ROWS_COLOR,
     ID_ROWS_ALIGNMENT,
     ID_ROWS_VERTICAL_ALIGNMENT,
+    getInputDataFromType,
 } from '../Components/ComponentType.js';
+import { VISUALIZATION_TYPE } from '../components/VisualizationType.js'
+
 
 /**
  * Bootstrap 4 simple table.
@@ -37,6 +39,12 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null, opti
                 if (options.hasOwnProperty(ID_HEADER_COLOR)) col_q.css('color', options[ID_HEADER_COLOR]);
                 if (options.hasOwnProperty(ID_HEADER_ALIGNMENT)) col_q.css('text-align', options[ID_HEADER_ALIGNMENT]);
                 if (options.hasOwnProperty(ID_HEADER_VERTICAL_ALIGNMENT)) col_q.css('vertical-align', options[ID_HEADER_VERTICAL_ALIGNMENT]);
+            } else {
+                const col_q = $(col.dom);              
+                col_q.css('background-color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS,ID_HEADER_BACK_COLOR));
+                col_q.css('color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_HEADER_COLOR));
+                col_q.css('text-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_HEADER_ALIGNMENT));
+                col_q.css('vertical-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_HEADER_VERTICAL_ALIGNMENT));
             }
         })        
     } else {
@@ -49,7 +57,13 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null, opti
                 if (options.hasOwnProperty(ID_HEADER_COLOR)) col_q.css('color', options[ID_HEADER_COLOR]);
                 if (options.hasOwnProperty(ID_HEADER_ALIGNMENT)) col_q.css('text-align', options[ID_HEADER_ALIGNMENT]);
                 if (options.hasOwnProperty(ID_HEADER_VERTICAL_ALIGNMENT)) col_q.css('vertical-align', options[ID_HEADER_VERTICAL_ALIGNMENT]);
-            }            
+            } else {
+                const col_q = $(col.dom);
+                col_q.css('background-color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS,ID_HEADER_BACK_COLOR));
+                col_q.css('color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_HEADER_COLOR));
+                col_q.css('text-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_HEADER_ALIGNMENT));
+                col_q.css('vertical-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_HEADER_VERTICAL_ALIGNMENT));
+            }         
         })
     }
 
@@ -71,7 +85,13 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null, opti
                     if (options.hasOwnProperty(ID_ROWS_COLOR)) td_q.css('color', options[ID_ROWS_COLOR]);
                     if (options.hasOwnProperty(ID_ROWS_ALIGNMENT)) td_q.css('text-align', options[ID_ROWS_ALIGNMENT]);
                     if (options.hasOwnProperty(ID_ROWS_VERTICAL_ALIGNMENT)) td_q.css('vertical-align', options[ID_ROWS_VERTICAL_ALIGNMENT]);
-                }
+                } else {
+                    const col_q = $(td.dom);
+                    col_q.css('background-color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS,ID_ROWS_BACK_COLOR));
+                    col_q.css('color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_ROWS_COLOR));
+                    col_q.css('text-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_ROWS_ALIGNMENT));
+                    col_q.css('vertical-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_ROWS_VERTICAL_ALIGNMENT));
+                }  
             });
         } else {
             const headers = Object.keys(data[0]);
@@ -88,7 +108,13 @@ export function BasicTable(data, max_lines = 10, order=null, onSelect=null, opti
                     if (options.hasOwnProperty(ID_ROWS_COLOR)) td_q.css('color', options[ID_ROWS_COLOR]);
                     if (options.hasOwnProperty(ID_ROWS_ALIGNMENT)) td_q.css('text-align', options[ID_ROWS_ALIGNMENT]);
                     if (options.hasOwnProperty(ID_ROWS_VERTICAL_ALIGNMENT)) td_q.css('vertical-align', options[ID_ROWS_VERTICAL_ALIGNMENT]);
-                }                
+                } else {
+                    const col_q = $(td.dom);
+                    col_q.css('background-color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS,ID_ROWS_BACK_COLOR));
+                    col_q.css('color', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_ROWS_COLOR));
+                    col_q.css('text-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_ROWS_ALIGNMENT));
+                    col_q.css('vertical-align', getInputDataFromType('TABLE',VISUALIZATION_TYPE.TS, ID_ROWS_VERTICAL_ALIGNMENT));
+                }               
             }
         }
     })
