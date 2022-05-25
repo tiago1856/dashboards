@@ -50,6 +50,10 @@ export class MasterComponent extends Div {
           console.warn("111111111111111");
         });
         */
+
+        $(this.dom).on('click',() => {
+            context.signals.onComponentClicked.dispatch(this);
+        })
     }
 
     setSpinnerVisibility(show = true) {
@@ -137,12 +141,40 @@ export class MasterComponent extends Div {
       if (this.content) this.content.setOptions();
     }
 
-
     /**
      * Cleanup operations.
      */
     clear() {}
 
+    /**
+     * 
+     * @returns 
+     */
+    getUUID() {
+      return this.data.uuid;
+    }
+
+    /**
+     * Get the visual configuration options.
+     * @returns Options.
+     */
+    getOptions() {
+        return this.data.options;
+    }
+
+    /**
+     * Applies the options from another object.
+     * Used to copy/paste options from one component to another.
+     * @param {object} options A data.options object.
+     * @returns 
+     */
+    setOptions(options = null) {
+      if (!options) return;
+      if (!this.content) return;
+      for (const id in options) {
+        this.content.setOption(id, options[id])
+      }
+    }
 
 }
 

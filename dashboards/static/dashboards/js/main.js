@@ -78,6 +78,10 @@ let dashboard = null;
 
 let new_dash = false;    // new dashboard?
 
+// to copy/paste options between components
+let brush_on = false;   // copy/paste options 
+let options_2_copy = null;
+let brush_from = null;  // options are from which component?
 
 // ------------------------------
 // --- MAIN AND GLOBAL MODALS ---
@@ -234,15 +238,29 @@ context.signals.onIconSelectionModal.add((current, onSelection = null) => {
 });
 
 
+
+context.signals.onComponentClicked.add(component => {
+    // brush not active
+    if (!brush_on) return;
+    // get the options to copy
+    if (!options_2_copy) {
+        options_2_copy = component.getOptions();
+        brush_from = component.getUUID();
+        BRUSH_BTN.removeClass('btn-outline-danger');
+        BRUSH_BTN.addClass('btn-danger');        
+        return;
+    }
+    // don't apply to the same component
+    if (brush_from == component.getUUID()) return;
+    // apply the copied options to the component
+    component.setOptions(options_2_copy);
+})
+
+
+
 // ----------------
 // TOP ROW ACTIONS
 // ----------------
-
-// SYNC COMMS - used for when a new component is added
-/*
-SYNC_COMMS.on('click', function() {
-});
-*/
 
 // ENTER COMMS SCREEN
 COMMS_BTN.on('click', function() {
@@ -367,8 +385,23 @@ PIN_DASH_BTN.on('click',function() {
     }
 });
 
-BRUSH_BTN.on('click',function() {
-    BRUSH_BTN.addClass('btn-outline-danger pulsate-opacity-scale');
+BRUSH_BTN.on('click',function() {   
+    if (!brush_on) {    
+        brush_on = true;
+        BRUSH_BTN.addClass('btn-outline-danger pulsate-opacity-scale');
+        /*
+        $('.Component').on('hover', () => {
+            $('.Component').css('cursor','copy');            
+        })
+        */        
+    } else {
+        brush_on = false;
+        options_2_copy = null;
+        brush_from = null;
+        BRUSH_BTN.removeClass('btn-danger btn-outline-danger pulsate-opacity-scale');
+        //$('.Component').off('hover');
+        //$('.Component').css('cursor','default');
+    }
 });
 
 

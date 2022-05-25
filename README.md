@@ -85,7 +85,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 7 | query analysis - queries inside queries |  | 
 | 8 | query analysis - multiple queries????? |  | 
 | 9 | query anayslys - ast array sometimes ???? why???? --- affects comm pins???? |  | 
-| 10 | copy/paste formatting options |  | 
+| 10 | copy/paste formatting options | *DONE* | 
 | 11 | open dash => reload window + open dash |  | 
 | 12 | options tables => whenc reating if options null => get default values from simple table | *DONE* | 
 | 13 | export data / component: print / pdf / excel / csv / image |  | 
@@ -100,7 +100,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 ## Bugs to solve
 
 | Nº        | Bug        | Priority        | Solution | Status |
-| ------------- | ------------- |:-------------:|:-------------:|:-------------:|
+| ------------- | ------------- |:-------------:| ------------- |:-------------:|
 | 1 | loading component on an existing one => old component remains in comms | `HIGH` | delete old after the loading the new one | *SOLVED* |
 | 2 | loading multiple identical components => appears as single comp in comms | `HIGH` | loading => new uuid | *SOLVED* |
 | 3 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` | loading => new uuid | *SOLVED* |
