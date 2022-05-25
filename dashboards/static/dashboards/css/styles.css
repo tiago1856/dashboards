@@ -637,3 +637,12 @@ li.date-format-selected:hover {
   }
   
 
+/* -------------- */
+/* SELECTIONS     */
+/* -------------- */
+
+/* component selected as options origin */
+.brush-component-selected {
+    outline: #4CAF50 solid 10px;
+}
+  

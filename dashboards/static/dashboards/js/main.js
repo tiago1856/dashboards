@@ -246,8 +246,7 @@ context.signals.onComponentClicked.add(component => {
     if (!options_2_copy) {
         options_2_copy = component.getOptions();
         brush_from = component.getUUID();
-        BRUSH_BTN.removeClass('btn-outline-danger');
-        BRUSH_BTN.addClass('btn-danger');        
+        component.addClass('brush-component-selected');
         return;
     }
     // don't apply to the same component
@@ -389,18 +388,12 @@ BRUSH_BTN.on('click',function() {
     if (!brush_on) {    
         brush_on = true;
         BRUSH_BTN.addClass('btn-outline-danger pulsate-opacity-scale');
-        /*
-        $('.Component').on('hover', () => {
-            $('.Component').css('cursor','copy');            
-        })
-        */        
     } else {
         brush_on = false;
         options_2_copy = null;
         brush_from = null;
-        BRUSH_BTN.removeClass('btn-danger btn-outline-danger pulsate-opacity-scale');
-        //$('.Component').off('hover');
-        //$('.Component').css('cursor','default');
+        BRUSH_BTN.removeClass('btn-outline-danger pulsate-opacity-scale');
+        $('.Component').removeClass('brush-component-selected');
     }
 });
 
