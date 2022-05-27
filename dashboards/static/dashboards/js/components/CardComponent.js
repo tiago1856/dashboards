@@ -1,10 +1,12 @@
 
-import { Div, AwesomeIconAndButton, Text } from '../builders/BuildingBlocks.js';
+import { Div, AwesomeIconAndButton, Text, Ul, Li, Link } from '../builders/BuildingBlocks.js';
 import { NO_TITLE_DEFINED } from '../constants.js';
 import { BaseComponentContent } from './BaseComponentContent.js';
 import { getComponentProperties } from './ComponentType.js';
 import { MasterComponent } from './MasterComponent.js';
 import { OptionsMenu } from '../options/OptionsMenu.js';
+import { ExportMenu } from './ExportMenu.js';
+
 /**
  * Container for all type of components (except the INFO).
  * 
@@ -46,7 +48,25 @@ export class CardComponent extends MasterComponent {
         const edit_btn = toolButton('fas fa-pencil-alt', 'text-danger editable-component', 'Novo/Editar Component').attachTo(card_tools);
         const remove_btn = toolButton('fas fa-times', 'text-danger editable-component', 'Remover component').attachTo(card_tools);
         this.options_btn = toolButton('fas fa-cog', 'non-editable-component', 'Configuração').attachTo(card_tools);
-        const print_btn = toolButton('fas fa-print', 'non-editable-component', 'Imprimir component').attachTo(card_tools);
+        
+        const dop = new Div().attachTo(card_tools);
+        dop.addClass('btn-group');
+        const print_btn = toolButton('fas fa-print', 'non-editable-component dropdown-toggle', 'Imprimir component').attachTo(dop);
+        print_btn.setAttribute('data-toggle','dropdown');
+        ExportMenu(null, null, null, () => {
+          if (!this.content || !this.content.result) return;
+          var ws = XLSX.utils.json_to_sheet(this.content.result);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "data");
+          XLSX.writeFile(wb,data.name + '.xlsx');
+        }, () => {
+          if (!this.content || !this.content.result) return;
+          var ws = XLSX.utils.json_to_sheet(this.content.result);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "data");
+          XLSX.writeFile(wb,data.name + '.csv');         
+        }).attachTo(dop)
+
         const zoom_btn = toolButton('fas fa-expand-arrows-alt', 'non-editable-component', 'Ampliar component').attachTo(card_tools);
         const collapse_btn = toolButton('fas fa-minus', 'non-editable-component', 'Collapsar component').attachTo(card_tools);
         const close_btn = toolButton('fas fa-times', 'non-editable-component', 'Remover component').attachTo(card_tools);

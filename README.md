@@ -88,14 +88,19 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 10 | copy/paste formatting options | *DONE* | 
 | 11 | open dash => reload window + open dash |  | 
 | 12 | options tables => whenc reating if options null => get default values from simple table | *DONE* | 
-| 13 | export data / component: print / pdf / excel / csv / image |  | 
-| 14 | save dash snapshoot (all current data) |  | 
-| 15 | export dash: print / pdf / image |  | 
-| 16 | component options: page orientation and size |  | 
-| 17 |  |  | 
-| 18 |  |  | 
-| 19 |  |  |
-| 20 |  |  |
+| 13 | export data / component: excel | *DONE* | 
+| 14 | export data / component: csv | *DONE* | 
+| 15 | export data / component: print |  | 
+| 16 | export data / component: pdf |  | 
+| 17 | export data / component: image |  | 
+| 18 | save dash snapshoot (all current data) |  | 
+| 19 | export dash: print |  | 
+| 20 | export dash: pdf |  | 
+| 21 | export dash: image |  | 
+| 22 | component options: page orientation and size |  | 
+| 23 |  |  | 
+| 24 |  |  | 
+
 
 ## Bugs to solve
 
@@ -103,6 +108,6 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | ------------- | ------------- |:-------------:| ------------- |:-------------:|
 | 1 | loading component on an existing one => old component remains in comms | `HIGH` | delete old after the loading the new one | *SOLVED* |
 | 2 | loading multiple identical components => appears as single comp in comms | `HIGH` | loading => new uuid | *SOLVED* |
-| 3 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` | loading => new uuid | *SOLVED* |
+| 3 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` |  |  |
 
 

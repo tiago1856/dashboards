@@ -1,4 +1,6 @@
 
+// TODO: REMOVE THIS AND USE xlsx
+
 /**
  * Export a given table to excel.
  * (source: https://www.codexworld.com/export-html-table-data-to-excel-using-javascript/)

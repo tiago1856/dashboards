@@ -23,6 +23,8 @@ export class BaseComponentContent {
         const properties = getComponentProperties(component.data.component_type, component.data.visualization.visualization_type);
         this.options_data = properties.options;
 
+        this.result = null;    // query results
+
         //this.component_analysis = null;  
         /*
         this.conditionals = [];
@@ -51,6 +53,7 @@ export class BaseComponentContent {
         return fetchPOST(URL_EXEC_QUERY,
             options,
             (result) => {
+                this.result = result;
                 return result;
                 //if (onReady) onReady(result);
             },
