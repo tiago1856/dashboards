@@ -51,8 +51,8 @@ export class CardComponent extends MasterComponent {
         
         const dop = new Div().attachTo(card_tools);
         dop.addClass('btn-group');
-        const print_btn = toolButton('fas fa-print', 'non-editable-component dropdown-toggle', 'Imprimir component').attachTo(dop);
-        print_btn.setAttribute('data-toggle','dropdown');
+        const export_btn = toolButton('fas fa-file-export', 'non-editable-component dropdown-toggle', 'Exportar/Imprimir component').attachTo(dop);
+        export_btn.setAttribute('data-toggle','dropdown');
         ExportMenu(null, null, null, () => {
           if (!this.content || !this.content.result) return;
           var ws = XLSX.utils.json_to_sheet(this.content.result);
