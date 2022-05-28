@@ -3,6 +3,9 @@ import { Div, AwesomeIconAndButton } from '../builders/BuildingBlocks.js';
 import { getComponentProperties } from './ComponentType.js';
 import { MasterComponent } from './MasterComponent.js';
 import { OptionsMenu } from '../options/OptionsMenu.js';
+import { ExportMenu } from './ExportMenu.js';
+import { MSG_NO_DATA_2_EXPORT } from '../messages.js';
+
 
 /**
  * INFO component.
@@ -37,6 +40,30 @@ export class NonCardComponent extends MasterComponent {
         const remove_btn = toolButton('fas fa-times', 'text-danger editable-component info-component-button', 'Remover component').attachTo(card_tools);
         this.options_btn = toolButton('fas fa-cog', 'non-editable-component info-component-button', 'Configuração').attachTo(card_tools);
       
+        const dop = new Div().attachTo(card_tools);
+        dop.addClass('btn-group');
+        const export_btn = toolButton('fas fa-file-export', 'non-editable-component info-component-button dropdown-toggle', 'Exportar/Imprimir component').attachTo(dop);
+        export_btn.setAttribute('data-toggle','dropdown');
+        ExportMenu(null, null, null, () => {
+          if (!this.content || !this.content.result) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }
+          var ws = XLSX.utils.json_to_sheet(this.content.result);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "data");
+          XLSX.writeFile(wb,data.name + '.xlsx');
+        }, () => {
+          if (!this.content || !this.content.result) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }
+          var ws = XLSX.utils.json_to_sheet(this.content.result);
+          var wb = XLSX.utils.book_new();
+          XLSX.utils.book_append_sheet(wb, ws, "data");
+          XLSX.writeFile(wb,data.name + '.csv');         
+        }).attachTo(dop)
+
 
         $(edit_btn.dom).on('click',function() {
           if (self.opt_menu) {

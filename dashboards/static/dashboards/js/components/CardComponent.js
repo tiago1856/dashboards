@@ -1,11 +1,11 @@
 
 import { Div, AwesomeIconAndButton, Text, Ul, Li, Link } from '../builders/BuildingBlocks.js';
 import { NO_TITLE_DEFINED } from '../constants.js';
-import { BaseComponentContent } from './BaseComponentContent.js';
 import { getComponentProperties } from './ComponentType.js';
 import { MasterComponent } from './MasterComponent.js';
 import { OptionsMenu } from '../options/OptionsMenu.js';
 import { ExportMenu } from './ExportMenu.js';
+import { MSG_NO_DATA_2_EXPORT } from '../messages.js';
 
 /**
  * Container for all type of components (except the INFO).
@@ -54,13 +54,19 @@ export class CardComponent extends MasterComponent {
         const export_btn = toolButton('fas fa-file-export', 'non-editable-component dropdown-toggle', 'Exportar/Imprimir component').attachTo(dop);
         export_btn.setAttribute('data-toggle','dropdown');
         ExportMenu(null, null, null, () => {
-          if (!this.content || !this.content.result) return;
+          if (!this.content || !this.content.result) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }
           var ws = XLSX.utils.json_to_sheet(this.content.result);
           var wb = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, "data");
           XLSX.writeFile(wb,data.name + '.xlsx');
         }, () => {
-          if (!this.content || !this.content.result) return;
+          if (!this.content || !this.content.result) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }
           var ws = XLSX.utils.json_to_sheet(this.content.result);
           var wb = XLSX.utils.book_new();
           XLSX.utils.book_append_sheet(wb, ws, "data");

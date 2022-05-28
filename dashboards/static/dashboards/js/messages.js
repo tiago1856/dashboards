@@ -10,3 +10,4 @@ export const MSG_QUERY_ERROR = "Erro na query!";
 export const MSG_DELETE_COMPONENT = "Apagar componente?";
 export const MSG_SAVE_DASH = "Guarde o Dashboard actual primeiro!";
 export const MSG_PIN_DASH = "Definir este Dashboard como o de abertura?";
+export const MSG_NO_DATA_2_EXPORT = "Não existem dados para exportar!";

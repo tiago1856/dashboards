@@ -14,10 +14,11 @@ import {
     URL_CHECK_NAME_COMPONENT,
 } from "../urls.js";
 import { BasicTable } from '../builders/BasicTable.js';
-import { ExportTable2Excel } from '../export/ExportTable2Excel.js';
 import { MSG_DELETE_QUERY } from '../messages.js';
 import { getAllNumbers } from '../utils/jsutils.js';
 import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
+import { MSG_NO_DATA_2_EXPORT } from '../messages.js';
+
 
 const EDIT_COMPONENT_MODAL = $('#edit-component-modal');
 
@@ -38,6 +39,7 @@ const SAVE_BTN = $('#data-source-save-query-btn');
 const EDIT_BTN = $('#data-source-edit-query-btn');
 const DELETE_BTN = $('#data-source-delete-query-btn');
 const EXCEL_BTN = $('#data-source-excel-btn');
+const CSV_BTN = $('#data-source-csv-btn');
 const NEW_QUERY_BUTTON = $('#data-source-new-query-btn');
 const EXEC_QUERY = $('#data-source-execute-btn');
 const SELECTED_FIELDS = $('#data-source-selected-fields');
@@ -116,6 +118,8 @@ export function EditComponentModal(context) {
 
     this.old_name = null;
 
+    this.query_result = null;   // results of the query, in case it's executed
+
     
     
     SELECTED_FIELDS.multiselect({enableFiltering: true,
@@ -158,9 +162,27 @@ export function EditComponentModal(context) {
     
     // EXPORTs TABLE TO EXCEL
     EXCEL_BTN.on('click',function() {
-        ExportTable2Excel(this.table_id,'xxx')
+        if (!self.query_result) {
+            context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+        }
+        var ws = XLSX.utils.json_to_sheet(self.query_result);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "data");
+        XLSX.writeFile(wb,self.state.name + '.xlsx');
     })
 
+    // EXPORTs TABLE TO CSV
+    CSV_BTN.on('click',function() {
+        if (!self.query_result) {
+            context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+        }
+        var ws = XLSX.utils.json_to_sheet(self.query_result);
+        var wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "data");
+        XLSX.writeFile(wb,self.state.name + '.csv');
+    })
 
     // NEW QUERY
     NEW_QUERY_BUTTON.on('click',function() {
@@ -264,6 +286,7 @@ export function EditComponentModal(context) {
             EDIT_BTN.removeAttr('disabled');
             DELETE_BTN.attr('disabled', true);
             EXCEL_BTN.attr('disabled', true);
+            CSV_BTN.attr('disabled', true);
             EXEC_QUERY.attr('disabled', true);
             //self.context.signals.onChanged.dispatch();
         } else {
@@ -866,6 +889,7 @@ EditComponentModal.prototype = {
         DATA_SOURCE_TABLE_ALERT.show();
         //NEW_QUERY_DIALOG.hide();
         TABLE_AREA.empty();
+        this.query_result = null;
         SELECTED_FIELDS.empty();
         SELECTED_FIELDS.multiselect('rebuild');
         
@@ -873,6 +897,9 @@ EditComponentModal.prototype = {
         SAVE_BTN.attr('disabled',true);
 
         GLOBAL_NAME_ALERT.hide();
+
+        EXCEL_BTN.attr('disabled', true);
+        CSV_BTN.attr('disabled', true);
 
         this.old_title = this.component.data.title;
 
@@ -1096,7 +1123,8 @@ EditComponentModal.prototype = {
                 $("body").css("cursor","auto");
                 DATA_SOURCE_TABLE_ALERT.hide();
                 TABLE_AREA.empty();
-                SELECTED_FIELDS.empty();                
+                SELECTED_FIELDS.empty();
+                this.query_result = result;
 
                 if (result.length == 0) return;                
 
@@ -1108,6 +1136,7 @@ EditComponentModal.prototype = {
                 const table = new BasicTable(result, parseInt(NUMBER_LINES.val())).attachTo(TABLE_AREA.get(0));
                 this.table_id = table.getId();
                 EXCEL_BTN.removeAttr('disabled');
+                CSV_BTN.removeAttr('disabled');
 
                 this.setVisualizationConfigPanel(false);
             },
