@@ -8,6 +8,7 @@ import { Dashboard } from './dashboards/Dashboard.js';
 import { 
     MSG_OVERRIDE_LAYOUT, 
     MSG_NO_SAVE,
+    MSG_DELETE_CURRENT_DASHBOARD,
     MSG_DELETE_DASHBOARD,
     MSG_SAVE_DASH,
     MSG_PIN_DASH,
@@ -24,7 +25,8 @@ import {
     URL_GET_DASHBOARD,
     URL_SAVE_CONFIG,
     URL_GET_CONFIG,
-    URL_SAVE_DASHBOARD,    
+    URL_SAVE_DASHBOARD,
+    URL_DELETE_DASHBOARD,    
 } from "./urls.js";
 import { IconsModal } from './modals/IconsModal.js';
 
@@ -255,7 +257,12 @@ context.signals.onComponentClicked.add(component => {
     component.setOptions(options_2_copy);
 })
 
-
+context.signals.onDashboardDeleted.add(deleted_dashboard_id => {
+    if (dashboard.id == deleted_dashboard_id) {
+        window.location.replace(PAGE_URL);
+    }    
+});
+    
 
 // ----------------
 // TOP ROW ACTIONS
@@ -358,9 +365,10 @@ DASHBOARD_NEW_BTN.on('click',function() {
 // DELETE CURRENT DASHBOARD
 DASHBOARD_DELETE_BTN.on('click',function() {
     if (!dashboard.id) return;
-    context.signals.onAYS.dispatch(MSG_DELETE_DASHBOARD, () => {
-        dashboard.delete(() => {       
-            window.location.replace(PAGE_URL);
+    context.signals.onAYS.dispatch(MSG_DELETE_CURRENT_DASHBOARD, () => {
+        deleteDashboard(dashboard.id, () => {
+            context.signals.onDashboardDeleted.dispatch(dashboard.id);
+            //window.location.replace(PAGE_URL);
         });
     });
 });
@@ -598,5 +606,20 @@ function saveDashboard(onReady = null) {
     )
 }
 
-
+function deleteDashboard(id, onReady = null) {
+    $("body").css("cursor","progress");
+    fetchPOST(URL_DELETE_DASHBOARD,
+        {
+            dashboard_id: id,
+        },  
+        (result) => {                
+            $("body").css("cursor","auto");
+            if (onReady) onReady(result);
+        },
+        (error) => {
+            $("body").css("cursor","auto");
+            context.signals.onError.dispatch(error,"[main::deleteDashboard]");                
+        }
+    );
+}
 

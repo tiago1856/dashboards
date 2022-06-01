@@ -99,7 +99,8 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 21 | export dash: image |  | 
 | 22 | component options: page orientation and size |  | 
 | 23 | editcomponentmodal: export to excel - use XLSX lib |  | 
-| 24 |  |  | 
+| 24 | delete dashboard: select dash / current dash | *DONE* | 
+| 25 |  |  | 
 
 
 ## Bugs to solve

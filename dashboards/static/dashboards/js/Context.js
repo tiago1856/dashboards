@@ -43,6 +43,8 @@ export function Context() {
         onQueryUpdated: new Signal(),
         //onSync: new Signal(),
 
+        onDashboardDeleted: new Signal(),
+
     }
 
     this.edit_mode = false;     // editor or presentation

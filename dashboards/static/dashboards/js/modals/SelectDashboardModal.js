@@ -1,6 +1,8 @@
-import { fetchGET } from "../Fetch.js";
-import { URL_LIST_DASHBOARDS } from "../urls.js";
+import { fetchGET, fetchPOST } from "../Fetch.js";
+import { URL_LIST_DASHBOARDS, URL_DELETE_DASHBOARD } from "../urls.js";
 import { getAllNumbers } from '../utils/jsutils.js';
+import { MSG_DELETE_DASHBOARD } from '../messages.js';
+import { AwesomeIconAndButton } from '../builders/BuildingBlocks.js';
 
 
 const SELECT_DASHBOARD_MODAL = $('#load-dashboard-modal');
@@ -30,6 +32,7 @@ SelectDashboardModal.prototype = {
 
     fetchLayouts: function(onReady=null) {
         $("body").css("cursor","progress");
+        const self = this;
         fetchGET(URL_LIST_DASHBOARDS, 
             (result) => {
                 TABLE_BODY.empty();
@@ -40,6 +43,29 @@ SelectDashboardModal.prototype = {
                     result.forEach(component => {
                         TABLE_BODY.append(createRow(component));
                     })
+
+                    // add operations - delete component
+                    TABLE_BODY.find('tr').each(function(){
+                        const td = $('<td>');
+                        td.addClass('text-center');
+                        const btn = new AwesomeIconAndButton('','fas fa-trash');
+                        btn.addClass('btn btn-sm btn-danger');
+                        btn.setAttribute('type','button');
+                        btn.setAttribute('data-toggle','tooltip');
+                        btn.setAttribute('title','Apagar dashboard');
+                        td.append(btn.dom);
+                        $(this).find('td').eq(3).after(td);
+                        $(btn.dom).on('click',function(e) {
+                            e.stopPropagation();
+                            const row = $(this).closest('tr');
+                            self.context.signals.onAYS.dispatch(MSG_DELETE_DASHBOARD, () => {
+                                self.deleteDashboard(row.attr('data-id'), () => {
+                                    row.remove();
+                                    self.context.signals.onDashboardDeleted.dispatch(row.attr('data-id'));
+                                });                                
+                            });                            
+                        });
+                    });
                     if (onReady) onReady();
                 }
                 $("body").css("cursor","auto");                
@@ -48,13 +74,32 @@ SelectDashboardModal.prototype = {
                 $("body").css("cursor","auto");
                 const error_codes = getAllNumbers(error.toString());
                 if (error_codes && error_codes.length > 0 && error_codes[0] == 500)
-                    this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[EditComponentModal::fetchQueries]");
+                    this.context.signals.onError.dispatch("Problemas com a base de dados! Verifique se existe!","[SelectDashboardModal::fetchLayouts]");
                 else
-                    this.context.signals.onError.dispatch(error,"[SelectLayoutModal::fetchLayouts]");
+                    this.context.signals.onError.dispatch(error,"[SelectDashboardModal::fetchLayouts]");
                 
             }
         );
-    } 
+    },
+
+
+    deleteDashboard: function(id, onReady = null) {
+        $("body").css("cursor","progress");
+        fetchPOST(URL_DELETE_DASHBOARD,
+            {
+                dashboard_id: id,
+            },  
+            (result) => {                
+                $("body").css("cursor","auto");
+                if (onReady) onReady(result);
+            },
+            (error) => {
+                $("body").css("cursor","auto");
+                context.signals.onError.dispatch(error,"[SelectDashboardModal::deleteDashboard]");                
+            }
+        );
+    },
+
 }
 
 const createRow = (data) => {
@@ -72,6 +117,6 @@ const createRow = (data) => {
     tr.append(description)
     const title = $('<td/>');
     title.text(data.title);
-    tr.append(title)
+    tr.append(title)   
     return tr;
  }
