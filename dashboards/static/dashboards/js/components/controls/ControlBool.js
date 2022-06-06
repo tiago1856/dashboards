@@ -30,19 +30,19 @@ export class ControlBool extends BaseComponentContent {
     const group = new Div().attachTo(cont);
     group.addClass('mx-auto');
 
-    const input = new Input().attachTo(group);
-    input.addClass('text-center');
-    input.setAttribute('type', 'checkbox');
+    this.input = new Input().attachTo(group);
+    this.input.addClass('text-center');
+    this.input.setAttribute('type', 'checkbox');
     if (component.data.data_config.default === component.data.data_config.true) {
-      input.setAttribute('checked', 'true');
+      this.input.setAttribute('checked', 'true');
     }
-    input.setAttribute('data-toggle', 'toggle');
-    input.setAttribute('data-on', "<i class='fa fa-thumbs-up'></i> " + component.data.data_config.true);
-    input.setAttribute('data-off', "<i class='fa fa-thumbs-down'></i> " + component.data.data_config.false);
-    input.setAttribute('data-onstyle', 'success');
-    input.setAttribute('data-offstyle', 'danger');
-    input.setAttribute('data-width', '100%');
-    $(input.dom).bootstrapToggle({
+    this.input.setAttribute('data-toggle', 'toggle');
+    this.input.setAttribute('data-on', "<i class='fa fa-thumbs-up'></i> " + component.data.data_config.true);
+    this.input.setAttribute('data-off', "<i class='fa fa-thumbs-down'></i> " + component.data.data_config.false);
+    this.input.setAttribute('data-onstyle', 'success');
+    this.input.setAttribute('data-offstyle', 'danger');
+    this.input.setAttribute('data-width', '100%');
+    $(this.input.dom).bootstrapToggle({
       on: component.data.data_config.true,
       off: component.data.data_config.false
     });
@@ -50,7 +50,7 @@ export class ControlBool extends BaseComponentContent {
 
   
 
-    $(input.dom).on('change', function(e) {
+    $(this.input.dom).on('change', function(e) {
       const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;//$(this).val();
      context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
@@ -64,5 +64,9 @@ export class ControlBool extends BaseComponentContent {
   }
 
   async execute() {
+  }
+
+  getContents() {
+    return $(this.input.dom).prop('checked');
   }
 }

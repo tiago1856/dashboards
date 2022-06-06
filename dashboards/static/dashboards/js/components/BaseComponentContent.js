@@ -111,6 +111,15 @@ export class BaseComponentContent {
      * @param {*} value 
      */
     setOption(option_id, value) {};
+
+
+    /**
+     * Get the current query's results, controsl values, ...
+     * @returns the query's results.
+     */
+    getContents() {
+        return this.result;
+    }
     
 }
 

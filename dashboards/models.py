@@ -90,3 +90,24 @@ class Config(models.Model):
     def __str__(self):
         return self.name
 
+
+
+class Snapshot(models.Model):
+    name = models.CharField(null=False, max_length = 80)
+    description = models.CharField(blank=True, null=True, max_length = 128)
+    date_format = models.CharField(blank=True, null=True, max_length = 16)
+    date_created = models.DateTimeField(null=False, auto_now_add=True)
+    global_date = models.CharField(blank=True, null=True, max_length = 80)
+    author = models.ForeignKey('accounts.User', models.SET_NULL, db_column='author', blank=True, null=True, default=None, related_name="snapshot_author")
+    # dashboard data - options, queries, visualization, ...
+    data = models.JSONField(blank=True, null=True)
+    # the contents of each component (query's results, ...)
+    components_content = models.JSONField(blank=True, null=True)
+
+    class Meta:
+        db_table = 'dash_snapshot'
+        verbose_name_plural = "Snapshots"
+        constraints = [ models.UniqueConstraint(fields=['name'], name="snapshot_name") ]
+
+    def __str__(self):
+        return self.name

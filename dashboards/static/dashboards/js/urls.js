@@ -37,3 +37,6 @@ export const URL_SAVE_LAYOUT = "/dashboards/api/save_layout/";
 
 export const URL_SAVE_CONFIG = "/dashboards/api/save_config/";
 export const URL_GET_CONFIG = "/dashboards/api/get_config/";
+
+export const URL_SAVE_SNAPSHOT = "/dashboards/api/save_snapshot/";
+export const URL_DELETE_SNAPSHOT = "/dashboards/api/delete_snapshot/";

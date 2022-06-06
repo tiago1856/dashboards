@@ -20,9 +20,9 @@ export class ControlString extends BaseComponentContent {
     const group = new Div().attachTo(cont);
     group.addClass('input-group mx-auto')
 
-    const input = new Input().attachTo(group);
-    input.addClass('form-control');
-    input.setAttribute('value', component.data.data_config.default);
+    this.input = new Input().attachTo(group);
+    this.input.addClass('form-control');
+    this.input.setAttribute('value', component.data.data_config.default);
 
     const append = new Div().attachTo(group);
     append.addClass("input-group-append");
@@ -30,15 +30,15 @@ export class ControlString extends BaseComponentContent {
     button.addClass("btn btn-outline-secondary");
     button.setAttribute('type','button');
 
-    $(input.dom).on('change', function(e) {
+    $(this.input.dom).on('change', function(e) {
       const _value = $(this).val();
       //context.signals.onCommTriggered.dispatch(component.data.uuid, component.data.data_config.name, _value);
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
     })
 
-    $(sync_btn.dom).on('click', function(e) {
-      const _value = input.getValue();
+    $(sync_btn.dom).on('click', (e) => {
+      const _value = this.input.getValue();
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
     });    
 
@@ -47,4 +47,9 @@ export class ControlString extends BaseComponentContent {
 
   async execute() {
   }
+
+  getContents() {
+    return this.input.getValue();
+  }
+
 }

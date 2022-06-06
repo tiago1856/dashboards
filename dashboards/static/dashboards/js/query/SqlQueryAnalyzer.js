@@ -66,9 +66,9 @@ export class SqlQueryAnalyzer {
         
         if (Array.isArray(ast))
             SqlQueryAnalyzer.parseConditionals(ast[0].where, conditionals);
-        else
-        
-		SqlQueryAnalyzer.parseConditionals(ast.where, conditionals);
+        else        
+		    SqlQueryAnalyzer.parseConditionals(ast.where, conditionals);
+            
         console.warn(query, ast, conditionals);
         return [ast, conditionals];
     }

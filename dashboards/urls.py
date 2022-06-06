@@ -24,7 +24,7 @@ urlpatterns = [
     path('api/save_dashboard/', views.save_dashboard, name="save_dashboard"),
     path('api/list_dashboards/', views.list_dashboards, name="list_dashboards"),
     path('api/get_dashboard/<int:pk>/', views.get_dashboard, name="get_dashboard"),
-    path('api/delete_dashboard/', views.delete_dashboard, name="delete_dashboard"),
+    path('api/delete_dashboard/', views.delete_dashboard, name="delete_dashboard"),    
 
     # layout
     path('api/get_layout/<int:pk>/', views.get_layout, name="get_layout"),
@@ -37,5 +37,9 @@ urlpatterns = [
     # config
     path('api/get_config/', views.get_config, name="get_config"),
     path('api/save_config/', views.save_config, name="save_config"),
+
+    # snapshot
+    path('api/save_snapshot/', views.save_snapshot, name="save_snapshot"),
+    path('api/delete_snapshot/', views.delete_snapshot, name="delete_snapshot"),
 
 ]

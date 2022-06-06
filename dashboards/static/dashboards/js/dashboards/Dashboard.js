@@ -234,8 +234,9 @@ export class Dashboard extends Div {
       }
   
     /**
-     * Saves the dashboard in the database.
-     * @param {function} onReady Called when done.
+     * Get all the required data to recreate the dashboard, except the query's
+     * results. For that, use getFullData().
+     * @returns All the required data to recreate the dashboard.
      */
      getData() {
         const components_data = {}
@@ -253,6 +254,22 @@ export class Dashboard extends Div {
             comms: this.comms.getData(),
         }
     };
+
+    /**
+     * Get all the required data to recreate the dashboard including the query's
+     * results, controls values, ...
+     * To be used for taking a snapshot.
+     * @returns All the required data to recreate the dashboard, including the query's
+     * results.
+     */
+    getFullData() {
+        const data = getData();
+        const components_content = {}
+        for (const spot in this.components){            
+            components_content[spot] = this.components[spot].content ? this.components[spot].content.getContents(): null;
+        }
+        data['components_content'] = components_content;
+    }
 
 
     /**

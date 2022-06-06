@@ -29,13 +29,13 @@ export class ControlNumber extends BaseComponentContent {
       lower.addClass('slider-output');
       lower.setTextContent(component.data.data_config.min);
 
-      const input = new Input().attachTo(slider);
-      input.addClass('slider');
-      input.setAttribute('type','range');
-      input.setAttribute('value', component.data.data_config.default);
-      input.setAttribute('min', component.data.data_config.min);
-      input.setAttribute('max', component.data.data_config.max);
-      input.setAttribute('step', component.data.data_config.step);
+      this.input = new Input().attachTo(slider);
+      this.input.addClass('slider');
+      this.input.setAttribute('type','range');
+      this.input.setAttribute('value', component.data.data_config.default);
+      this.input.setAttribute('min', component.data.data_config.min);
+      this.input.setAttribute('max', component.data.data_config.max);
+      this.input.setAttribute('step', component.data.data_config.step);
 
       const upper = new Span().attachTo(slider);
       upper.addClass('slider-output');
@@ -46,23 +46,28 @@ export class ControlNumber extends BaseComponentContent {
       value.setTextContent(component.data.data_config.default);
               
             
-      $(input.dom).on('change', function(e) {
+      $(this.input.dom).on('change', function(e) {
         const _value = $(this).val();
         value.setTextContent(_value);
         context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       })
 
-      $(input.dom).on('input', function(e) {
+      $(this.input.dom).on('input', function(e) {
         const _value = $(this).val();
         value.setTextContent(_value);
       })
 
-      $(sync_btn.dom).on('click', function(e) {
-        const _value = input.getValue();
+      $(sync_btn.dom).on('click', (e) => {
+        const _value = this.input.getValue();
         context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       });
   }
 
   async execute() {
   }
+
+  getContents() {
+    return this.input.getValue();
+  }
+
 }

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from dashboards.models import Query, Component, Dashboard, Layout, Config
+from dashboards.models import Query, Component, Dashboard, Layout, Config, Snapshot
 
 class LayoutSerializer(serializers.ModelSerializer):
     class Meta:
@@ -44,4 +44,9 @@ class DashboardSerializer3(serializers.ModelSerializer):
 class ConfigSerializer(serializers.ModelSerializer):
     class Meta:
         model = Config
+        fields = '__all__'
+
+class SnapshotSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Dashboard
         fields = '__all__'

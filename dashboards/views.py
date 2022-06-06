@@ -15,7 +15,8 @@ from dashboards.serializers import ComponentSerializer, ComponentSerializer2
 from dashboards.serializers import DashboardSerializer, DashboardSerializer2, DashboardSerializer3
 from dashboards.serializers import LayoutSerializer
 from dashboards.serializers import ConfigSerializer
-from dashboards.models import Query, Component, Dashboard, Layout, Config
+from dashboards.serializers import SnapshotSerializer
+from dashboards.models import Query, Component, Dashboard, Layout, Config, Snapshot
 
 from django.conf import settings
 
@@ -643,6 +644,80 @@ def get_config(request):
       except Config.DoesNotExist:
          return Response(data={'config': None}, status=status.HTTP_200_OK)
          #return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+############
+# SNAPSHOT #
+############
+
+
+
+@api_view(["POST"])
+def save_snapshot(request):
+   """
+      Saves a snapshot of the a dashboard  
+
+      Body params:
+         dashboard_data (object): Dashboard data
+        
+   """
+   if request.method == 'POST':
+      try:
+         name = request.data.get('name')
+         description = request.data.get('description')
+         components_content = request.data.get('components_content')
+         data = request.data.get('data')
+         date_format = request.data.get('date_format')
+         user = None
+         layout = Layout.objects.get(pk = request.data.get('layout'))
+         global_date = request.data.get('global_date')
+
+         if request.user.is_authenticated:
+            user = request.user
+
+         snapshot = Snapshot(
+            name = name,
+            description = description,
+            components_content = components_content,
+            data = data,
+            author = user, 
+            layout = layout,
+            date_format = date_format,
+            global_date = global_date
+         )
+         snapshot.save()
+
+         serializer = SnapshotSerializer(snapshot)
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except (Snapshot.DoesNotExist, Layout.DoesNotExist) as e:
+         print(e)
+         return Response(status=status.HTTP_404_NOT_FOUND)       
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+#@login_required
+@api_view(["POST"])
+def delete_snapshot(request):
+   """Deletes a snapshot."""
+   if request.method == 'POST' or 'snapshot_id' not in request.data:
+      try:
+         Snapshot.objects.filter(pk=request.data.get('snapshot_id')).delete()
+         return Response(data={'message':'ok'}, status=status.HTTP_200_OK)
+      except Snapshot.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
       except Exception as e:
          print (e)
          return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         

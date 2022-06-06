@@ -203,6 +203,7 @@ export class InfoSimpleLeft extends BaseComponentContent {
         this.onOptionChanged.detach();
     }
 
+
 }
 
 /*

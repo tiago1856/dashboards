@@ -225,4 +225,5 @@ export class ComplexTable extends BaseComponentContent {
         super.clear();
         this.onOptionChanged.detach();
     }
+
 }

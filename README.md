@@ -93,7 +93,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 15 | export data / component: print |  | 
 | 16 | export data / component: pdf |  | 
 | 17 | export data / component: image |  | 
-| 18 | save dash snapshoot (all current data) |  | 
+| 18 | save dash snapshoot (all current data) | on going | 
 | 19 | export dash: print |  | 
 | 20 | export dash: pdf |  | 
 | 21 | export dash: image |  | 
