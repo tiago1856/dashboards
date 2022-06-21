@@ -37,7 +37,7 @@ export class Dashboard extends Div {
         this.name = data?data.name:null;
         this.description = data?data.description:null;        
         this.id = data?data.id:null;
-        this.date_format = data?data.date_format:DEFAULT_DATE_FORMAT;        
+        this.date_format = data?(data.date_format?data.date_format:DEFAULT_DATE_FORMAT):DEFAULT_DATE_FORMAT;
         this.layout_id = layout_id;
         this.components = {};
         this.changed = false;   // something changed and it's not saved
@@ -236,6 +236,7 @@ export class Dashboard extends Div {
     /**
      * Get all the required data to recreate the dashboard, except the query's
      * results. For that, use getFullData().
+     * Used to save the dashboard.
      * @returns All the required data to recreate the dashboard.
      */
      getData() {
@@ -258,17 +259,18 @@ export class Dashboard extends Div {
     /**
      * Get all the required data to recreate the dashboard including the query's
      * results, controls values, ...
-     * To be used for taking a snapshot.
+     * Used when taking a dashboard's snapshot.
      * @returns All the required data to recreate the dashboard, including the query's
      * results.
      */
     getFullData() {
-        const data = getData();
+        const data = this.getData();
         const components_content = {}
         for (const spot in this.components){            
             components_content[spot] = this.components[spot].content ? this.components[spot].content.getContents(): null;
         }
         data['components_content'] = components_content;
+        return data;
     }
 
 

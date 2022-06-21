@@ -26,9 +26,12 @@ import {
     URL_SAVE_CONFIG,
     URL_GET_CONFIG,
     URL_SAVE_DASHBOARD,
-    URL_DELETE_DASHBOARD,    
+    URL_DELETE_DASHBOARD, 
+    URL_SAVE_SNAPSHOT,   
 } from "./urls.js";
 import { IconsModal } from './modals/IconsModal.js';
+import { SaveSnapshotModal } from './modals/SaveSnapshotModal.js';
+import { SelectSnapshotModal } from './modals/SelectSnapshotModal.js';
 
 
 // -----------------
@@ -56,6 +59,8 @@ const EXIT_COMMS_BTN = $('#exit-comms-btn');
 const COMMS_SCREEN = $('#comms-tab-content');
 const LAYOUT_SCREEN = $('#layout-tab-content');
 const BRUSH_BTN = $('#brush-btn');
+const SAVE_SNAPSHOT_BTN = $('#snapshot-save-btn');
+const SELECT_SNAPSHOT_BTN = $('#snapshot-select-btn');
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -116,6 +121,16 @@ const dashboard_properties_modal = new DashboardPropertiesModal(context);
  * SELECT LAYOUT MODAL
  */
 const layout_selection_modal = new LayoutSelectionModal(context);
+
+/**
+ * SNAPSHOT SAVE MODAL
+ */
+const save_snapshot_modal = new SaveSnapshotModal(context);
+
+/**
+ * SNAPSHOT SELECT MODAL
+ */
+const snapshot_select_modal = new SelectSnapshotModal(context);
 
 
 /**
@@ -405,6 +420,31 @@ BRUSH_BTN.on('click',function() {
     }
 });
 
+SAVE_SNAPSHOT_BTN.on('click',function() {
+    save_snapshot_modal.show((name, description) => {
+        saveSnapshot(name, description, (result) => {
+            console.log("SNAPSHOT SAVED");
+        });
+    });
+});
+
+SELECT_SNAPSHOT_BTN.on('click',function() {
+    snapshot_select_modal.show((snapshot_id) => {
+
+        console.log("load snapshot > ", snapshot_id);
+        /*
+        getDashboard(dash_id, (result) => {
+            changeSaveStatus(false);
+            if (dashboard) dashboard.clear();
+            dashboard = new Dashboard(context, result.layout, result);
+            dashboard.init().then(() => {
+                date_interval.setFormat(result.date_format, false);
+            });
+        });
+        */
+    });
+});
+
 
 // -------------
 // INIT
@@ -621,5 +661,35 @@ function deleteDashboard(id, onReady = null) {
             context.signals.onError.dispatch(error,"[main::deleteDashboard]");                
         }
     );
+}
+
+
+
+function saveSnapshot(name, description, onReady = null) {
+    $("body").css("cursor","progress");
+    const data = dashboard.getFullData();
+    fetchPOST(
+        URL_SAVE_SNAPSHOT, 
+        {
+            name: name,
+            description: description,
+            title: data.title,
+            layout: data.layout_id,
+            data: {
+                components: data.components_data,
+                comms: data.comms,
+            },
+            date_format: data.date_format,
+            components_content: data.components_content,
+        }, 
+        result => {
+            $("body").css("cursor","auto");
+            if (onReady) onReady(result);
+        },
+        (error) => {
+            $("body").css("cursor","auto");
+            context.signals.onError.dispatch(error,"[main::saveSnapshot]");                
+        }
+    )
 }
 

@@ -95,6 +95,8 @@ class Config(models.Model):
 class Snapshot(models.Model):
     name = models.CharField(null=False, max_length = 80)
     description = models.CharField(blank=True, null=True, max_length = 128)
+    layout = models.ForeignKey(Layout, models.SET_NULL, db_column='layout', blank=True, null=True, default=None, related_name="snapshot_layout")
+    title = models.CharField(blank=True, null=True, max_length = 128)
     date_format = models.CharField(blank=True, null=True, max_length = 16)
     date_created = models.DateTimeField(null=False, auto_now_add=True)
     global_date = models.CharField(blank=True, null=True, max_length = 80)

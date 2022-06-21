@@ -1,0 +1,35 @@
+{% load static %}
+
+<!-- SAVE SNAPSHOT MODAL -->
+<div class="modal" id="snapshot-save-modal" tabindex="-1"  role="dialog" aria-labelledby="data-source-modal-label" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+
+            <div class="modal-header">
+                <h4 class="modal-title">Guardar Snapshot</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div><!-- /modal-header -->
+
+            <div class="modal-body ">
+                <div class="form-group">
+                    <label for="ssm-snapshot-name">Nome:</label>
+                    <input type="text" class="form-control valid-input" placeholder="Nome do Snapshot" name="ssm-snapshot-name" id="ssm-snapshot-name" required>
+                </div>
+                <div class="alert alert-danger collapse" id="ssm-name-alert" role="alert">
+                    Nome já existente! O nome deve ser unico.
+                </div>	  
+                <div class="form-group">
+                    <label for="ssm-snapshot-description">Descrição:</label>
+                    <textarea  class="form-control" placeholder="Descrição do Snapshot" name="ssm-snapshot-description" id="ssm-snapshot-description"></textarea>
+                </div>           
+
+            </div><!-- /modal-body -->
+
+            <div class="modal-footer">            
+                <button type="button" class="btn btn-warning" data-dismiss="modal"><i class="fa fa-times"></i> Cancelar</button>
+                <button type="button" class="btn btn-primary" id="ssm-save-btn" ><i class="fa fa-save"></i> Gravar e Fechar</button>
+            </div> <!-- /modal-footer -->
+
+        </div> <!-- /modal-content -->
+    </div><!-- /modal-dialog -->
+</div>

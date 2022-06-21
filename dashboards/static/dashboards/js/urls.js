@@ -40,3 +40,7 @@ export const URL_GET_CONFIG = "/dashboards/api/get_config/";
 
 export const URL_SAVE_SNAPSHOT = "/dashboards/api/save_snapshot/";
 export const URL_DELETE_SNAPSHOT = "/dashboards/api/delete_snapshot/";
+export const URL_GET_SNAPSHOT = "/dashboards/api/get_snapshot/";
+export const URL_LIST_SNAPSHOTS = "/dashboards/api/list_snapshots/";
+export const URL_CHECK_NAME_SNAPSHOT = "/dashboards/api/check_name_snapshot/";
+

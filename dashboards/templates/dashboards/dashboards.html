@@ -15,7 +15,7 @@
 	<br>
 	
 
-	<div class="container-fluid">
+	<div class="container-fluid" id="master-container">
 		
 
 		
@@ -65,7 +65,9 @@
 	{% include 'dashboards/modals/_select_dashboard_modal.html' %}
 	{% include 'dashboards/modals/_dashboard_properties_modal.html' %}
 	{% include 'dashboards/modals/_layout_editor_modal.html' %}
-
+	{% include 'dashboards/modals/_snapshot_save_modal.html' %}
+	{% include 'dashboards/modals/_select_snapshot_modal.html' %}
+	
 	{% include 'dashboards/_scripts.html' %}
   
    </body>

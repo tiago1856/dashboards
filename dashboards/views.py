@@ -15,7 +15,7 @@ from dashboards.serializers import ComponentSerializer, ComponentSerializer2
 from dashboards.serializers import DashboardSerializer, DashboardSerializer2, DashboardSerializer3
 from dashboards.serializers import LayoutSerializer
 from dashboards.serializers import ConfigSerializer
-from dashboards.serializers import SnapshotSerializer
+from dashboards.serializers import SnapshotSerializer, SnapshotSerializer2
 from dashboards.models import Query, Component, Dashboard, Layout, Config, Snapshot
 
 from django.conf import settings
@@ -673,11 +673,15 @@ def save_snapshot(request):
       try:
          name = request.data.get('name')
          description = request.data.get('description')
+         title = request.data.get('title')
+         # query results for each component
          components_content = request.data.get('components_content')
+         # components data
          data = request.data.get('data')
          date_format = request.data.get('date_format')
          user = None
          layout = Layout.objects.get(pk = request.data.get('layout'))
+         # global stuff: date, colors, geo, ...
          global_date = request.data.get('global_date')
 
          if request.user.is_authenticated:
@@ -686,6 +690,7 @@ def save_snapshot(request):
          snapshot = Snapshot(
             name = name,
             description = description,
+            title = title,
             components_content = components_content,
             data = data,
             author = user, 
@@ -723,3 +728,78 @@ def delete_snapshot(request):
          return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
    else:
       return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(["GET"])
+def get_snapshot(request, pk):
+   """
+      Gets a specific snapshot.
+
+      Params:
+         pk (number): Snapshot ID
+   """
+   if request.method == 'GET':
+      try:
+         snapshot = Snapshot.objects.get(id=pk)
+         serializer = SnapshotSerializer(snapshot)
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Snapshot.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+#@login_required
+@api_view(["GET"])
+def list_snapshots(request):
+   """Lists all snapshots."""
+   if request.method == 'GET':
+      try:
+         snapshots = Snapshot.objects.all()
+         serializer = SnapshotSerializer2(snapshots, many=True)         
+         return Response(serializer.data, status=status.HTTP_200_OK)
+      except Snapshot.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)       
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+
+#@login_required
+@api_view(["POST"])
+def check_name_snapshot(request):
+   """
+      Checks if a snapshot with a specific name already exists.
+      If yes then returns a CONFLICT message else OK.
+
+      Body params:
+         name (string): Snapshot name
+
+      Returns:
+         {'status': 666, 'result': 'CONFLICT'}
+
+         {'status': 200, 'result': 'OK'}
+   """
+   if request.method == 'POST':
+      try:    
+         Snapshots = Snapshot.objects.filter(name = request.data.get('name'))
+         if Snapshots.count() > 0:
+            data = {'status': 666, 'result': 'CONFLICT'}
+         else: 
+            data = {'status': 200, 'result': 'OK'}
+         return Response(data, status=status.HTTP_200_OK)
+      except Snapshot.DoesNotExist:
+         return Response(status=status.HTTP_404_NOT_FOUND)
+      except Exception as e:
+         print (e)
+         return Response(status=status.HTTP_500_INTERNAL_SERVER_ERROR)         
+   else:
+      return Response(status=status.HTTP_400_BAD_REQUEST)
+
+

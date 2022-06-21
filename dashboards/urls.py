@@ -41,5 +41,8 @@ urlpatterns = [
     # snapshot
     path('api/save_snapshot/', views.save_snapshot, name="save_snapshot"),
     path('api/delete_snapshot/', views.delete_snapshot, name="delete_snapshot"),
+    path('api/get_snapshot/<int:pk>/', views.get_snapshot, name="get_snapshot"),
+    path('api/list_snapshots/', views.list_snapshots, name="list_snapshots"),
+    path('api/check_name_snapshot/', views.check_name_snapshot, name="check_name_snapshot"),
 
 ]

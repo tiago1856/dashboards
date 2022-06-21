@@ -48,5 +48,13 @@ class ConfigSerializer(serializers.ModelSerializer):
 
 class SnapshotSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Dashboard
+        model = Snapshot
         fields = '__all__'
+
+
+class SnapshotSerializer2(serializers.ModelSerializer):
+    #layout_name = serializers.ReadOnlyField(source='layout.name', read_only=True)
+    class Meta:
+        model = Snapshot
+        fields = ['id', 'name', 'description', 'date_created']
+

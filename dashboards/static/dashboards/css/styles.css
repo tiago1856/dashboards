@@ -645,4 +645,13 @@ li.date-format-selected:hover {
 .brush-component-selected {
     outline: #4CAF50 solid 10px;
 }
-  
+
+
+/* ---------*/
+/* SNAPSHOT */
+/* ---------*/
+.snapshot-dashboard {
+    border: green 4px solid; 
+    border-radius: 5px; 
+    padding: 10px;
+}
