@@ -1,6 +1,7 @@
 
 import { Div } from '../builders/BuildingBlocks.js';
 import { DashboardTitle } from './DashboardTitle.js';
+import { DashboardSubTitle } from './DashboardSubTitle.js';
 import { 
     URL_GET_COMPONENT, 
     URL_GET_LAYOUT,
@@ -13,6 +14,7 @@ import { CONTAINER_TYPE, CreateComponent } from '../Components/CreateComponent.j
 import { CommsManager } from '../comms/CommsManager.js';
 
 const DASHBOARD_CONTAINER = $('#layout-container');
+const MASTER_CONTAINER = $('#master-container');
 
 /**
  * const d = new Dashboard()
@@ -24,7 +26,7 @@ export class Dashboard extends Div {
      * @param {Context} context Context.
      * @param {number} layout_id Layout ID.
      * @param {object} data Data to restore the layout and all its components.
-     * @param {function} onReady Called when dashboard created and ready - the layout, not the components rendering.
+     * @param {object} components_content Content for each component (query results) --- used to restore a snapshot.
      */
     constructor (context, layout_id, data=null) {
         super();
@@ -42,6 +44,17 @@ export class Dashboard extends Div {
         this.components = {};
         this.changed = false;   // something changed and it's not saved
         this.data = data;
+        this.components_content = data?(data.hasOwnProperty('components_content')?data.components_content:null):null;
+
+        MASTER_CONTAINER.removeClass('snapshot-dashboard');
+
+        if (this.components_content) {
+            MASTER_CONTAINER.addClass('snapshot-dashboard');
+            context.is_snapshot = true;
+        } else {
+            MASTER_CONTAINER.removeClass('snapshot-dashboard');
+            context.is_snapshot = false;
+        }
 
         this.comms = new CommsManager(context);
 
@@ -51,7 +64,11 @@ export class Dashboard extends Div {
             (new_title) => {
                 this.title = new_title;
             }
-        ).attachTo(this);        
+        ).attachTo(this); 
+        
+        if (this.components_content) {
+            new DashboardSubTitle(context, data.name).attachTo(this); 
+        }
      
         this.onGlobalDateFormatChanged = context.signals.onGlobalDateFormatChanged.add(selected_format => {
             this.date_format = selected_format;
@@ -72,6 +89,7 @@ export class Dashboard extends Div {
                 this.components[spot] = comp;
             })
         });
+
         
     }
 
@@ -92,10 +110,11 @@ export class Dashboard extends Div {
                 const div = new Div().attachTo(display);
                 // check for legacy (old => only components data)
                 const component_data = this.data?(this.data.data.hasOwnProperty("components")?this.data.data.components[spot]:this.data.data[spot]):null;
+                const component_content = this.components_content ? this.components_content[spot]: null;
                 div.addClass("span-col-" + grid_block[0] + (grid_block[1]>1?(" span-row-" + grid_block[1]):""));
                 div.setStyle('width','100%');
                 if (this.data && (component_data.component_type === 'INFO' || component_data.component_type === 'CONTROL')) {
-                    CreateComponent(CONTAINER_TYPE.NONCARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
+                    CreateComponent(CONTAINER_TYPE.NONCARD, div, this.context, spot, null, 'light', this.data?component_data:null, false, component_content).then(component => {
                         self.components[component.spot] = component;
                         //self.components[component.spot].attachTo(div);
                         self.components[component.spot].setEditMode(self.context.edit_mode);
@@ -103,7 +122,7 @@ export class Dashboard extends Div {
                         resolve();
                     })
                 } else {
-                    CreateComponent(CONTAINER_TYPE.CARD, div, this.context, spot, null, 'light', this.data?component_data:null).then(component => {
+                    CreateComponent(CONTAINER_TYPE.CARD, div, this.context, spot, null, 'light', this.data?component_data:null, false, component_content).then(component => {
                         self.components[component.spot] = component;
                         //self.components[component.spot].attachTo(div);
                         self.components[component.spot].setEditMode(self.context.edit_mode);

@@ -33,8 +33,9 @@ export class SimpleTable extends BaseComponentContent {
 
 
 
-    async execute() {
-        const results = await this.execQuery(this.query, null);
+    async execute(component_content = null) {
+        //const results = await this.execQuery(this.query, null);
+        const results = component_content ? component_content : await this.execQuery(this.query, null);
         const component_data = this.prepareData(results, this.component.data);            
         this.table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
             this.context.signals.onCommTriggered.dispatch(this.component.data.uuid, row);

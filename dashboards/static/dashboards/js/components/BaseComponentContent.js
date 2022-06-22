@@ -40,7 +40,7 @@ export class BaseComponentContent {
     prepareData(_data) {
     }
 
-    async execute() {        
+    async execute(component_content = null) {        
     }
 
     async execQuery(query=null, rows=null) {

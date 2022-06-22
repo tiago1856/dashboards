@@ -63,7 +63,7 @@ SelectComponentModal.prototype = {
                             self.context.signals.onAYS.dispatch(MSG_DELETE_COMPONENT, () => {
                                 self.deleteComponent(row.attr('data-id'), () => {
                                     row.remove();
-                                });                                
+                                });
                             });                            
                         });
                     });

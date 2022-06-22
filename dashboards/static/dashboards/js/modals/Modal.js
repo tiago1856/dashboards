@@ -67,6 +67,7 @@ export class Modal extends Div {
         this.ok_btn = new Button('Ok').attachTo(modal_footer);
         this.ok_btn.addClass('btn btn-primary');
         this.ok_btn.setAttribute('data-dismiss', 'modal');
+
     }
 
     /**

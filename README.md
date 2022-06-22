@@ -93,7 +93,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 15 | export data / component: print |  | 
 | 16 | export data / component: pdf |  | 
 | 17 | export data / component: image |  | 
-| 18 | save dash snapshoot (all current data) | on going | 
+| 18 | save / open / delete snapshoots | *DONE* | 
 | 19 | export dash: print |  | 
 | 20 | export dash: pdf |  | 
 | 21 | export dash: image |  | 
@@ -110,5 +110,6 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 1 | loading component on an existing one => old component remains in comms | `HIGH` | delete old after the loading the new one | *SOLVED* |
 | 2 | loading multiple identical components => appears as single comp in comms | `HIGH` | loading => new uuid | *SOLVED* |
 | 3 | graph rec => editcomponentmodal::display properties => 2x same fields to select in list | `HIGH` |  |  |
+| 4 | stack modals: 2 modals open -> close 1 => can't close 2 with escape | `LOW` |  |  |
 
 

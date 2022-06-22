@@ -64,8 +64,9 @@ export class InfoSimpleRight extends BaseComponentContent {
 
 
 
-  async execute() {
-    const results = await this.execQuery(this.query, null);
+  async execute(component_content = null) {
+    //const results = await this.execQuery(this.query, null);
+    const results = component_content ? component_content : await this.execQuery(this.query, null);
     const [comp_text_1, comp_value] = this.prepareData(results, this.component.data);
     if (comp_text_1 !== '') this.text.setTextContent(comp_text_1);   
     if (comp_value) {

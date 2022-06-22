@@ -48,8 +48,9 @@ export class ComplexTable extends BaseComponentContent {
 
     }
 
-    async execute() {
-        const results = await this.execQuery(this.query, null);
+    async execute(component_content = null) {
+        //const results = await this.execQuery(this.query, null);
+        const results = component_content ? component_content : await this.execQuery(this.query, null);
         const component_data = this.prepareData(results, this.component.data);
         const table = new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => {
             console.log("selected row > ", row, this.component.data.uuid);

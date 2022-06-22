@@ -33,7 +33,6 @@ export function Context() {
 
         onComponentClicked: new Signal(),
 
-
         //onComponentChanged: new Signal(),
 
         // comms
@@ -53,7 +52,8 @@ export function Context() {
     this.changed = false;       // indicates if there was any change (save system)
     this.date_start = null;     // global starting date
     this.date_end = null;       // global end date
-
+    this.is_snapshot = false;
+    
     //this.layout = null;         // => layout and components accessible everywhere
 
     // channel to communicate with the visualization framework

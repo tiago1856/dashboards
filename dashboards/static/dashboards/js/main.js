@@ -9,10 +9,8 @@ import {
     MSG_OVERRIDE_LAYOUT, 
     MSG_NO_SAVE,
     MSG_DELETE_CURRENT_DASHBOARD,
-    MSG_DELETE_DASHBOARD,
     MSG_SAVE_DASH,
     MSG_PIN_DASH,
-    //MSG_OVERRIDE_DASHBOARD
 } from './messages.js';
 import { EditComponentModal } from './modals/EditComponentModal.js';
 import { SelectComponentModal } from './modals/SelectComponentModal.js';
@@ -27,7 +25,8 @@ import {
     URL_GET_CONFIG,
     URL_SAVE_DASHBOARD,
     URL_DELETE_DASHBOARD, 
-    URL_SAVE_SNAPSHOT,   
+    URL_SAVE_SNAPSHOT,
+    URL_GET_SNAPSHOT,
 } from "./urls.js";
 import { IconsModal } from './modals/IconsModal.js';
 import { SaveSnapshotModal } from './modals/SaveSnapshotModal.js';
@@ -244,6 +243,7 @@ context.signals.onLoadComponent.add((spot) => {
 context.signals.onLayoutEditor.add((spot) => {
     layout_editor_modal.show((new_layout_id) => {
         if (dashboard) dashboard.clear();
+        setSnapshotMode(false);
         dashboard = new Dashboard(context, new_layout_id, null);
         dashboard.init();
     });
@@ -322,6 +322,7 @@ DASHBOARD_OPEN_BTN.on('click',function() {
         getDashboard(dash_id, (result) => {
             changeSaveStatus(false);
             if (dashboard) dashboard.clear();
+            setSnapshotMode(false);
             dashboard = new Dashboard(context, result.layout, result);
             dashboard.init().then(() => {
                 date_interval.setFormat(result.date_format, false);
@@ -423,25 +424,21 @@ BRUSH_BTN.on('click',function() {
 SAVE_SNAPSHOT_BTN.on('click',function() {
     save_snapshot_modal.show((name, description) => {
         saveSnapshot(name, description, (result) => {
-            console.log("SNAPSHOT SAVED");
         });
     });
 });
 
 SELECT_SNAPSHOT_BTN.on('click',function() {
     snapshot_select_modal.show((snapshot_id) => {
-
-        console.log("load snapshot > ", snapshot_id);
-        /*
-        getDashboard(dash_id, (result) => {
-            changeSaveStatus(false);
+        getSnapshot(snapshot_id, (result) => {
             if (dashboard) dashboard.clear();
-            dashboard = new Dashboard(context, result.layout, result);
+            setSnapshotMode(true);
+            dashboard = new Dashboard(context, result.layout, result);            
             dashboard.init().then(() => {
                 date_interval.setFormat(result.date_format, false);
             });
         });
-        */
+
     });
 });
 
@@ -461,6 +458,7 @@ $(function(){
 
 
 // INIT - LO
+setSnapshotMode(false);
 if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new")) {
     localStorage.removeItem("dash_new"); 
     loadConfig((config) => {
@@ -503,6 +501,20 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
 // FUNCTIONS
 // -------------
 
+function setSnapshotMode(mode = false) {
+    if (mode) {
+        PIN_DASH_BTN.attr('disabled', true);
+        DASHBOARD_EDIT_BTN.attr('disabled', true);
+        SAVE_SNAPSHOT_BTN.attr('disabled', true);
+        DASHBOARD_NEW_BTN.attr('disabled', true);
+    } else {
+        PIN_DASH_BTN.removeAttr('disabled');
+        DASHBOARD_EDIT_BTN.removeAttr('disabled');
+        SAVE_SNAPSHOT_BTN.removeAttr('disabled');
+        DASHBOARD_NEW_BTN.removeAttr('disabled');
+    }
+}
+
 /**
  * 
  * @param {boolean} new_status 
@@ -543,6 +555,7 @@ function enterEditMode(enter=true) {
  */
 function newDashboard(layout_id/*, edit_mode = false*/) {
     if (dashboard) dashboard.clear();
+    setSnapshotMode(false);
     dashboard = new Dashboard(context, layout_id, null);
     dashboard.init().then(() => {
         $(SELECTABLE_COMPONENTS).show();
@@ -693,3 +706,16 @@ function saveSnapshot(name, description, onReady = null) {
     )
 }
 
+function getSnapshot(snapshot_id, onReady = null) {
+    $("body").css("cursor","progress");
+    fetchGET(URL_GET_SNAPSHOT + snapshot_id, 
+        (result) => {                
+            $("body").css("cursor","auto");
+            if (onReady) onReady(result);
+        },
+        (error) => {
+            $("body").css("cursor","auto");
+            context.signals.onError.dispatch(error,"[main::getSnapshot]");                
+        }
+    );
+}

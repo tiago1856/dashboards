@@ -20,6 +20,9 @@ export class AreYouSureModal extends Div {
 
 		this.dom.className = 'AYSModal';
         this.addClass('modal fade');
+        this.setAttribute('tabindex','-1'); // to enable close by escape
+        //this.setAttribute('role','dialog');
+        //this.setAttribute('aria-hidden','true');
 
         const modal_dialog = new Div().attachTo(this);
         modal_dialog.addClass('modal-dialog');
@@ -80,7 +83,6 @@ export class AreYouSureModal extends Div {
             if (context.cancel_callback)
                 context.cancel_callback();
         });
-
     }
 
     /**
@@ -89,7 +91,7 @@ export class AreYouSureModal extends Div {
      * @param {function} ok_callback Called if Ok button.
      * @param {function} cancel_callback Called if Cancel/No button.
      */
-    show(text=null, ok_callback=null, cancel_callback=null) {      
+    show(text=null, ok_callback=null, cancel_callback=null) {     
         if (text) {
             this.text.setTextContent(text);
         }

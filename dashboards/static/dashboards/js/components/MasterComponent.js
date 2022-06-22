@@ -99,7 +99,7 @@ export class MasterComponent extends Div {
        * Updates the component's content.
        * Called when something fundamental change, like creation itself or just the component's type.
        */
-      async setContent(new_query = null) {
+      async setContent(new_query = null, component_content = null) {
       }
 
       /**

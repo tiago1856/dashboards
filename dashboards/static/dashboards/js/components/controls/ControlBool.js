@@ -63,7 +63,14 @@ export class ControlBool extends BaseComponentContent {
 
   }
 
-  async execute() {
+  async execute(component_content = null) {
+    if (component_content) {
+      if (component_content) {
+        $(this.input.dom).bootstrapToggle('on');
+      } else {
+        $(this.input.dom).bootstrapToggle('off');
+      }
+    } 
   }
 
   getContents() {

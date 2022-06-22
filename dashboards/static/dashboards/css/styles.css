@@ -651,7 +651,7 @@ li.date-format-selected:hover {
 /* SNAPSHOT */
 /* ---------*/
 .snapshot-dashboard {
-    border: green 4px solid; 
+    border: red 4px solid; 
     border-radius: 5px; 
     padding: 10px;
 }

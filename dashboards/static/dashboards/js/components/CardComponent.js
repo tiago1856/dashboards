@@ -191,25 +191,17 @@ export class CardComponent extends MasterComponent {
       }
     }
 
+
     /**
      * Updates the component's content.
      * Called when something fundamental change, like creation itself or just the component's type.
      * Body recreated because the graph framework does something weird to the container.
+     * @param {string} changed_query New query
+     * @param {object} component_content All the data required to restore the content. 
+     * Example: query's result. Used to restore a snapshot.
      */
-    async setContent(changed_query = null) {
+    async setContent(changed_query = null, component_content=null) {
       super.setContent(changed_query);
-      //this.setTitle(this.data.title);
-      
-      /*
-      if (this.content) {
-        //if (!this.content.hasOwnProperty('getQuery')) return;
-        const old_query = this.content.getQuery();
-        // only update if query different
-        if (old_query && old_query === (new_query?new_query:this.data.query.query)) {
-          return;
-        }
-      }
-      */
       
       const component = getComponentProperties(this.data.component_type, this.data.visualization.visualization_type);
       if (component) {
@@ -226,7 +218,7 @@ export class CardComponent extends MasterComponent {
             this.content = null;
             this.content = new component.class(this.context, this, changed_query);
             //await delay(Math.random() * 5000);
-            await this.content.execute();
+            await this.content.execute(component_content);
             this.setSpinnerVisibility(false);
             this.context.signals.onComponentUpdated.dispatch(this, changed_query?false:true); 
         }

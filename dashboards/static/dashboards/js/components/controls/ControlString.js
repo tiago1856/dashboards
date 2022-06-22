@@ -45,7 +45,10 @@ export class ControlString extends BaseComponentContent {
 
   }
 
-  async execute() {
+  async execute(component_content = null) {
+    if (component_content) {
+      this.input.setValue(component_content);
+    }
   }
 
   getContents() {

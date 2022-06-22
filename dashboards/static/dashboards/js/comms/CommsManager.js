@@ -191,6 +191,7 @@ export class CommsManager {
 
         // 
         this.onCommTriggered = context.signals.onCommTriggered.add((uuid, new_values) => {
+            if (context.is_snapshot) return;
             console.log(uuid, new_values);
             const data_comm = {};
             new_values.forEach(data => {

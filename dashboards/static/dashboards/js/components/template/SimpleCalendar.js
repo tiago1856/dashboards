@@ -3,17 +3,15 @@ import { BaseComponentContent } from '../BaseComponentContent.js';
 
 
 export class SimpleCalendar extends BaseComponentContent {
-    constructor(context, data, parent, opt_btn, h100) {
-        super(context, data, parent);
+    constructor(context, component, new_query=null) {
+        super(context, component, new_query?new_query:component.data.query.query);
 
 
-        $(parent.dom).datetimepicker({format:'L',inline:true})
+        $(component.body.dom).datetimepicker({format:'L',inline:true})
 
-        $(opt_btn).on('click',function() {
-        });
     }
 
-    execute(onReady=null) {
-        if (onReady) onReady();
+    async execute(component_content = null) {
+        //if (onReady) onReady();
     }
 }

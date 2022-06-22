@@ -14,8 +14,9 @@ export class GraphDoubleNum extends BaseComponentContent {
         });
     }
 
-    async execute() {
-        const results = await this.execQuery(this.query, null);
+    async execute(component_content = null) {
+        //const results = await this.execQuery(this.query, null);
+        const results = component_content ? component_content : await this.execQuery(this.query, null);
         const component_data = this.prepareData(results, this.component.data);
         this.context.react_message_broker.postMessage({
             operation:'create_component', 

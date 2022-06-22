@@ -17,7 +17,7 @@ export class ControlNumberInterval extends BaseComponentContent {
 
   }
 
-  async execute() {
+  async execute(component_content = null) {
   }
 }
 

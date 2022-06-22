@@ -546,8 +546,9 @@ def list_in_use_layouts(request):
    """Lists all layouts that are currently in use by any dashboard."""
    if request.method == 'GET':
       try:
-         layouts = Dashboard.objects.order_by().values('layout').distinct().values_list('layout', flat=True)
-         return Response(list(layouts), status=status.HTTP_200_OK)
+         layouts_dashboards = Dashboard.objects.order_by().values('layout').distinct().values_list('layout', flat=True)
+         layouts_snapshots = Snapshot.objects.order_by().values('layout').distinct().values_list('layout', flat=True)
+         return Response(list(layouts_dashboards) + list(layouts_snapshots), status=status.HTTP_200_OK)
       except Dashboard.DoesNotExist:
          return Response(status=status.HTTP_404_NOT_FOUND)
       except Exception as e:
