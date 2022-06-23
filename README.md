@@ -90,7 +90,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 12 | options tables => whenc reating if options null => get default values from simple table | *DONE* | 
 | 13 | export data / component: excel | *DONE* | 
 | 14 | export data / component: csv | *DONE* | 
-| 15 | export data / component: print |  | 
+| 15 | export data / component: print | *DONE* | 
 | 16 | export data / component: pdf | *DONE* | 
 | 17 | export data / component: image | *DONE* | 
 | 18 | save / open / delete snapshoots | *DONE* | 

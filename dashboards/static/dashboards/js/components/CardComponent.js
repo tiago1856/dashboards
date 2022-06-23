@@ -6,8 +6,10 @@ import { MasterComponent } from './MasterComponent.js';
 import { OptionsMenu } from '../options/OptionsMenu.js';
 import { ExportMenu } from './ExportMenu.js';
 import { MSG_NO_DATA_2_EXPORT } from '../messages.js';
+import { printCanvas } from '../utils/jsprint.js';
 
-const { PDFDocument, PageSizes } = PDFLib
+
+
 
 /**
  * Container for all type of components (except the INFO).
@@ -57,6 +59,28 @@ export class CardComponent extends MasterComponent {
         export_btn.setAttribute('data-toggle','dropdown');
         ExportMenu(() => {
             // print
+            if (!this.content || !this.content.result || !this.body) {
+              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+              return;
+            }
+            const currentPosition_y = this.body.dom.scrollTop;
+            const currentPosition_x = this.body.dom.scrollLeft;
+            const height = this.body.dom.style.height;
+            const width = this.body.dom.style.width;
+            this.body.dom.style.height="auto";
+            this.body.dom.style.width=(this.body.dom.scrollWidth + 15) + "px";
+            $("body").css("cursor","progress");
+            html2canvas(this.body.dom, {logging:false}).then(canvas => {
+                printCanvas(canvas);
+
+                this.body.dom.style.height=height;
+                this.body.dom.style.width=width;
+                this.body.dom.scrollTop = currentPosition_y;
+                this.body.dom.scrollLeft = currentPosition_x;
+                $("body").css("cursor","auto");
+            }).catch(() => {
+              $("body").css("cursor","auto");
+            });            
           }, () => {
           	// pdf
             if (!this.content || !this.content.result || !this.body) {
@@ -71,6 +95,7 @@ export class CardComponent extends MasterComponent {
             this.body.dom.style.width=(this.body.dom.scrollWidth + 15) + "px";
             $("body").css("cursor","progress");
             html2canvas(this.body.dom, {logging:false, scale: 1}).then(canvas => {
+                const { PDFDocument, PageSizes } = PDFLib
                 PDFDocument.create().then(pdfDoc => {
                     const page = pdfDoc.addPage(PageSizes.A4);
                     const img = canvas.toDataURL('image/png');
@@ -330,14 +355,3 @@ const toolButton = (icon, classes, title) => {
 
 
 
-export async function dataUrlToFile(dataUrl, fileName) {
-
-  const res = await fetch(dataUrl);
-  const blob = await res.blob();
-  return new File([blob], fileName, { type: 'image/png' });
-}
-
-
-function delay(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
