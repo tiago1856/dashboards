@@ -32,6 +32,24 @@ export const ExportMenu = (onPrint=null, onPDF=null, onImage=null, onExcel=null,
     csv_link.addClass('dropdown-item');
     csv_link.setTextContent('CSV');
 
+    if (onPrint) {
+      $(print_link.dom).on('click',() => {
+        onPrint();
+      })
+    }
+
+    if (onPDF) {
+      $(pdf_link.dom).on('click',() => {
+        onPDF();
+      })
+    }
+    
+    if (onImage) {
+      $(image_link.dom).on('click',() => {
+        onImage();
+      })
+    }    
+
     if (onExcel) {
       $(excel_link.dom).on('click',() => {
         onExcel();

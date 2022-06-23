@@ -91,8 +91,8 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 13 | export data / component: excel | *DONE* | 
 | 14 | export data / component: csv | *DONE* | 
 | 15 | export data / component: print |  | 
-| 16 | export data / component: pdf |  | 
-| 17 | export data / component: image |  | 
+| 16 | export data / component: pdf | *DONE* | 
+| 17 | export data / component: image | *DONE* | 
 | 18 | save / open / delete snapshoots | *DONE* | 
 | 19 | export dash: print |  | 
 | 20 | export dash: pdf |  | 
