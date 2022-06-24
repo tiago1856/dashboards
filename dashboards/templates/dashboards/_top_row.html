@@ -19,9 +19,20 @@
                 <button id="location-btn" class="btn btn-outline-secondary mr-1" type="button" data-toggle="tooltip" title="Selecionar localização">
                     <i class="fa fa-map-marked-alt"></i> 
                 </button>
-                <button id="print-btn" class="btn btn-outline-secondary mr-1 non-editable-component" type="button" data-toggle="tooltip" title="Imprimir">
-                    <i class="fa fa-print"></i> 
-                </button>
+ 
+                <div class="dropdown">
+                    <button type="button" class="btn btn-outline-secondary dropdown-toggle" data-toggle="dropdown">
+                      Imprimir / Exportar
+                    </button>
+                    <div class="dropdown-menu">
+                      <a id="dash-print" class="dropdown-item" href="javascript:void(0);"><i class="fa fa-print"></i> Imprimir</a>
+                      <a id="dash-pdf" class="dropdown-item" href="javascript:void(0);"><i class="fa fa-file-pdf"></i> PDF</a>
+                      <a id="dash-image" class="dropdown-item" href="javascript:void(0);"><i class="fa fa-image"></i> Image</a>
+                      <div class="dropdown-divider"></div>
+                      <a id="dash-excel" class="dropdown-item" href="javascript:void(0);"><i class="fa fa-file-excel"></i> Excel</a>
+                      <a id="dash-csv" class="dropdown-item" href="javascript:void(0);"><i class="fa fa-file-csv"></i> CSV (zip)</a>
+                    </div>
+                  </div>                
             </div>        
         </div>
         

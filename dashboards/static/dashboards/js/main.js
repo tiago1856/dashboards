@@ -47,7 +47,6 @@ const EDIT_APPLY_BTN = $('#edit-apply-btn');
 const DASHBOARD_OPEN_BTN = $('#open-btn');
 const DISPLAY_LAYOUT_MODAL = $('#layout-choice-btn');
 const LOCATION_BTN = $('#location-btn');
-const DASHBOARD_PRINT_BTN = $('#print-btn');
 const DASHBOARD_NEW_BTN = $('#new-btn');
 const DASHBOARD_DELETE_BTN = $('#delete-btn');
 const SWAP_BTN = $('#swap-btn');
@@ -60,6 +59,12 @@ const LAYOUT_SCREEN = $('#layout-tab-content');
 const BRUSH_BTN = $('#brush-btn');
 const SAVE_SNAPSHOT_BTN = $('#snapshot-save-btn');
 const SELECT_SNAPSHOT_BTN = $('#snapshot-select-btn');
+
+const DASH_PRINT = $('#dash-print');
+const DASH_PDF = $('#dash-pdf');
+const DASH_IMAGE = $('#dash-image');
+const DASH_EXCEL = $('#dash-excel');
+const DASH_CSV = $('#dash-csv');
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -350,9 +355,6 @@ DISPLAY_LAYOUT_MODAL.on('click',function() {
 LOCATION_BTN.on('click',function() {
 });
 
-// PRINT DASHBOARD
-DASHBOARD_PRINT_BTN.on('click',function() {
-});
 
 // SAVE DASHBOARD
 DASHBOARD_SAVE_BTN.on('click',function() {
@@ -442,6 +444,20 @@ SELECT_SNAPSHOT_BTN.on('click',function() {
     });
 });
 
+
+DASH_PRINT.on('click',function() {
+    window.print();
+    //printwin.document.write(document.getElementById("TARGET").innerHTML);
+    //printwin.print(); 
+});
+DASH_PDF.on('click',function() {
+});
+DASH_IMAGE.on('click',function() {
+});
+DASH_EXCEL.on('click',function() {
+});
+DASH_CSV.on('click',function() {
+});
 
 // -------------
 // INIT

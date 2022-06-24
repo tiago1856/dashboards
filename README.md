@@ -1,5 +1,18 @@
 # dashboards
 
+## Notes
+
+BasicTable and ComplexTable have a limit of **20**:
+
+```bash
+...
+new BasicTable(component_data, 20, this.component.data.data_config.fields, (row) => 
+...
+```
+
+To remove this limit, set a negative value.
+
+
 ## Requirements
 
 * Python >= 3.7.x
@@ -97,8 +110,8 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 19 | export dash: print |  | 
 | 20 | export dash: pdf |  | 
 | 21 | export dash: image |  | 
-| 22 | component options: page orientation and size |  | 
-| 23 | editcomponentmodal: export to excel - use XLSX lib |  | 
+| 22 | ~~component options: page orientation and size~~ |  | 
+| 23 | editcomponentmodal: export to excel - use XLSX lib | *DONE* | 
 | 24 | delete dashboard: select dash / current dash | *DONE* | 
 | 25 |  |  | 
 
