@@ -595,7 +595,7 @@ function loadConfig(onReady = null) {
         },
         (error) => {
             $("body").css("cursor","auto");
-            context.signals.onError.dispatch(error,"[main::loadConfig]");                
+            context.signals.onError.dispatch(error,"[main::loadConfig]");
         }
     );
 }

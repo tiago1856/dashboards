@@ -6,7 +6,12 @@ import { OptionsMenu } from '../options/OptionsMenu.js';
 import { ExportMenu } from './ExportMenu.js';
 import { MSG_NO_DATA_2_EXPORT } from '../messages.js';
 import { printCanvas } from '../utils/jsprint.js';
-
+import { exportJson2ExcelCsv } from '../export/ExcelCsv.js';
+import { 
+  exportComponentBody2PDF, 
+  exportComponentBody2PNG, 
+  getComponentBodyCanvas 
+} from '../export/ComponentBody.js';
 
 
 /**
@@ -47,148 +52,58 @@ export class NonCardComponent extends MasterComponent {
         const export_btn = toolButton('fas fa-file-export', 'non-editable-component info-component-button dropdown-toggle', 'Exportar/Imprimir component').attachTo(dop);
         export_btn.setAttribute('data-toggle','dropdown');
         ExportMenu(() => {
-            // print
-            if (!this.content || !this.content.result || !this.body) {
-              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
-              return;
-            }
-            const currentPosition_y = this.body.dom.scrollTop;
-            const currentPosition_x = this.body.dom.scrollLeft;
-            const height = this.body.dom.style.height;
-            const width = this.body.dom.style.width;
-            this.body.dom.style.height="auto";
-            this.body.dom.style.width=(this.body.dom.scrollWidth + 15) + "px";
-            $("body").css("cursor","progress");
-            html2canvas(this.body.dom, {logging:false}).then(canvas => {
-                printCanvas(canvas);
-
-                this.body.dom.style.height=height;
-                this.body.dom.style.width=width;
-                this.body.dom.scrollTop = currentPosition_y;
-                this.body.dom.scrollLeft = currentPosition_x;
-                $("body").css("cursor","auto");
-            }).catch(() => {
-              $("body").css("cursor","auto");
-            });              
-          }, () => {
-          	// pdf
-            if (!this.content || !this.content.result || !this.body) {
-              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
-              return;
-            }
-            const currentPosition_y = this.body.dom.scrollTop;
-            const currentPosition_x = this.body.dom.scrollLeft;
-            const height = this.body.dom.style.height;
-            const width = this.body.dom.style.width;
-            this.body.dom.style.height="auto";
-            this.body.dom.style.width=(this.body.dom.scrollWidth + 15) + "px";
-            $("body").css("cursor","progress");
-            html2canvas(this.body.dom, {logging:false, scale: 1}).then(canvas => {
-                const { PDFDocument, PageSizes } = PDFLib
-                PDFDocument.create().then(pdfDoc => {
-                    const page = pdfDoc.addPage(PageSizes.A4);
-                    const img = canvas.toDataURL('image/png');
-                    const w_ratio = page.getWidth() / canvas.width;
-                    const h_ratio = page.getHeight() / canvas.height;
-                    const ratio = w_ratio < h_ratio ? w_ratio : h_ratio;
-                    pdfDoc.embedPng(img).then (pngImage => {
-                      page.drawImage(pngImage, {
-                        x: page.getWidth() / 2 - canvas.width * ratio / 2,
-                        y: page.getHeight() - canvas.height * ratio,
-                        width: canvas.width * ratio,
-                        height: canvas.height * ratio,
-                      })                     
-                      pdfDoc.save().then(pdfBytes => {
-                          var file = new File([pdfBytes], data.name + '.pdf', {
-                            type: "application/pdf;charset=utf-8",
-                          });
-                          $("body").css("cursor","auto");
-                          saveAs(file);
-                      }).catch(() => {
-                        $("body").css("cursor","auto");
-                      });
-                      this.body.dom.style.height=height;
-                      this.body.dom.style.width=width;
-                      this.body.dom.scrollTop = currentPosition_y;
-                      this.body.dom.scrollLeft = currentPosition_x;
-                    }).catch(() => {
-                      $("body").css("cursor","auto");
-                    });
-                }).catch(() => {
-                  $("body").css("cursor","auto");
-                });
-              })
-
-          }, () => {
-            // image
-            if (!this.content || !this.content.result || !this.body) {
-              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
-              return;
-            }
-            const currentPosition_y = this.body.dom.scrollTop;
-            const currentPosition_x = this.body.dom.scrollLeft;
-            const height = this.body.dom.style.height;
-            const width = this.body.dom.style.width;
-            this.body.dom.style.height="auto";
-            this.body.dom.style.width=(this.body.dom.scrollWidth + 15) + "px";
-            $("body").css("cursor","progress");
-            html2canvas(this.body.dom, {logging:false}).then(canvas => {
-                var link = document.createElement('a');
-                link.download = data.name + '.png';
-                link.href = canvas.toDataURL()
-                link.click();
-                link.remove();
-                this.body.dom.style.height=height;
-                this.body.dom.style.width=width;
-                this.body.dom.scrollTop = currentPosition_y;
-                this.body.dom.scrollLeft = currentPosition_x;
-                $("body").css("cursor","auto");
-            }).catch(() => {
-              $("body").css("cursor","auto");
-            });
-          }, () => {
-            // image
-            if (!this.content || !this.content.result || !this.body) {
-              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
-              return;
-            }
-            const currentPosition_y = this.body.dom.scrollTop;
-            const currentPosition_x = this.body.dom.scrollLeft;
-            const height = this.body.dom.style.height;
-            const width = this.body.dom.style.width;
-            this.body.dom.style.height="auto";
-            this.body.dom.style.width=(this.body.dom.scrollWidth + 15) + "px";
-            html2canvas(this.body.dom, {logging:false}).then(canvas => {
-                var link = document.createElement('a');
-                link.download = data.name + '.png';
-                link.href = canvas.toDataURL()
-                link.click();
-                link.remove();
-                this.body.dom.style.height=height;
-                this.body.dom.style.width=width;
-                this.body.dom.scrollTop = currentPosition_y;
-                this.body.dom.scrollLeft = currentPosition_x;
-            });
-          }, () => {
-            // excel
-            if (!this.content || !this.content.result) {
-              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
-              return;
-            }
-            var ws = XLSX.utils.json_to_sheet(this.content.result);
-            var wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "data");
-            XLSX.writeFile(wb,data.name + '.xlsx');
-          }, () => {
-            //csv
-            if (!this.content || !this.content.result) {
-              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
-              return;
-            }
-            var ws = XLSX.utils.json_to_sheet(this.content.result);
-            var wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "data");
-            XLSX.writeFile(wb,data.name + '.csv');         
+          // print
+          if (!this.content || !this.content.result || !this.body) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }           
+          $("body").css("cursor","progress");
+          getComponentBodyCanvas(this.body.dom).then(canvas => {
+            printCanvas(canvas);
+            $("body").css("cursor","auto");
+          }).catch(() => {
+            $("body").css("cursor","auto");
+          });            
+        }, () => {
+          // pdf
+          if (!this.content || !this.content.result || !this.body) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }            
+          $("body").css("cursor","progress");
+          exportComponentBody2PDF(this.body.dom, data.name).then(()=> {
+            $("body").css("cursor","auto");
+          }).catch((error) => {
+            this.context.signals.onError.dispatch(error,"[CardComponent::ctor]");
+            $("body").css("cursor","auto");
+          });            
+        }, () => {
+          // image
+          if (!this.content || !this.content.result || !this.body) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }
+          $("body").css("cursor","progress");
+          exportComponentBody2PNG(this.body.dom, data.name).then(()=> {
+            $("body").css("cursor","auto");
+          }).catch((error) => {
+            this.context.signals.onError.dispatch(error,"[NonCardComponent::ctor]");
+            $("body").css("cursor","auto");
+          });            
+        }, () => {
+          // excel
+          if (!this.content || !this.content.result) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }
+          exportJson2ExcelCsv(this.content.result, data.name, '.xlsx');
+        }, () => {
+          //csv
+          if (!this.content || !this.content.result) {
+            this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+            return;
+          }
+          exportJson2ExcelCsv(this.content.result, data.name, '.xlsx');
         }).attachTo(dop)
 
 
