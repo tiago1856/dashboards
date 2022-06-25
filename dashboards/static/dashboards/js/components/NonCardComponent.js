@@ -6,12 +6,12 @@ import { OptionsMenu } from '../options/OptionsMenu.js';
 import { ExportMenu } from './ExportMenu.js';
 import { MSG_NO_DATA_2_EXPORT } from '../messages.js';
 import { printCanvas } from '../utils/jsprint.js';
-import { exportJson2ExcelCsv } from '../export/ExcelCsv.js';
+import { exportObject2ExcelCsv } from '../export/ExcelCsv.js';
 import { 
-  exportComponentBody2PDF, 
-  exportComponentBody2PNG, 
-  getComponentBodyCanvas 
-} from '../export/ComponentBody.js';
+  exportArea2PDF, 
+  exportArea2PNG, 
+  getAreaCanvas 
+} from '../export/ElementArea.js';
 
 
 /**
@@ -58,7 +58,7 @@ export class NonCardComponent extends MasterComponent {
             return;
           }           
           $("body").css("cursor","progress");
-          getComponentBodyCanvas(this.body.dom).then(canvas => {
+          getAreaCanvas(this.body.dom).then(canvas => {
             printCanvas(canvas);
             $("body").css("cursor","auto");
           }).catch(() => {
@@ -71,7 +71,7 @@ export class NonCardComponent extends MasterComponent {
             return;
           }            
           $("body").css("cursor","progress");
-          exportComponentBody2PDF(this.body.dom, data.name).then(()=> {
+          exportArea2PDF(this.body.dom, data.name).then(()=> {
             $("body").css("cursor","auto");
           }).catch((error) => {
             this.context.signals.onError.dispatch(error,"[CardComponent::ctor]");
@@ -84,7 +84,7 @@ export class NonCardComponent extends MasterComponent {
             return;
           }
           $("body").css("cursor","progress");
-          exportComponentBody2PNG(this.body.dom, data.name).then(()=> {
+          exportArea2PNG(this.body.dom, data.name).then(()=> {
             $("body").css("cursor","auto");
           }).catch((error) => {
             this.context.signals.onError.dispatch(error,"[NonCardComponent::ctor]");
@@ -96,14 +96,14 @@ export class NonCardComponent extends MasterComponent {
             this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
             return;
           }
-          exportJson2ExcelCsv(this.content.result, data.name, '.xlsx');
+          exportObject2ExcelCsv(this.content.result, data.name, '.xlsx');
         }, () => {
           //csv
           if (!this.content || !this.content.result) {
             this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
             return;
           }
-          exportJson2ExcelCsv(this.content.result, data.name, '.xlsx');
+          exportObject2ExcelCsv(this.content.result, data.name, '.xlsx');
         }).attachTo(dop)
 
 

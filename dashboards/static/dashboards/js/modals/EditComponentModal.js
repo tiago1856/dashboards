@@ -18,7 +18,7 @@ import { MSG_DELETE_QUERY } from '../messages.js';
 import { getAllNumbers } from '../utils/jsutils.js';
 import { VISUALIZATION_TYPE } from "../components/VisualizationType.js";
 import { MSG_NO_DATA_2_EXPORT } from '../messages.js';
-import { exportJson2ExcelCsv } from '../export/ExcelCsv.js';
+import { exportObject2ExcelCsv } from '../export/ExcelCsv.js';
 
 
 const EDIT_COMPONENT_MODAL = $('#edit-component-modal');
@@ -167,13 +167,7 @@ export function EditComponentModal(context) {
             context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
             return;
         }
-        /*
-        var ws = XLSX.utils.json_to_sheet(self.query_result);
-        var wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "data");
-        XLSX.writeFile(wb,self.state.name + '.xlsx');
-        */
-        exportJson2ExcelCsv(self.query_result, self.state.name, '.xlsx');
+        exportObject2ExcelCsv(self.query_result, self.state.name, '.xlsx');
     })
 
     // EXPORTs TABLE TO CSV

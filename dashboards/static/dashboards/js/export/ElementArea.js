@@ -1,11 +1,12 @@
 
 
 /**
- * Get a canvas representing the contents of a component's body.
+ * Get a canvas representing the contents of a scrollable area.
+ * It expands the area, put the contents in a canvas, restores the area.
  * @param {node} body Component body.
  * @returns Canvas.
  */
-export async function getComponentBodyCanvas(body = null) {
+export async function getAreaCanvas(body = null) {
     if (!body) return null;
 
     const currentPosition_y = body.scrollTop;
@@ -27,7 +28,7 @@ export async function getComponentBodyCanvas(body = null) {
 
 // ----------------------------
 // ----------------------------
-// COMPONENT BODY -> PDF
+// SCROLLABLE AREA -> PDF
 // ----------------------------
 // ----------------------------
 
@@ -64,31 +65,31 @@ export async function exportCanvas2PDF(canvas = null, filename = 'component') {
 }
 
 /**
- * Creates a PDF file from the contents of a component's body.
+ * Creates a PDF file from a scrollable area.
  * @param {node} body Component body.
  * @param {string} filename PDF output file.
  * @returns 
  */
-export async function exportComponentBody2PDF(body=null, filename='component') {
-    const canvas = await getComponentBodyCanvas(body);
+export async function exportArea2PDF(body=null, filename='component') {
+    const canvas = await getAreaCanvas(body);
     if (!canvas) return null;
     return await exportCanvas2PDF(canvas, filename);
 }
 
 // ----------------------------
 // ----------------------------
-// COMPONENT BODY -> IMAGE
+// SCROLLABLE AREA -> IMAGE
 // ----------------------------
 // ----------------------------
 
 /**
- * Creates a PNG file from the contents of a component's body.
+ * Creates a PNG file from a scrollable area.
  * @param {node} body Component body.
  * @param {string} filename PDF output file.
  * @returns 
  */
-export async function exportComponentBody2PNG(body=null, filename='component') {
-    const canvas = await getComponentBodyCanvas(body);
+export async function exportArea2PNG(body=null, filename='component') {
+    const canvas = await getAreaCanvas(body);
     if (!canvas) return null;
     var link = document.createElement('a');
     link.download = filename + '.png';
