@@ -33,7 +33,14 @@ export class ControlNumber extends BaseComponentContent {
       this.input = new Input().attachTo(slider);
       this.input.addClass('slider');
       this.input.setAttribute('type','range');
-      this.input.setAttribute('value', component.data.data_config.default);
+
+      let init_value = component.data.data_config.default;
+      if (component.data.data_config.default < component.data.data_config.min) 
+        init_value = component.data.data_config.min;
+      else if (component.data.data_config.default > component.data.data_config.max) 
+        init_value = component.data.data_config.max;
+
+      this.input.setAttribute('value', init_value);
       this.input.setAttribute('min', component.data.data_config.min);
       this.input.setAttribute('max', component.data.data_config.max);
       this.input.setAttribute('step', component.data.data_config.step);
@@ -44,12 +51,12 @@ export class ControlNumber extends BaseComponentContent {
 
       this.value = new Span().attachTo(slider);
       this.value.addClass('slider-output2');
-      this.value.setTextContent(component.data.data_config.default);
-              
-            
+      this.value.setTextContent(init_value);            
+ 
       $(this.input.dom).on('change', function(e) {
         const _value = $(this).val();
         self.value.setTextContent(_value);
+        this.result[0].value = this.input.getValue();
         context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       })
 
@@ -60,14 +67,20 @@ export class ControlNumber extends BaseComponentContent {
 
       $(sync_btn.dom).on('click', (e) => {
         const _value = this.input.getValue();
+        this.result[0].value = _value;
         context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       });
+
   }
 
   async execute(component_content = null) {
+    this.result = [{name: this.component.data.data_config.name}];
     if (component_content) {
       this.input.setValue(component_content);
       this.value.setTextContent(component_content);
+      this.result[0].value = component_content;
+    } else {
+      this.result[0].value = this.input.getValue();
     }
   }
 

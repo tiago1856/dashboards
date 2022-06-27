@@ -52,25 +52,31 @@ export class ControlBool extends BaseComponentContent {
 
     $(this.input.dom).on('change', function(e) {
       const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;//$(this).val();
+      this.result[0].value = _value;
      context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
     })
 
     $(sync_btn.dom).on('click', function(e) {
       const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;
+      this.result[0].value = _value;
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
     });    
 
   }
 
   async execute(component_content = null) {
+    this.result = [{name: this.component.data.data_config.name}];
     if (component_content) {
       if (component_content) {
         $(this.input.dom).bootstrapToggle('on');
       } else {
         $(this.input.dom).bootstrapToggle('off');
       }
-    } 
+      this.result[0].value = component_content;
+    } else {
+      this.result[0].value = $(this.input.dom).prop('checked');
+    }
   }
 
   getContents() {

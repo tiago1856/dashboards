@@ -92,7 +92,7 @@ export class NonCardComponent extends MasterComponent {
           });            
         }, () => {
           // excel
-          if (!this.content || !this.content.result) {
+          if (!this.content || !this.content.result) {            
             this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
             return;
           }

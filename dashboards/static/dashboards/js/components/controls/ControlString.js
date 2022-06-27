@@ -32,6 +32,7 @@ export class ControlString extends BaseComponentContent {
 
     $(this.input.dom).on('change', function(e) {
       const _value = $(this).val();
+      this.result[0].value = _value;
       //context.signals.onCommTriggered.dispatch(component.data.uuid, component.data.data_config.name, _value);
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
@@ -39,6 +40,7 @@ export class ControlString extends BaseComponentContent {
 
     $(sync_btn.dom).on('click', (e) => {
       const _value = this.input.getValue();
+      this.result[0].value = _value;
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
     });    
 
@@ -46,8 +48,12 @@ export class ControlString extends BaseComponentContent {
   }
 
   async execute(component_content = null) {
+    this.result = [{name: this.component.data.data_config.name}];
     if (component_content) {
       this.input.setValue(component_content);
+      this.result[0].value = component_content;
+    } else {
+      this.result[0].value = this.input.getValue();
     }
   }
 
