@@ -11,6 +11,8 @@ import {
     MSG_DELETE_CURRENT_DASHBOARD,
     MSG_SAVE_DASH,
     MSG_PIN_DASH,
+    MSG_NO_DATA_2_EXPORT,
+    MSG_EXPORT_ERROR,
 } from './messages.js';
 import { EditComponentModal } from './modals/EditComponentModal.js';
 import { SelectComponentModal } from './modals/SelectComponentModal.js';
@@ -31,7 +33,7 @@ import {
 import { IconsModal } from './modals/IconsModal.js';
 import { SaveSnapshotModal } from './modals/SaveSnapshotModal.js';
 import { SelectSnapshotModal } from './modals/SelectSnapshotModal.js';
-
+import { exportObject2Excel } from './export/ExcelCsv.js';
 
 // -----------------
 // --- CONSTANTS ---
@@ -64,7 +66,6 @@ const DASH_PRINT = $('#dash-print');
 const DASH_PDF = $('#dash-pdf');
 const DASH_IMAGE = $('#dash-image');
 const DASH_EXCEL = $('#dash-excel');
-const DASH_CSV = $('#dash-csv');
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -455,9 +456,16 @@ DASH_PDF.on('click',function() {
 DASH_IMAGE.on('click',function() {
 });
 DASH_EXCEL.on('click',function() {
+    if (!dashboard) {
+        context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+        return;
+    }
+    const [data, names] = dashboard.getComponentsExportData();
+    if (!exportObject2Excel(data, names, dashboard.title ? (dashboard.title + '.xlsx') : 'export.xlsx')) {
+        context.signals.onError.dispatch(MSG_EXPORT_ERROR,"[main::DASH_EXCEL]");
+    }
 });
-DASH_CSV.on('click',function() {
-});
+
 
 // -------------
 // INIT
@@ -502,7 +510,7 @@ if (localStorage.getItem("dash_new") === null || !localStorage.getItem("dash_new
     dashboard = new Dashboard(context, DEFAULT_LAYOUT, null);
     dashboard.init().then(() => {
         new_dash = true;
-        changeSaveStatus(true);
+       // changeSaveStatus(true);
         localStorage.removeItem("dash_new"); 
     });
 }

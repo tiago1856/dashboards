@@ -14,3 +14,4 @@ export const MSG_PIN_DASH = "Definir este Dashboard como o de abertura?";
 export const MSG_NO_DATA_2_EXPORT = "Não existem dados para exportar!";
 
 export const MSG_DELETE_SNAPSHOT = "De certeza que deseja apagar o snapshot selecionado?";
+export const MSG_EXPORT_ERROR = "Erro na exportação de dados!";

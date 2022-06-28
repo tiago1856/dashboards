@@ -110,10 +110,11 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 19 | export dash: print |  | 
 | 20 | export dash: pdf |  | 
 | 21 | export dash: image |  | 
-| 22 | ~~component options: page orientation and size~~ |  | 
-| 23 | editcomponentmodal: export to excel - use XLSX lib | *DONE* | 
-| 24 | delete dashboard: select dash / current dash | *DONE* | 
-| 25 |  |  | 
+| 22 | export dash: excel | *DONE* | 
+| 23 | ~~component options: page orientation and size~~ |  | 
+| 24 | editcomponentmodal: export to excel - use XLSX lib | *DONE* | 
+| 25 | delete dashboard: select dash / current dash | *DONE* | 
+| 26 |  |  | 
 
 
 ## Bugs to solve

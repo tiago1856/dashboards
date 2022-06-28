@@ -12,6 +12,7 @@ import { COMPONENT_TYPE } from "../Components/ComponentType.js";
 import { DEFAULT_DATE_FORMAT } from '../constants.js';
 import { CONTAINER_TYPE, CreateComponent } from '../Components/CreateComponent.js';
 import { CommsManager } from '../comms/CommsManager.js';
+import { subStr } from '../utils/jsutils.js';
 
 const DASHBOARD_CONTAINER = $('#layout-container');
 const MASTER_CONTAINER = $('#master-container');
@@ -290,6 +291,22 @@ export class Dashboard extends Div {
         }
         data['components_content'] = components_content;
         return data;
+    }
+
+    /**
+     * 
+     * @returns 
+     */
+    getComponentsExportData() {
+        const data = [];
+        const names = [];
+        for (const spot in this.components){
+            const _data = this.components[spot].content.getContents();
+            if (!_data) continue;
+            data.push(_data);
+            names.push(subStr(this.components[spot].data.name, 27,27));            
+        }
+        return [data, names];
     }
 
 
