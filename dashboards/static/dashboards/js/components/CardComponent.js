@@ -73,6 +73,7 @@ export class CardComponent extends MasterComponent {
               $("body").css("cursor","auto");
             }).catch(() => {
               $("body").css("cursor","auto");
+              this.context.signals.onError.dispatch(error,"[CardComponent::ctor]");
             });            
           }, () => {
           	// pdf

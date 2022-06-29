@@ -26,6 +26,12 @@ export async function getAreaCanvas(body = null) {
     return canvas;
 }
 
+export async function getSimpleAreaCanvas(body = null) {
+    if (!body) return null;
+    const canvas = await html2canvas(body, {logging:false, scale: 1});
+    return canvas;
+}
+
 // ----------------------------
 // ----------------------------
 // SCROLLABLE AREA -> PDF
@@ -75,6 +81,7 @@ export async function exportArea2PDF(body=null, filename='component') {
     if (!canvas) return null;
     return await exportCanvas2PDF(canvas, filename);
 }
+
 
 // ----------------------------
 // ----------------------------

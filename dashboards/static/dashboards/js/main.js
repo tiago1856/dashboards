@@ -34,6 +34,13 @@ import { IconsModal } from './modals/IconsModal.js';
 import { SaveSnapshotModal } from './modals/SaveSnapshotModal.js';
 import { SelectSnapshotModal } from './modals/SelectSnapshotModal.js';
 import { exportObject2Excel } from './export/ExcelCsv.js';
+import { 
+    exportArea2PDF, 
+    exportArea2PNG, 
+    getAreaCanvas 
+} from './export/ElementArea.js';
+import { printCanvas } from './utils/jsprint.js';
+
 
 // -----------------
 // --- CONSTANTS ---
@@ -66,6 +73,8 @@ const DASH_PRINT = $('#dash-print');
 const DASH_PDF = $('#dash-pdf');
 const DASH_IMAGE = $('#dash-image');
 const DASH_EXCEL = $('#dash-excel');
+
+const LAYOUT_CONTAINER = $('#layout-container');
 
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
@@ -447,14 +456,37 @@ SELECT_SNAPSHOT_BTN.on('click',function() {
 
 
 DASH_PRINT.on('click',function() {
-    window.print();
-    //printwin.document.write(document.getElementById("TARGET").innerHTML);
-    //printwin.print(); 
+   // window.print();
+    $("body").css("cursor","progress");
+    getAreaCanvas(LAYOUT_CONTAINER.get(0)).then(canvas => {
+      printCanvas(canvas);
+      $("body").css("cursor","auto");
+    }).catch(() => {
+      $("body").css("cursor","auto");
+      this.context.signals.onError.dispatch(error,"[CardComponent::ctor]");
+    }); 
 });
+
 DASH_PDF.on('click',function() {
+    $("body").css("cursor","progress");
+    exportArea2PDF(LAYOUT_CONTAINER.get(0), dashboard.title ? dashboard.title : 'export').then(()=> {
+      $("body").css("cursor","auto");
+    }).catch((error) => {
+      this.context.signals.onError.dispatch(error,"[main::DASH_PDF]");
+      $("body").css("cursor","auto");
+    }); 
 });
-DASH_IMAGE.on('click',function() {
+
+DASH_IMAGE.on('click',function() {    
+    $("body").css("cursor","progress");
+    exportArea2PNG(LAYOUT_CONTAINER.get(0), dashboard.title ? dashboard.title : 'export').then(()=> {
+      $("body").css("cursor","auto");
+    }).catch((error) => {
+      context.signals.onError.dispatch(error,"[main::DASH_IMAGE]");
+      $("body").css("cursor","auto");
+    });  
 });
+
 DASH_EXCEL.on('click',function() {
     if (!dashboard) {
         context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
