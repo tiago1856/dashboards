@@ -76,6 +76,9 @@ const DASH_EXCEL = $('#dash-excel');
 
 const LAYOUT_CONTAINER = $('#layout-container');
 
+const ZOOM_MODAL_BODY = $("#zoom-modal-body");
+const ZOOM_MODAL_TITLE = $("#zoom-modal-title");
+
 const PAGE_URL = '/dashboards';
 const SELECTABLE_COMPONENTS = '.editable-component';
 const NON_SELECTABLE_COMPONENTS = '.non-editable-component';
@@ -213,12 +216,18 @@ context.signals.onChanged.add(() => {
     changeSaveStatus(true);
 });
 
-context.signals.onZoomComponent.add((msg, body) => {
+// zoom only for card components
+context.signals.onZoomComponent.add((component) => {
+    
+
+    ZOOM_MODAL_BODY.empty();
+    ZOOM_MODAL_TITLE.html(component.getTitle());
+    $(component.body.dom).clone().appendTo(ZOOM_MODAL_BODY);
+    const body = ZOOM_MODAL_BODY.find('.card-body');
+    body.css('overflow','');
+    body.css('height','');
+    body.css('width','');
     ZOOM_MODAL.modal('show');
-    /*
-    $("#zoom-modal-body").empty();
-    $(body.dom).clone().appendTo($("#zoom-modal-body"))
-    */
 });
 
 context.signals.onEditComponent.add((spot, original_type) => {

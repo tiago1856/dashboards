@@ -124,7 +124,7 @@ export class CardComponent extends MasterComponent {
         collapse_btn.setAttribute('data-card-widget','collapse');
 
         $(zoom_btn.dom).on('click',function() {
-          context.signals.onZoomComponent.dispatch(self.spot, self.body);
+          context.signals.onZoomComponent.dispatch(self);
         });
         
         $(edit_btn.dom).on('click',function() {
@@ -233,6 +233,10 @@ export class CardComponent extends MasterComponent {
       } else {
         this.title.dom.innerHTML = NO_TITLE_DEFINED;
       }
+    }
+
+    getTitle() {
+      return this.data.title?this.data.title:NO_TITLE_DEFINED;
     }
 
 
