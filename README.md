@@ -99,7 +99,7 @@ Go to page [http://127.0.0.1:8000/dashboards/](http://127.0.0.1:8000/dashboards/
 | 8 | query analysis - multiple queries????? |  | 
 | 9 | query anayslys - ast array sometimes ???? why???? --- affects comm pins???? |  | 
 | 10 | copy/paste formatting options | *DONE* | 
-| 11 | open dash => reload window + open dash |  | 
+| 11 | ~~open dash => reload window + open dash~~ |  | 
 | 12 | options tables => whenc reating if options null => get default values from simple table | *DONE* | 
 | 13 | export data / component: excel | *DONE* | 
 | 14 | export data / component: csv | *DONE* | 

@@ -76,7 +76,7 @@ export class CardComponent extends MasterComponent {
               this.context.signals.onError.dispatch(error,"[CardComponent::ctor]");
             });            
           }, () => {
-          	// pdf
+          	// pdf portrait
             if (!this.content || !this.content.result || !this.body) {
               this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
               return;
@@ -87,7 +87,20 @@ export class CardComponent extends MasterComponent {
             }).catch((error) => {
               this.context.signals.onError.dispatch(error,"[CardComponent::ctor]");
               $("body").css("cursor","auto");
-            });            
+            });
+          }, () => {
+          	// pdf landscape
+            if (!this.content || !this.content.result || !this.body) {
+              this.context.signals.onWarning.dispatch(MSG_NO_DATA_2_EXPORT);
+              return;
+            }            
+            $("body").css("cursor","progress");
+            exportArea2PDF(this.body.dom, data.name, 'landscape').then(()=> {
+              $("body").css("cursor","auto");
+            }).catch((error) => {
+              this.context.signals.onError.dispatch(error,"[CardComponent::ctor]");
+              $("body").css("cursor","auto");
+            });             
           }, () => {
             // image
             if (!this.content || !this.content.result || !this.body) {

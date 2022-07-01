@@ -42,13 +42,15 @@ export async function getSimpleAreaCanvas(body = null) {
  * Creates a pdf file from a canvas.
  * @param {node} canvas Canvas.
  * @param {string} filename PDF output file.
+ * @param {string} orientation portrait or landscape.
  * @returns 
  */
-export async function exportCanvas2PDF(canvas = null, filename = 'component') {
+ export async function exportCanvas2PDF(canvas = null, filename = 'component', orientation = 'portrait') {
     if (!canvas) return null;
 
     const { PDFDocument, PageSizes } = PDFLib
     const pdfDoc = await PDFDocument.create();
+    /*
     const page = pdfDoc.addPage(PageSizes.A4);
     const img = canvas.toDataURL('image/png');
     const w_ratio = page.getWidth() / canvas.width;
@@ -62,6 +64,27 @@ export async function exportCanvas2PDF(canvas = null, filename = 'component') {
         width: canvas.width * ratio,
         height: canvas.height * ratio,
     }) 
+    */
+   let page = null;
+    if (orientation == 'landscape') {
+        page = pdfDoc.addPage([PageSizes.A4[1], PageSizes.A4[0]]);
+    } else {
+        page = pdfDoc.addPage(PageSizes.A4);
+    }
+    const img = canvas.toDataURL('image/png');
+    const w_ratio = page.getWidth() / canvas.width;
+    const h_ratio = page.getHeight() / canvas.height;
+    const ratio = w_ratio < h_ratio ? w_ratio : h_ratio;    
+    const pngImage = await pdfDoc.embedPng(img);
+    page.drawImage(pngImage, {
+        x: page.getWidth() / 2 - canvas.width * ratio / 2,
+        y: page.getHeight() - canvas.height * ratio,
+        width: canvas.width * ratio,
+        height: canvas.height * ratio,
+    }) 
+
+
+
 
     const pdfBytes = await pdfDoc.save();
     var file = new File([pdfBytes], filename + '.pdf', {
@@ -74,12 +97,13 @@ export async function exportCanvas2PDF(canvas = null, filename = 'component') {
  * Creates a PDF file from a scrollable area.
  * @param {node} body Component body.
  * @param {string} filename PDF output file.
+ * @param {string} orientation portrait or landscape.
  * @returns 
  */
-export async function exportArea2PDF(body=null, filename='component') {
+export async function exportArea2PDF(body=null, filename='component', orientation = 'portrait') {
     const canvas = await getAreaCanvas(body);
     if (!canvas) return null;
-    return await exportCanvas2PDF(canvas, filename);
+    return await exportCanvas2PDF(canvas, filename, orientation);
 }
 
 

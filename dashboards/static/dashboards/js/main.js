@@ -70,7 +70,8 @@ const SAVE_SNAPSHOT_BTN = $('#snapshot-save-btn');
 const SELECT_SNAPSHOT_BTN = $('#snapshot-select-btn');
 
 const DASH_PRINT = $('#dash-print');
-const DASH_PDF = $('#dash-pdf');
+const DASH_PDF_PORTRAIT = $('#dash-pdf-portrait');
+const DASH_PDF_LANDSCAPE = $('#dash-pdf-landscape');
 const DASH_IMAGE = $('#dash-image');
 const DASH_EXCEL = $('#dash-excel');
 
@@ -476,9 +477,19 @@ DASH_PRINT.on('click',function() {
     }); 
 });
 
-DASH_PDF.on('click',function() {
+DASH_PDF_PORTRAIT.on('click',function() {
     $("body").css("cursor","progress");
     exportArea2PDF(LAYOUT_CONTAINER.get(0), dashboard.title ? dashboard.title : 'export').then(()=> {
+      $("body").css("cursor","auto");
+    }).catch((error) => {
+      this.context.signals.onError.dispatch(error,"[main::DASH_PDF]");
+      $("body").css("cursor","auto");
+    }); 
+});
+
+DASH_PDF_LANDSCAPE.on('click',function() {
+    $("body").css("cursor","progress");
+    exportArea2PDF(LAYOUT_CONTAINER.get(0), dashboard.title ? dashboard.title : 'export', 'landscape').then(()=> {
       $("body").css("cursor","auto");
     }).catch((error) => {
       this.context.signals.onError.dispatch(error,"[main::DASH_PDF]");

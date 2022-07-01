@@ -4,7 +4,7 @@ import { Div, Link } from '../builders/BuildingBlocks.js';
 /**
  * Component's export menu dropdown.
  */
-export const ExportMenu = (onPrint=null, onPDF=null, onImage=null, onExcel=null, onCSV=null) => {
+export const ExportMenu = (onPrint=null, onPDF_portrait=null, onPDF_landscape=null, onImage=null, onExcel=null, onCSV=null) => {
     const div = new Div();
     div.addClass("dropdown-menu pull-right");
     div.setAttribute('role','menu');
@@ -14,10 +14,15 @@ export const ExportMenu = (onPrint=null, onPDF=null, onImage=null, onExcel=null,
     print_link.setTextContent('Imprimir');
     print_link.setAttribute('href','javascript:void(0);');
   
-    const pdf_link = new Link().attachTo(div);
-    pdf_link.addClass('dropdown-item');
-    pdf_link.setTextContent('PDF');
-    pdf_link.setAttribute('href','javascript:void(0);');
+    const pdf_link_portrait = new Link().attachTo(div);
+    pdf_link_portrait.addClass('dropdown-item');
+    pdf_link_portrait.setTextContent('PDF (vertical)');
+    pdf_link_portrait.setAttribute('href','javascript:void(0);');
+
+    const pdf_link_landscape = new Link().attachTo(div);
+    pdf_link_landscape.addClass('dropdown-item');
+    pdf_link_landscape.setTextContent('PDF (horizontal)');
+    pdf_link_landscape.setAttribute('href','javascript:void(0);');    
   
     const image_link = new Link().attachTo(div);
     image_link.addClass('dropdown-item');
@@ -43,11 +48,17 @@ export const ExportMenu = (onPrint=null, onPDF=null, onImage=null, onExcel=null,
       })
     }
 
-    if (onPDF) {
-      $(pdf_link.dom).on('click',() => {
-        onPDF();
+    if (onPDF_portrait) {
+      $(pdf_link_portrait.dom).on('click',() => {
+        onPDF_portrait();
       })
     }
+
+    if (onPDF_landscape) {
+      $(pdf_link_landscape.dom).on('click',() => {
+        onPDF_landscape();
+      })
+    }    
     
     if (onImage) {
       $(image_link.dom).on('click',() => {
