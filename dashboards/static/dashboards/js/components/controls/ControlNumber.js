@@ -56,7 +56,7 @@ export class ControlNumber extends BaseComponentContent {
       $(this.input.dom).on('change', function(e) {
         const _value = $(this).val();
         self.value.setTextContent(_value);
-        this.result[0].value = this.input.getValue();
+        self.result[0].value = self.input.getValue();
         context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       })
 
@@ -66,8 +66,8 @@ export class ControlNumber extends BaseComponentContent {
       })
 
       $(sync_btn.dom).on('click', (e) => {
-        const _value = this.input.getValue();
-        this.result[0].value = _value;
+        const _value = self.input.getValue();
+        self.result[0].value = _value;
         context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       });
 

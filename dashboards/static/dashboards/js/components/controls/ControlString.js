@@ -6,6 +6,7 @@ export class ControlString extends BaseComponentContent {
   constructor(context, component) {
     super(context, component);
 
+    const self = this;
 
     const div = new Div().attachTo(component.body);
     div.addClass("info-box info-component-content");
@@ -32,15 +33,15 @@ export class ControlString extends BaseComponentContent {
 
     $(this.input.dom).on('change', function(e) {
       const _value = $(this).val();
-      this.result[0].value = _value;
+      self.result[0].value = _value;
       //context.signals.onCommTriggered.dispatch(component.data.uuid, component.data.data_config.name, _value);
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
     })
 
     $(sync_btn.dom).on('click', (e) => {
-      const _value = this.input.getValue();
-      this.result[0].value = _value;
+      const _value = self.input.getValue();
+      self.result[0].value = _value;
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
     });    
 

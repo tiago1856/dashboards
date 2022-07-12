@@ -6,6 +6,7 @@ export class ControlBool extends BaseComponentContent {
   constructor(context, component) {
     super(context, component);
 
+    const self = this;
 
     const div = new Div().attachTo(component.body);
     div.addClass("info-box info-component-content");
@@ -52,14 +53,14 @@ export class ControlBool extends BaseComponentContent {
 
     $(this.input.dom).on('change', function(e) {
       const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;//$(this).val();
-      this.result[0].value = _value;
+      self.result[0].value = _value;
      context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
 
     })
 
     $(sync_btn.dom).on('click', function(e) {
       const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;
-      this.result[0].value = _value;
+      self.result[0].value = _value;
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
     });    
 
