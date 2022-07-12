@@ -71,6 +71,8 @@ export class ControlNumber extends BaseComponentContent {
         context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
       });
 
+      if (context.is_snapshot) this.input.setAttribute('disabled', 'true');
+
   }
 
   async execute(component_content = null) {

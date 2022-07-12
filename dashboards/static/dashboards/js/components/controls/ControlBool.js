@@ -62,7 +62,9 @@ export class ControlBool extends BaseComponentContent {
       const _value = $(this).prop('checked')?component.data.data_config.true:component.data.data_config.false;
       self.result[0].value = _value;
       context.signals.onCommTriggered.dispatch(component.data.uuid, [{outpin: component.data.data_config.name, value: _value, index: 0}]);
-    });    
+    }); 
+    
+    if (context.is_snapshot) this.input.setAttribute('disabled', 'true');
 
   }
 
